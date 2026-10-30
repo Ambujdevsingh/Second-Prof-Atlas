@@ -333,3 +333,31 @@ pre.diag{white-space:pre-wrap; font-family:var(--f-mono); font-size:.82rem; back
 .anstbl td,.anstbl th{font-size:.9rem}
 .ansfoot{border-top:1px dashed var(--line); padding-top:8px; display:flex; flex-direction:column; gap:8px}
 .ansq{flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--line); border-radius:8px}
+
+/* ---- practice engine ---- */
+.lvchip{font-family:var(--f-mono); font-size:.7rem; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; text-transform:uppercase}
+.lv1{--lc:#2E7D32}.lv2{--lc:#1F4FD1}.lv3{--lc:#6534D6}.lv4{--lc:#C2185B}
+.lvchip{color:var(--lc); background:color-mix(in srgb, var(--lc) 12%, var(--surface))}
+.lvgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px}
+.lvcell{border:1px solid var(--line); border-top:4px solid var(--lc); border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:2px}
+.lvcell b{color:var(--lc)}
+.mode{border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; align-items:flex-start; background:var(--surface)}
+.mode select{padding:7px 8px; border:1px solid var(--line); border-radius:8px}
+.srsbar{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
+.srsbar div{background:var(--sunk); border-radius:10px; padding:8px; text-align:center; display:flex; flex-direction:column}
+.srsbar b{font-family:var(--f-display); font-size:1.4rem}
+.srsbar span{font-size:.78rem; color:var(--muted)}
+.rate .btn small{font-family:var(--f-mono); opacity:.6; font-size:.7rem}
+.rate .r1{border-color:var(--bad); color:var(--bad)}
+.rate .r2{border-color:var(--warn); color:var(--warn)}
+.rate .r4{border-color:var(--good); color:var(--good)}
+.ladder{display:inline-flex; gap:3px; align-items:center}
+.ladder i{width:18px; height:8px; border-radius:4px; background:var(--line)}
+.ladder i.on{background:var(--lc)}
+.ladder b{margin-left:6px; font-size:.85rem}
+button.term,.term.demo{font:inherit; color:inherit; background:none; border:none; padding:0; border-bottom:2px dotted var(--sc,var(--accent)); cursor:help; text-align:inherit}
+button.term:hover{background:var(--ss,var(--accent-soft))}
+.chip.term{border:1px solid var(--line); background:var(--surface); cursor:pointer}
+.termbox{grid-column:1/-1; margin-top:8px; background:var(--ss,var(--accent-soft)); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; align-items:flex-start}
+.termbox p{margin:0}
+.termbox .more{background:var(--surface); border-radius:8px; padding:8px 10px}

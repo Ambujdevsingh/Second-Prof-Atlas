@@ -347,6 +347,34 @@ pre.diag{white-space:pre-wrap; font-family:var(--f-mono); font-size:.82rem; back
 .ansfoot{border-top:1px dashed var(--line); padding-top:8px; display:flex; flex-direction:column; gap:8px}
 .ansq{flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--line); border-radius:8px}
 
+/* ---- practice engine ---- */
+.lvchip{font-family:var(--f-mono); font-size:.7rem; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; text-transform:uppercase}
+.lv1{--lc:#2E7D32}.lv2{--lc:#1F4FD1}.lv3{--lc:#6534D6}.lv4{--lc:#C2185B}
+.lvchip{color:var(--lc); background:color-mix(in srgb, var(--lc) 12%, var(--surface))}
+.lvgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px}
+.lvcell{border:1px solid var(--line); border-top:4px solid var(--lc); border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:2px}
+.lvcell b{color:var(--lc)}
+.mode{border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; align-items:flex-start; background:var(--surface)}
+.mode select{padding:7px 8px; border:1px solid var(--line); border-radius:8px}
+.srsbar{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
+.srsbar div{background:var(--sunk); border-radius:10px; padding:8px; text-align:center; display:flex; flex-direction:column}
+.srsbar b{font-family:var(--f-display); font-size:1.4rem}
+.srsbar span{font-size:.78rem; color:var(--muted)}
+.rate .btn small{font-family:var(--f-mono); opacity:.6; font-size:.7rem}
+.rate .r1{border-color:var(--bad); color:var(--bad)}
+.rate .r2{border-color:var(--warn); color:var(--warn)}
+.rate .r4{border-color:var(--good); color:var(--good)}
+.ladder{display:inline-flex; gap:3px; align-items:center}
+.ladder i{width:18px; height:8px; border-radius:4px; background:var(--line)}
+.ladder i.on{background:var(--lc)}
+.ladder b{margin-left:6px; font-size:.85rem}
+button.term,.term.demo{font:inherit; color:inherit; background:none; border:none; padding:0; border-bottom:2px dotted var(--sc,var(--accent)); cursor:help; text-align:inherit}
+button.term:hover{background:var(--ss,var(--accent-soft))}
+.chip.term{border:1px solid var(--line); background:var(--surface); cursor:pointer}
+.termbox{grid-column:1/-1; margin-top:8px; background:var(--ss,var(--accent-soft)); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; align-items:flex-start}
+.termbox p{margin:0}
+.termbox .more{background:var(--surface); border-radius:8px; padding:8px 10px}
+
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
 <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
@@ -1704,6 +1732,471 @@ X("path4:1",[["Opportunistic infections by CD4 count",[["CD4 count (cells/µL)",
 X("path4:4",[["Gross and microscopic organ changes",["Kidney: enlarged pale waxy; amyloid first in glomerular mesangium and capillary walls, then arterioles and tubules; glomeruli obliterated","Spleen: sago spleen (deposits in follicles — tapioca-like granules) vs lardaceous spleen (red pulp sinusoids — map-like)","Liver: deposits in space of Disse → compress hepatocytes (pressure atrophy)","Heart: subendocardial and interstitial deposits → restrictive cardiomyopathy, conduction defects"]],["Clinical features & prognosis",["Nephrotic syndrome, renal failure (commonest cause of death in AA)","Hepatosplenomegaly, macroglossia (AL), carpal tunnel syndrome (β2M)","Heart failure, arrhythmia (AL, ATTR)","Prognosis poor in systemic AL; AA improves if underlying inflammation is controlled"]]]);
 X("path5:0",[["Epidemiology & predisposing factors",["Age: most carcinomas after 55; specific childhood tumours (neuroblastoma, Wilms, retinoblastoma, leukaemia)","Environment: tobacco (lung, oral, bladder), alcohol, diet (aflatoxin), occupation (asbestos, aniline dyes), infections (HPV, HBV, H. pylori)","Heredity: familial cancer syndromes (RB, p53, BRCA1/2, APC, MLH1)","Acquired predisposing conditions: chronic inflammation (UC, Barrett), immunodeficiency, precursor lesions (leukoplakia, adenomatous polyps)"]],["Effects of tumour on host",["Local: pressure, obstruction, ulceration, bleeding, infection, fracture","Hormone production: functioning adenomas","Cancer cachexia: TNF, proteolysis-inducing factor","Paraneoplastic syndromes"]]]);
 
+/* Glossary for tap-to-explain terms. G[term] = [one-line definition, fuller explanation with example & exam relevance]; aliases map other spellings. */
+const GLOSS={
+"hypertrophy":["Increase in cell size leading to a bigger organ.","Occurs in cells that cannot divide much (heart, skeletal muscle). Physiological: uterus in pregnancy, body-builder's muscle. Pathological: left ventricle in hypertension or aortic stenosis. Driven by mechanical stretch and growth factors that switch on 'fetal' genes (β-myosin, ANP). Exam tip: contrast with hyperplasia; often both occur together (uterus)."],
+"hyperplasia":["Increase in the number of cells in an organ.","Needs cells that can divide. Physiological: hormonal (breast at puberty, endometrium) or compensatory (liver after partial hepatectomy). Pathological: excess hormone or growth factor (endometrial hyperplasia, BPH, warts). Pathological hyperplasia can be the soil for cancer (endometrial hyperplasia → carcinoma)."],
+"atrophy":["Shrinkage of an organ due to decrease in cell size and number.","Causes: disuse, denervation, reduced blood supply, poor nutrition, loss of hormones, pressure, ageing. Mechanism: less protein synthesis plus more breakdown by the ubiquitin–proteasome system and autophagy. Atrophic cells often contain lipofuscin (brown atrophy)."],
+"metaplasia":["Reversible change of one adult cell type into another.","An adaptive substitution by cells better able to withstand stress. Squamous metaplasia: bronchus in smokers, cervix, vitamin A deficiency. Columnar metaplasia: Barrett oesophagus with acid reflux. Arises from reprogramming of stem cells. Persistent metaplasia can progress to dysplasia and cancer."],
+"dysplasia":["Disordered growth with atypical cells; a pre-cancerous change.","Features: pleomorphism, large hyperchromatic nuclei, raised N:C ratio, mitoses above the basal layer, loss of polarity. Graded mild/moderate/severe; full-thickness dysplasia = carcinoma in situ. Example: CIN in cervix (detected by Pap smear)."],
+"atp depletion":["Fall in cellular energy (ATP), usually from hypoxia.","Effects: Na⁺/K⁺ pump fails (swelling), anaerobic glycolysis rises (lactic acid, low pH), Ca²⁺ pump fails (calcium overload), ribosomes detach (less protein synthesis), misfolded proteins accumulate. Cells with high energy needs (neurons, myocardium) are most vulnerable."],
+"mitochondrial damage":["Injury to mitochondria that cuts ATP and triggers death pathways.","Caused by Ca²⁺ overload, ROS and hypoxia. Leads to the mitochondrial permeability transition (loss of membrane potential), ATP failure and leakage of cytochrome c, which starts apoptosis. Amorphous densities in mitochondria on EM mark irreversible injury."],
+"ros":["Reactive oxygen species — unstable oxygen-derived free radicals.","Superoxide, hydrogen peroxide and hydroxyl radical. Produced in normal respiration, by leukocytes in inflammation, radiation, drugs (CCl4, paracetamol) and iron (Fenton reaction). They damage membranes (lipid peroxidation), proteins and DNA. Removed by SOD, catalase, glutathione peroxidase and vitamins A, C, E."],
+"cell swelling":["Earliest sign of reversible injury: cells take in water.","Due to failure of the ATP-dependent Na⁺/K⁺ pump. Light microscopy shows pale, enlarged cells with small clear vacuoles (hydropic or vacuolar degeneration). Grossly the organ is pale, swollen and heavier."],
+"fatty change":["Accumulation of triglyceride droplets inside cells (steatosis).","Mostly in liver, also heart and kidney. Causes: alcohol, obesity, diabetes, starvation, toxins, hypoxia. Shows as clear vacuoles in routine sections; confirmed with Oil Red O or Sudan stains on frozen sections. Usually reversible."],
+"coagulative necrosis":["Necrosis where tissue architecture is preserved for days ('ghost cells').","Proteins and enzymes are denatured, so cells are not digested quickly. Typical of ischaemic infarcts of solid organs (heart, kidney, spleen) — except brain. Microscopy: eosinophilic anucleate cells with preserved outlines."],
+"liquefactive necrosis":["Necrosis in which dead tissue is digested into a liquid mass.","Seen in bacterial/fungal abscesses (neutrophil enzymes) and in brain infarcts (lipid-rich, enzyme-rich tissue). The liquid is often creamy yellow pus."],
+"caseous necrosis":["Cheese-like necrosis typical of tuberculosis.","Friable white-yellow material; microscopically amorphous granular pink debris surrounded by a granuloma (epithelioid cells, Langhans giant cells, lymphocytes). Cell outlines are completely lost."],
+"fat necrosis":["Destruction of fat, typically by pancreatic lipases.","In acute pancreatitis lipases split triglycerides; fatty acids combine with calcium (saponification) forming chalky white areas. Traumatic fat necrosis occurs in breast."],
+"fibrinoid necrosis":["Immune-related vessel wall damage that looks like fibrin.","Immune complexes and fibrin leak into arterial walls, giving bright pink amorphous material on H&E. Seen in vasculitis (PAN), malignant hypertension and immune complex diseases."],
+"apoptosis":["Programmed, tidy self-destruction of single cells.","Energy-dependent; cells shrink, chromatin condenses, apoptotic bodies form and are eaten without inflammation. Intrinsic (mitochondrial) and extrinsic (death receptor) pathways converge on caspases. Physiological (embryo, menstruation) and pathological (DNA damage, viral hepatitis)."],
+"bcl-2":["Main anti-apoptotic protein of the mitochondrial pathway.","Keeps the mitochondrial membrane intact by blocking BAX/BAK pores, preventing cytochrome c release. Overexpressed in follicular lymphoma by t(14;18), allowing B cells to escape death."],
+"cytochrome c":["Mitochondrial protein whose release starts intrinsic apoptosis.","In the cytosol it binds APAF-1 forming the apoptosome, which activates caspase-9, then executioner caspases 3, 6, 7."],
+"caspases":["Protease enzymes that carry out apoptosis.","Initiators: caspase-8 (extrinsic), caspase-9 (intrinsic). Executioners: caspases 3, 6, 7, which cleave the cytoskeleton and activate DNases. Caspase-1 drives pyroptosis (IL-1β release)."],
+"dystrophic calcification":["Calcium deposits in dead or damaged tissue with normal serum calcium.","Examples: atheroma, damaged heart valves, caseous TB, infarcts, psammoma bodies. Begins in membrane-bound vesicles of dying cells. Stains: von Kossa (black), Alizarin red."],
+"metastatic calcification":["Calcium deposits in normal tissues because blood calcium is high.","Causes of hypercalcaemia: hyperparathyroidism, bone destruction (myeloma, metastases), vitamin D excess, renal failure, milk-alkali syndrome. Prefers lungs, kidneys, gastric mucosa and arteries (alkaline compartments)."],
+"hypoxia":["Lack of oxygen to cells; the commonest cause of cell injury.","Causes: ischaemia (loss of blood supply — worst, as nutrients and waste removal also fail), anaemia, CO poisoning, lung disease. Leads to ATP depletion."],
+"vasodilatation":["Widening of arterioles, increasing blood flow.","Mediated by histamine, prostaglandins and nitric oxide. Causes redness (rubor) and heat (calor) in inflammation."],
+"permeability":["Leakiness of blood vessels allowing proteins and fluid out.","In inflammation mechanisms include endothelial contraction (histamine; immediate transient), direct injury (burns; sustained), leukocyte injury, transcytosis (VEGF) and leaky new vessels. The result is exudate and swelling."],
+"exudate":["Protein-rich, cell-rich fluid that leaks in inflammation.","Specific gravity > 1.020, protein > 3 g/dL, contains cells and fibrin, clots. Contrast with transudate (low protein, from pressure imbalance)."],
+"transudate":["Low-protein fluid from pressure imbalance, not inflammation.","Specific gravity < 1.012, protein < 3 g/dL, few cells. Seen in heart failure, nephrotic syndrome, cirrhosis."],
+"margination":["White cells moving to the edge of the vessel stream.","As blood slows (stasis), leukocytes leave the central axial stream and line up along the endothelium, preparing to roll and adhere."],
+"rolling":["Leukocytes tumbling slowly along the endothelium.","Mediated by weak, transient bonds between selectins (E- and P-selectin on endothelium, L-selectin on leukocytes) and their sugar ligands (sialyl-Lewis X)."],
+"selectins":["Adhesion molecules that cause leukocyte rolling.","E-selectin (endothelium, induced by IL-1/TNF), P-selectin (endothelium and platelets, from Weibel-Palade bodies), L-selectin (leukocytes). Defective ligand (fucosylation) = LAD-2."],
+"integrins":["Leukocyte adhesion molecules causing firm attachment.","LFA-1 and Mac-1 (β2 integrins) bind ICAM-1; VLA-4 binds VCAM-1. Chemokines switch integrins to a high-affinity state. β2 integrin (CD18) defect = LAD-1."],
+"icam-1":["Endothelial ligand for leukocyte integrins (LFA-1).","Expression increases with TNF and IL-1, allowing firm adhesion of leukocytes."],
+"pecam-1":["CD31 — the molecule for transmigration between endothelial cells.","Leukocytes squeeze through inter-endothelial junctions (diapedesis), mainly in post-capillary venules, guided by PECAM-1."],
+"transmigration":["Leukocytes crossing the vessel wall into tissue (diapedesis).","Occurs in post-capillary venules via PECAM-1; leukocytes then pierce the basement membrane using collagenases."],
+"chemotaxis":["Directed movement of leukocytes toward a chemical signal.","Chemoattractants: bacterial N-formyl peptides, C5a, LTB4, chemokines like IL-8. They bind G-protein receptors and drive actin polymerisation at the leading edge."],
+"phagocytosis":["Engulfing and killing of microbes by neutrophils and macrophages.","Steps: recognition (via opsonins IgG and C3b, mannose and scavenger receptors), engulfment into a phagosome, fusion with lysosome, and killing — mainly by the H2O2–MPO–halide system producing hypochlorous acid."],
+"histamine":["Preformed amine from mast cells causing immediate vasodilatation and leak.","Released by IgE cross-linking, C3a/C5a, trauma, cold. Acts on H1 receptors on endothelium within seconds; short-lived. Basis of antihistamine therapy in allergy."],
+"leukotrienes":["Lipoxygenase products of arachidonic acid.","LTB4: powerful chemotaxis of neutrophils. LTC4, D4, E4: bronchospasm, increased permeability (important in asthma). Blocked by montelukast (receptor) and zileuton (5-LOX)."],
+"pge2":["Prostaglandin E2 — causes pain, fever and vasodilatation.","Made by COX enzymes; acts in the hypothalamus to raise the set point (fever) and sensitises pain receptors. NSAIDs reduce pain and fever by blocking its synthesis."],
+"il-1":["Interleukin-1, a key pro-inflammatory cytokine.","Produced by macrophages; activates endothelium, induces fever (via PGE2), acute phase proteins and leukocytosis. Released by the inflammasome (caspase-1)."],
+"tnf":["Tumour necrosis factor — central cytokine of inflammation.","From macrophages, T cells and mast cells. Activates endothelium, causes fever, cachexia, septic shock; maintains granulomas (anti-TNF therapy can reactivate TB)."],
+"c5a":["Complement fragment that attracts and activates neutrophils.","Also an anaphylatoxin (with C3a) causing mast cell degranulation. Generated in all complement pathways."],
+"bradykinin":["Kinin causing increased permeability and pain.","Produced from kininogen by kallikrein; rapidly destroyed by kininase II (ACE). ACE inhibitors raise bradykinin, causing cough and angioedema."],
+"granuloma":["A compact cluster of activated macrophages (epithelioid cells).","Often with giant cells and a rim of lymphocytes; may have central caseation. Forms when the body cannot destroy an agent — TB, leprosy, syphilis, fungi, sarcoidosis, foreign bodies. Driven by TH1 cells and IFN-γ."],
+"epithelioid cells":["Activated macrophages that look like epithelial cells.","Abundant pale pink cytoplasm, indistinct cell borders, slipper-shaped nuclei; secrete rather than eat. The essential cell of a granuloma."],
+"langhans giant cells":["Multinucleate giant cells with nuclei in a horseshoe at the edge.","Formed by fusion of epithelioid macrophages; typical of TB and sarcoidosis. Foreign body giant cells have scattered nuclei."],
+"ghon focus":["The first lung lesion of primary TB.","A 1–1.5 cm subpleural caseous focus in the lower part of the upper lobe or upper part of the lower lobe."],
+"ghon complex":["Ghon focus plus caseous hilar lymph node in primary TB.","Usually heals by fibrosis and calcification (Ranke complex); in children or immunocompromised it can progress."],
+"first intention":["Healing of a clean wound with edges brought together.","Typical surgical incision: minimal granulation tissue, epithelial bridging in 24–48 h, thin linear scar."],
+"second intention":["Healing of a large open wound by filling from below.","Abundant granulation tissue, wound contraction by myofibroblasts, larger scar, longer healing time; seen in infected or gaping wounds, ulcers."],
+"myofibroblasts":["Fibroblasts with contractile smooth-muscle features.","Contain α-smooth muscle actin; pull wound edges together during healing by second intention; excessive activity causes contractures."],
+"granulation tissue":["Young repair tissue of new capillaries and fibroblasts.","Pink, soft and granular on the wound surface; rich in macrophages and oedema. Matures into a collagen scar. Exuberant growth is called proud flesh."]
+};
+const GLOSS_ALIAS={"atp":"atp depletion","free radicals":"ros","reactive oxygen species":"ros","hydropic change":"cell swelling","steatosis":"fatty change","bcl-xl":"bcl-2","caspase":"caspases","integrin":"integrins","selectin":"selectins","leukotriene":"leukotrienes","epithelioid cell":"epithelioid cells","langhans giant cell":"langhans giant cells","ghon focus":"ghon focus","myofibroblast":"myofibroblasts","vasodilation":"vasodilatation","increased permeability":"permeability","granulomas":"granuloma"};
+
+/* Question banks. QB[ch] = {c:[[level,q,a]], q:[[level,q,[opts],answerIdx,explanation]]}
+   level: 1 Basic · 2 Intermediate · 3 Advanced · 4 Exam-pattern (modelled on frequently asked university / NEET-PG questions) */
+const QB={};
+QB.path1={c:[
+[1,"Define cell injury.","Changes in a cell when stress exceeds its ability to adapt; may be reversible or irreversible."],
+[1,"Commonest cause of cell injury?","Hypoxia (oxygen deprivation)."],
+[1,"Define hypertrophy.","Increase in the size of cells, causing an increase in organ size."],
+[1,"Define hyperplasia.","Increase in the number of cells in an organ or tissue."],
+[1,"Define atrophy.","Reduction in size of an organ or tissue due to decrease in cell size and number."],
+[1,"Define metaplasia.","Reversible replacement of one differentiated adult cell type by another."],
+[1,"Define dysplasia.","Disordered growth with loss of uniformity and architectural orientation of cells; pre-neoplastic."],
+[1,"Earliest light-microscopic change in reversible injury?","Cell swelling (hydropic change)."],
+[1,"Two features of reversible injury?","Cell swelling and fatty change."],
+[1,"Define necrosis.","Morphological changes after cell death in living tissue, with membrane rupture and inflammation."],
+[1,"Define apoptosis.","Programmed, energy-dependent cell death of single cells without inflammation."],
+[1,"Nuclear changes in necrosis?","Pyknosis, karyorrhexis, karyolysis."],
+[1,"What is pyknosis?","Nuclear shrinkage with increased basophilia."],
+[1,"What is karyorrhexis?","Fragmentation of the pyknotic nucleus."],
+[1,"What is karyolysis?","Fading of nuclear basophilia due to DNase activity."],
+[1,"Commonest type of necrosis?","Coagulative necrosis."],
+[1,"Necrosis typical of brain infarct?","Liquefactive necrosis."],
+[1,"Necrosis typical of tuberculosis?","Caseous necrosis."],
+[1,"Necrosis typical of acute pancreatitis?","Enzymatic fat necrosis."],
+[1,"Define gangrene.","Necrosis with superadded putrefaction."],
+[1,"Define pathological calcification.","Abnormal deposition of calcium salts in tissues."],
+[1,"Name the two types of pathological calcification.","Dystrophic and metastatic."],
+[1,"Wear-and-tear pigment?","Lipofuscin."],
+[1,"Example of physiological hypertrophy?","Uterus in pregnancy; skeletal muscle in body-builders."],
+[1,"Example of physiological hyperplasia?","Breast at puberty and pregnancy; endometrium in menstrual cycle."],
+[1,"Example of squamous metaplasia?","Bronchial epithelium in smokers."],
+[1,"Example of columnar metaplasia?","Barrett oesophagus."],
+[1,"Fatty liver is also called?","Steatosis."],
+[1,"Stain for fat on frozen section?","Oil Red O or Sudan III/IV."],
+[1,"Commonest cause of fatty liver?","Alcohol."],
+[2,"Point of no return in cell injury?","Inability to reverse mitochondrial dysfunction and profound membrane damage."],
+[2,"Why does ATP depletion cause cell swelling?","Na⁺/K⁺-ATPase fails, Na⁺ and water enter the cell."],
+[2,"Why does pH fall in hypoxic cells?","Anaerobic glycolysis produces lactic acid."],
+[2,"Enzymes activated by raised intracellular Ca²⁺?","Phospholipases, proteases, endonucleases and ATPases."],
+[2,"Name three reactive oxygen species.","Superoxide (O2•⁻), hydrogen peroxide (H2O2), hydroxyl radical (•OH)."],
+[2,"Fenton reaction?","Fe²⁺ + H2O2 → Fe³⁺ + •OH + OH⁻ (generates hydroxyl radical)."],
+[2,"Enzymes removing free radicals?","Superoxide dismutase, catalase, glutathione peroxidase."],
+[2,"Antioxidant vitamins?","Vitamins A, C and E."],
+[2,"Free radical formed from CCl4?","CCl3• (trichloromethyl radical), via cytochrome P450 in liver."],
+[2,"Mechanism of fatty liver in CCl4 poisoning?","Reduced apoprotein synthesis so triglycerides cannot be exported."],
+[2,"Why does alcohol cause fatty liver?","Increased FFA esterification to triglycerides, reduced oxidation, increased NADH."],
+[2,"Macrovesicular vs microvesicular steatosis — examples?","Macro: alcohol, obesity. Micro: acute fatty liver of pregnancy, Reye's syndrome."],
+[2,"Why is fat not seen in routine paraffin sections?","Lipids dissolve in alcohol/xylene during processing; seen as clear vacuoles."],
+[2,"Tigered effect (thrush-breast heart)?","Patchy fatty change in myocardium in chronic hypoxia/severe anaemia."],
+[2,"Features of coagulative necrosis on microscopy?","Preserved cell outlines (ghost cells), eosinophilic cytoplasm, absent nuclei."],
+[2,"Why is brain infarct liquefactive?","Brain is rich in lipids and lysosomal enzymes; little connective tissue."],
+[2,"Gross appearance of caseous necrosis?","Friable, white-yellow, cheese-like."],
+[2,"Fat saponification?","Released fatty acids combine with calcium → chalky white deposits."],
+[2,"Where is fibrinoid necrosis seen?","Vessel walls in vasculitis (PAN), malignant hypertension, immune complex disease."],
+[2,"Intrinsic apoptotic pathway key event?","Release of cytochrome c from mitochondria."],
+[2,"Extrinsic apoptotic pathway initiator caspase?","Caspase-8."],
+[2,"Intrinsic pathway initiator caspase?","Caspase-9."],
+[2,"Executioner caspases?","Caspases 3, 6 and 7."],
+[2,"Anti-apoptotic proteins?","BCL-2, BCL-XL, MCL-1."],
+[2,"Pro-apoptotic effectors?","BAX and BAK."],
+[2,"Death receptors?","Fas (CD95) and TNF receptor-1."],
+[2,"'Eat me' signal on apoptotic cells?","Phosphatidylserine flipped to the outer membrane leaflet."],
+[2,"DNA pattern of apoptosis on gel?","Ladder pattern (internucleosomal cleavage, 180–200 bp fragments)."],
+[2,"DNA pattern of necrosis on gel?","Smear pattern."],
+[2,"Councilman bodies?","Apoptotic hepatocytes in viral hepatitis."],
+[2,"Physiological apoptosis examples?","Embryogenesis, menstrual endometrium, thymic deletion, involution of lactating breast."],
+[2,"Line of demarcation in dry gangrene is formed by?","Inflammatory reaction and granulation tissue between dead and living tissue."],
+[2,"Why is gangrenous tissue black?","Iron sulphide from haemoglobin breakdown by bacteria."],
+[2,"Organism of gas gangrene?","Clostridium perfringens."],
+[2,"Sites of metastatic calcification?","Lungs, kidneys, gastric mucosa, systemic arteries, pulmonary veins."],
+[2,"Why do these sites get metastatic calcification?","They lose acid and have an alkaline internal compartment."],
+[2,"Stains for calcium?","von Kossa (black) and Alizarin red S."],
+[3,"What are psammoma bodies and where are they seen?","Laminated concentric calcifications; papillary thyroid ca, serous ovarian tumours, meningioma, mesothelioma."],
+[3,"Mitochondrial permeability transition?","Opening of a high-conductance channel in the inner mitochondrial membrane causing loss of membrane potential."],
+[3,"Ischaemia–reperfusion injury mechanisms?","Increased ROS, Ca²⁺ overload, inflammation, complement activation."],
+[3,"Role of p53 in apoptosis?","Senses DNA damage, induces PUMA/NOXA/BAX → intrinsic apoptosis if damage is irreparable."],
+[3,"What are BH3-only proteins?","Sensors (BIM, BID, BAD, PUMA, NOXA) that activate BAX/BAK and block BCL-2."],
+[3,"What forms the apoptosome?","Cytochrome c + APAF-1 + procaspase-9."],
+[3,"Role of FLIP?","Inhibits caspase-8 activation in the extrinsic pathway."],
+[3,"What is necroptosis?","Programmed necrosis via RIPK1, RIPK3 and MLKL; caspase-independent."],
+[3,"What is pyroptosis?","Inflammasome/caspase-1-mediated death with IL-1β release."],
+[3,"What is ferroptosis?","Iron-dependent cell death from lipid peroxidation."],
+[3,"Disease with BCL-2 overexpression?","Follicular lymphoma, t(14;18)."],
+[3,"Autophagy?","Self-digestion of cell components via autophagic vacuoles fusing with lysosomes; survival response in starvation."],
+[3,"Hallmark ultrastructural sign of irreversible injury?","Amorphous flocculent densities in mitochondria."],
+[3,"Myelin figures?","Whorled phospholipid masses from damaged membranes."],
+[3,"Sequence of metaplasia → cancer in bronchus?","Squamous metaplasia → dysplasia → carcinoma in situ → squamous cell carcinoma."],
+[3,"Cancer arising from Barrett oesophagus?","Adenocarcinoma."],
+[3,"Which cells cause metaplasia?","Reprogramming of stem/reserve cells, not transformation of differentiated cells."],
+[3,"Vitamin linked to squamous metaplasia?","Vitamin A deficiency."],
+[3,"Brown atrophy?","Atrophic organ with lipofuscin (heart, liver in elderly/cachexia)."],
+[3,"Mechanism of atrophy?","Reduced protein synthesis + increased degradation via ubiquitin-proteasome pathway and autophagy."],
+[3,"Cardiac hypertrophy genes switched on?","Fetal genes like β-myosin heavy chain, ANP."],
+[3,"Haemosiderin is detected by?","Perls' Prussian blue stain."],
+[3,"Hyaline change — two types?","Intracellular (Mallory bodies, Russell bodies) and extracellular (hyaline arteriolosclerosis, amyloid)."],
+[4,"Q (exam): Define cell injury; list causes and mechanisms — key words?","Hypoxia, ATP depletion, mitochondrial damage, Ca²⁺ influx, ROS, membrane and DNA damage; reversible vs irreversible."],
+[4,"Q (exam): Apoptosis vs necrosis — 4 key differences?","Single cells vs groups; shrinkage vs swelling; intact vs ruptured membrane; no inflammation vs inflammation."],
+[4,"Q (exam): Dystrophic vs metastatic calcification — key difference?","Serum calcium: normal in dystrophic (dead tissue), high in metastatic (normal tissue)."],
+[4,"Q (exam): Dry vs wet gangrene — the one-line difference?","Dry: arterial occlusion, clear demarcation, slow; wet: venous + infection, no demarcation, rapid, toxaemia."],
+[4,"Q (exam): Metaplasia vs dysplasia — key point?","Metaplasia is adaptive change of cell type; dysplasia is disordered pre-neoplastic growth with atypia."],
+[4,"Q (exam): Pathogenesis of fatty liver — 4 mechanisms?","↑ FFA delivery, ↓ FFA oxidation, ↑ esterification, ↓ apoprotein/lipoprotein export."],
+[4,"Q (NEET-PG pattern): Most reliable indicator of irreversible injury?","Membrane damage (with mitochondrial dysfunction); morphologically nuclear changes."],
+[4,"Q (NEET-PG pattern): Caspase common to both apoptotic pathways?","Caspase-3 (executioner)."],
+[4,"Q (NEET-PG pattern): Annexin V binds?","Phosphatidylserine on apoptotic cells."],
+[4,"Q (NEET-PG pattern): Russell bodies contain?","Immunoglobulin in plasma cells."]],
+q:[
+[1,"Commonest cause of cell injury is:",["Infection","Hypoxia","Trauma","Genetic defect"],1,"Oxygen deprivation is the most common cause."],
+[1,"Earliest change in reversible cell injury on light microscopy:",["Fatty change","Cell swelling","Pyknosis","Karyolysis"],1,"Hydropic swelling appears first."],
+[1,"Increase in number of cells is called:",["Hypertrophy","Hyperplasia","Metaplasia","Anaplasia"],1,"Hyperplasia = more cells."],
+[1,"Increase in size of cells is:",["Hypertrophy","Hyperplasia","Dysplasia","Atrophy"],0,"Hypertrophy = bigger cells."],
+[1,"Replacement of one adult cell type by another:",["Dysplasia","Metaplasia","Anaplasia","Neoplasia"],1,"Metaplasia is a reversible change in cell type."],
+[1,"Barrett oesophagus is an example of:",["Squamous metaplasia","Columnar metaplasia","Dysplasia","Hyperplasia"],1,"Squamous → intestinal-type columnar epithelium."],
+[1,"Smoker's bronchus shows:",["Columnar metaplasia","Squamous metaplasia","Osseous metaplasia","Hyperplasia only"],1,"Ciliated columnar → squamous."],
+[1,"Uterine enlargement in pregnancy is mainly due to:",["Hyperplasia","Hypertrophy","Metaplasia","Oedema"],1,"Smooth muscle hypertrophy (plus some hyperplasia)."],
+[1,"Nuclear fragmentation is called:",["Pyknosis","Karyorrhexis","Karyolysis","Chromatolysis"],1,"Karyorrhexis = fragmentation."],
+[1,"Fading of nucleus is called:",["Pyknosis","Karyorrhexis","Karyolysis","Margination"],2,"Karyolysis due to DNase."],
+[1,"Commonest type of necrosis:",["Liquefactive","Coagulative","Caseous","Fat"],1,"Seen in infarcts of most solid organs."],
+[1,"Brain infarct shows which necrosis?",["Coagulative","Liquefactive","Caseous","Fibrinoid"],1,"Brain liquefies."],
+[1,"Caseous necrosis is typical of:",["Syphilis","Tuberculosis","Leprosy","Sarcoidosis"],1,"Cheesy necrosis in TB granulomas."],
+[1,"Fat necrosis is classically seen in:",["Acute pancreatitis","Myocardial infarction","Brain abscess","Gangrene"],0,"Lipases cause enzymatic fat necrosis."],
+[1,"Wear-and-tear pigment is:",["Melanin","Lipofuscin","Haemosiderin","Bilirubin"],1,"Lipofuscin accumulates with age."],
+[1,"Stain used for fat on frozen section:",["PAS","Oil Red O","Congo red","Perls"],1,"Lipid dissolves in routine processing."],
+[1,"Commonest cause of fatty liver:",["Starvation","Alcohol","CCl4","Pregnancy"],1,"Alcohol is the commonest cause."],
+[1,"Apoptosis is associated with:",["Inflammation","Cell swelling","Cell shrinkage","Membrane rupture"],2,"Apoptotic cells shrink."],
+[1,"Gangrene is necrosis with:",["Calcification","Putrefaction","Fibrosis","Haemorrhage only"],1,"Superadded bacterial putrefaction."],
+[1,"Calcification in dead tissue with normal serum calcium:",["Metastatic","Dystrophic","Idiopathic","Physiological"],1,"Dystrophic calcification."],
+[1,"Atrophy of brain in elderly is:",["Physiological","Pathological due to denervation","Pressure atrophy","Disuse atrophy"],0,"Ageing causes physiological atrophy."],
+[1,"Which is a pre-neoplastic change?",["Hyperplasia","Metaplasia","Dysplasia","Hypertrophy"],2,"Dysplasia may progress to carcinoma."],
+[1,"Gas gangrene is caused by:",["Staph aureus","Clostridium perfringens","Strep pyogenes","Bacteroides"],1,"C. perfringens α-toxin."],
+[1,"Dry gangrene commonly affects:",["Bowel","Lung","Limbs","Mouth"],2,"Arterial occlusion of limbs."],
+[1,"Psammoma bodies represent:",["Dystrophic calcification","Metastatic calcification","Amyloid","Hyaline"],0,"Laminated dystrophic calcification."],
+[1,"Cell swelling in injury is due to failure of:",["Ca²⁺ pump","Na⁺/K⁺-ATPase","Glycolysis","Protein synthesis"],1,"Pump failure lets Na⁺ and water in."],
+[1,"Physiological apoptosis is seen in:",["Myocardial infarct","Menstrual endometrium","Pancreatitis","Tuberculosis"],1,"Hormone-withdrawal apoptosis."],
+[1,"Steatosis means:",["Fatty change","Hyaline change","Calcification","Pigmentation"],0,"Triglyceride accumulation."],
+[1,"Ghost outlines of cells are seen in:",["Liquefactive necrosis","Coagulative necrosis","Fat necrosis","Apoptosis"],1,"Architecture preserved for days."],
+[1,"Which organ most commonly shows fatty change?",["Heart","Kidney","Liver","Brain"],2,"Liver is central to fat metabolism."],
+[2,"Point of no return in cell injury is marked by:",["Cell swelling","Fatty change","Mitochondrial dysfunction and membrane damage","ER dilation"],2,"Irreversible injury hallmarks."],
+[2,"Lactic acidosis in hypoxic cells results from:",["Aerobic respiration","Anaerobic glycolysis","Fatty acid oxidation","Protein breakdown"],1,"Glycolysis produces lactate."],
+[2,"Intracellular Ca²⁺ rise activates all EXCEPT:",["Phospholipase","Protease","Endonuclease","Catalase"],3,"Catalase removes H2O2; it is not Ca²⁺-activated."],
+[2,"Hydroxyl radical is generated by:",["Fenton reaction","Glycolysis","Krebs cycle","Urea cycle"],0,"Fe²⁺ + H2O2 → •OH."],
+[2,"Enzyme converting superoxide to H2O2:",["Catalase","Superoxide dismutase","Glutathione peroxidase","Myeloperoxidase"],1,"SOD."],
+[2,"CCl4 injury is mediated by:",["CCl3• free radical","Immune complexes","Hypoxia","Caspase-8"],0,"P450 converts CCl4 to CCl3•."],
+[2,"Microvesicular steatosis is seen in:",["Alcoholism","Obesity","Reye's syndrome","Diabetes"],2,"Also acute fatty liver of pregnancy."],
+[2,"Tigered effect in heart is due to:",["Amyloid","Fatty change","Haemosiderin","Glycogen"],1,"Thrush-breast appearance in hypoxia."],
+[2,"Liquefactive necrosis occurs in:",["Heart infarct","Kidney infarct","Abscess","Spleen infarct"],2,"Neutrophil enzymes liquefy tissue."],
+[2,"Fibrinoid necrosis is seen in:",["TB","Malignant hypertension","Pancreatitis","Gas gangrene"],1,"Vessel walls in malignant hypertension and vasculitis."],
+[2,"Chalky white deposits in pancreatitis are due to:",["Dystrophic calcification of fat (saponification)","Amyloid","Urate","Cholesterol"],0,"Fatty acids + calcium."],
+[2,"Key mitochondrial protein released in intrinsic apoptosis:",["Cytochrome c","Ubiquitin","Actin","Tubulin"],0,"Binds APAF-1."],
+[2,"Initiator caspase of extrinsic pathway:",["Caspase-3","Caspase-8","Caspase-9","Caspase-1"],1,"Activated via FADD."],
+[2,"Anti-apoptotic protein:",["BAX","BAK","BCL-2","BIM"],2,"BCL-2 prevents pore formation."],
+[2,"Fas ligand initiates:",["Intrinsic apoptosis","Extrinsic apoptosis","Necrosis","Autophagy"],1,"Death receptor pathway."],
+[2,"Ladder pattern on DNA electrophoresis indicates:",["Necrosis","Apoptosis","Autolysis","Mitosis"],1,"Internucleosomal cleavage."],
+[2,"Councilman bodies are seen in:",["Alcoholic hepatitis","Viral hepatitis","Wilson disease","Amyloidosis"],1,"Apoptotic hepatocytes."],
+[2,"Phosphatidylserine exposure on the outer membrane signals:",["Cell division","Phagocytosis","Necrosis","Mitosis"],1,"'Eat me' signal."],
+[2,"Wet gangrene is common in:",["Toes","Bowel","Fingers","Ear"],1,"Moist tissue with venous blockage."],
+[2,"Black colour of gangrene is due to:",["Melanin","Iron sulphide","Bilirubin","Lipofuscin"],1,"From haemoglobin degradation."],
+[2,"Metastatic calcification commonly occurs in:",["Atheroma","Lungs","Caseous TB","Damaged valves"],1,"Alkaline compartments of lungs, kidney, stomach."],
+[2,"Metastatic calcification is seen in:",["Hyperparathyroidism","Atherosclerosis","TB","Fat necrosis"],0,"Due to hypercalcaemia."],
+[2,"Stain for calcium:",["Perls","von Kossa","Masson trichrome","Oil Red O"],1,"Black deposits."],
+[2,"Perls' Prussian blue detects:",["Calcium","Haemosiderin","Melanin","Glycogen"],1,"Iron stain."],
+[2,"Russell bodies are:",["Fat droplets","Immunoglobulin in plasma cells","Calcified bodies","Apoptotic bodies"],1,"Intracellular hyaline."],
+[2,"Mallory hyaline consists of:",["Keratin intermediate filaments","Immunoglobulin","Amyloid","Collagen"],0,"Seen in alcoholic hepatitis."],
+[2,"Hyaline arteriolosclerosis is seen in:",["Diabetes and benign hypertension","Malignant hypertension","Vasculitis","Atherosclerosis"],0,"Plasma protein leakage."],
+[2,"Brown atrophy is due to:",["Haemosiderin","Lipofuscin","Melanin","Bilirubin"],1,"Wear-and-tear pigment in atrophic organs."],
+[2,"Atrophy mechanism mainly involves:",["Ubiquitin-proteasome degradation","Apoptosis only","Necrosis","Calcification"],0,"Plus autophagy."],
+[2,"Line of demarcation is characteristic of:",["Wet gangrene","Dry gangrene","Gas gangrene","Fournier's gangrene"],1,"Clear boundary in dry gangrene."],
+[3,"Amorphous densities in mitochondria indicate:",["Reversible injury","Irreversible injury","Apoptosis","Autophagy"],1,"Ultrastructural sign of irreversible injury."],
+[3,"Myelin figures are derived from:",["DNA","Damaged membranes","Glycogen","Collagen"],1,"Phospholipid whorls."],
+[3,"Apoptosome consists of:",["Cytochrome c + APAF-1 + caspase-9","Fas + FADD + caspase-8","BCL-2 + BAX","p53 + MDM2"],0,"Intrinsic pathway."],
+[3,"FLIP inhibits:",["Caspase-9","Caspase-8","Caspase-3","BAX"],1,"Blocks the extrinsic pathway."],
+[3,"Necroptosis involves:",["Caspase-8 activation","RIPK1/RIPK3 and MLKL","Cytochrome c","Caspase-1"],1,"Caspase-independent programmed necrosis."],
+[3,"Pyroptosis is mediated by:",["Caspase-1 and inflammasome","Caspase-9","RIPK3","BCL-2"],0,"Releases IL-1β."],
+[3,"Ferroptosis is due to:",["Iron-dependent lipid peroxidation","Calcium overload","Caspase-3","Autophagy"],0,"Glutathione peroxidase 4 inhibition."],
+[3,"t(14;18) leads to overexpression of:",["MYC","BCL-2","BCR-ABL","p53"],1,"Follicular lymphoma."],
+[3,"Reperfusion injury is mainly mediated by:",["Free radicals and Ca²⁺ overload","Hypoglycaemia","Fat emboli","Immune complexes only"],0,"Also neutrophils and complement."],
+[3,"p53 promotes apoptosis via:",["BCL-2","PUMA and NOXA","FLIP","IAPs"],1,"Pro-apoptotic BH3 proteins."],
+[3,"Mitochondrial permeability transition pore is involved in:",["Reversible injury","Irreversible injury via loss of membrane potential","Glycolysis","DNA repair"],1,"Leads to ATP failure."],
+[3,"Autophagy is triggered by:",["Nutrient deprivation","Hypercalcaemia","Hyperkalaemia","Excess ATP"],0,"Survival mechanism."],
+[3,"Cardiac hypertrophy is accompanied by re-expression of:",["Adult myosin only","Fetal genes like β-MHC and ANP","Keratin","Albumin"],1,"Fetal gene programme."],
+[3,"Vitamin A deficiency causes which change in epithelium?",["Columnar metaplasia","Squamous metaplasia","Osseous metaplasia","Atrophy"],1,"Keratinising squamous metaplasia."],
+[3,"Myositis ossificans is an example of:",["Epithelial metaplasia","Mesenchymal (osseous) metaplasia","Dysplasia","Calcification"],1,"Bone forms in muscle."],
+[3,"Cancer arising from Barrett oesophagus:",["Squamous cell carcinoma","Adenocarcinoma","Lymphoma","Leiomyosarcoma"],1,"Intestinal-type columnar epithelium."],
+[3,"Glutathione depletion is central to toxicity of:",["Aspirin","Paracetamol","Penicillin","Digoxin"],1,"NAPQI binds proteins when GSH is used up."],
+[3,"Pressure atrophy example:",["Bone erosion by aneurysm","Muscle after fracture cast","Ageing brain","Testis after orchitis"],0,"Expanding lesion compresses tissue."],
+[3,"Haemosiderin appears as:",["Golden-brown granular pigment","Black pigment","Yellow lipid","Pink hyaline"],0,"Stains blue with Perls."],
+[3,"Dystrophic calcification may occur in:",["Hyperparathyroidism","Vitamin D toxicity","Damaged heart valves","Milk-alkali syndrome"],2,"Normal Ca, damaged tissue."],
+[3,"Metastatic calcification is seen in all EXCEPT:",["Vitamin D intoxication","Bone metastases","Renal failure","Atheroma"],3,"Atheroma = dystrophic."],
+[3,"Which is NOT a feature of apoptosis?",["DNA ladder","Annexin V binding","Inflammation","Chromatin condensation"],2,"Apoptosis is non-inflammatory."],
+[3,"Which is TRUE about necrosis?",["Requires ATP","Affects single cells","Always pathological","Shows DNA ladder"],2,"Necrosis is always pathological."],
+[3,"Most important antioxidant in hepatocytes against paracetamol injury:",["Vitamin C","Glutathione","Catalase","Albumin"],1,"Replenished by N-acetylcysteine."],
+[4,"(NEET-PG pattern) Most specific feature of irreversible cell injury:",["Swelling of ER","Loss of microvilli","Damage to plasma membrane","Clumping of chromatin"],2,"Membrane damage defines irreversibility."],
+[4,"(NEET-PG pattern) Caspase common to both pathways:",["Caspase-8","Caspase-9","Caspase-3","Caspase-1"],2,"Executioner caspase."],
+[4,"(NEET-PG pattern) Annexin V is used to detect:",["Necrosis","Apoptosis","Autophagy","Mitosis"],1,"Binds phosphatidylserine."],
+[4,"(University pattern) Councilman bodies are an example of:",["Necrosis","Apoptosis","Hyaline change","Calcification"],1,"Apoptotic hepatocytes."],
+[4,"(NEET-PG pattern) Hallmark of reversible injury on EM:",["Mitochondrial amorphous densities","Plasma membrane blebs","Lysosome rupture","Nuclear fragmentation"],1,"Blebs, swelling, ER dilation."],
+[4,"(University pattern) Dystrophic calcification is seen in:",["Hypervitaminosis D","Atheromatous plaque","Hyperparathyroidism","Milk-alkali syndrome"],1,"Damaged tissue, normal Ca."],
+[4,"(NEET-PG pattern) Liquefactive necrosis is seen in:",["Heart","Kidney","Brain","Spleen"],2,"Brain infarcts liquefy."],
+[4,"(NEET-PG pattern) BCL-2 inhibits apoptosis by:",["Activating caspase-8","Preventing cytochrome c release","Cleaving DNA","Binding Fas"],1,"Stabilises mitochondrial membrane."],
+[4,"(University pattern) Earliest feature of irreversible injury on light microscopy:",["Cell swelling","Increased eosinophilia with nuclear changes","Fatty change","Hyaline change"],1,"Nuclear changes mark death."],
+[4,"(NEET-PG pattern) Free radical scavenger enzyme in peroxisomes:",["SOD","Catalase","Glutathione peroxidase","Myeloperoxidase"],1,"Catalase breaks H2O2."],
+[4,"(University pattern) Sago spleen is due to:",["Fatty change","Amyloid in follicles","Haemosiderin","Calcification"],1,"Amyloid deposits in white pulp look like sago grains."],
+[4,"(University pattern) Fatty liver in kwashiorkor is due to:",["Excess FFA","Deficient apoprotein","Alcohol","Hypoxia"],1,"Protein deficiency impairs lipoprotein export."],
+[4,"(NEET-PG pattern) Pigment in brown atrophy of heart:",["Haemosiderin","Lipofuscin","Melanin","Bilirubin"],1,"Lipofuscin."],
+[4,"(NEET-PG pattern) Programmed necrosis is called:",["Pyroptosis","Necroptosis","Ferroptosis","Anoikis"],1,"RIPK-dependent."],
+[4,"(University pattern) Compensatory hyperplasia is seen in:",["Liver after partial hepatectomy","Breast at puberty","Endometrium after menses","Thyroid in Graves disease"],0,"Remaining liver regenerates to restore mass."],
+[4,"(NEET-PG pattern) Apoptosis in cytotoxic T-cell killing is via:",["Perforin–granzyme and Fas","Complement","Antibodies","Histamine"],0,"Granzyme activates caspases."]]};
+
+QB.path2={c:[
+[1,"Define inflammation.","A protective response of vascularised tissue to injury that brings leukocytes and plasma proteins to eliminate the cause and start repair."],
+[1,"Five cardinal signs of inflammation?","Rubor (redness), calor (heat), tumor (swelling), dolor (pain), functio laesa (loss of function)."],
+[1,"Who added loss of function to the cardinal signs?","Rudolf Virchow."],
+[1,"Main cell of acute inflammation?","Neutrophil."],
+[1,"Main cells of chronic inflammation?","Macrophages, lymphocytes and plasma cells."],
+[1,"First vascular change in acute inflammation?","Transient arteriolar vasoconstriction."],
+[1,"Cause of redness and heat?","Vasodilatation with increased blood flow."],
+[1,"Cause of swelling in inflammation?","Exudate from increased vascular permeability."],
+[1,"Define exudate.","Inflammatory extravascular fluid rich in protein and cells, SG > 1.020."],
+[1,"Define transudate.","Low-protein fluid from hydrostatic/oncotic imbalance, SG < 1.012."],
+[1,"Define pus.","Purulent exudate rich in neutrophils, dead cells and microbes."],
+[1,"Define abscess.","Localised collection of pus in a cavity formed by tissue necrosis."],
+[1,"Define ulcer.","Local defect of the surface of an organ or tissue from sloughing of inflamed necrotic tissue."],
+[1,"Define chemotaxis.","Directed movement of leukocytes along a chemical gradient."],
+[1,"Define phagocytosis.","Engulfment and destruction of particles by cells like neutrophils and macrophages."],
+[1,"Define opsonin.","Molecule that coats microbes to enhance phagocytosis (IgG, C3b)."],
+[1,"Define granuloma.","Focal aggregate of activated macrophages (epithelioid cells) ± giant cells with a lymphocyte rim."],
+[1,"Epithelioid cells are derived from?","Activated macrophages."],
+[1,"Giant cell with horseshoe nuclei?","Langhans giant cell."],
+[1,"Giant cell with scattered nuclei?","Foreign body giant cell."],
+[1,"Classic caseating granuloma disease?","Tuberculosis."],
+[1,"Classic non-caseating granuloma disease?","Sarcoidosis."],
+[1,"Causative organism of TB?","Mycobacterium tuberculosis."],
+[1,"Causative organism of syphilis?","Treponema pallidum."],
+[1,"Define regeneration.","Replacement of damaged cells by proliferation of the same type of cells."],
+[1,"Define repair (healing by scar).","Replacement of damaged tissue by connective tissue (fibrosis)."],
+[1,"Define granulation tissue.","New capillaries, fibroblasts and inflammatory cells in loose oedematous matrix."],
+[1,"Healing of clean surgical incision?","Healing by first intention."],
+[1,"Healing of large gaping wound?","Healing by second intention."],
+[1,"Cells responsible for wound contraction?","Myofibroblasts."],
+[2,"Where does leukocyte transmigration mainly occur?","Post-capillary venules."],
+[2,"Molecules for leukocyte rolling?","Selectins (E-, P-, L-selectin)."],
+[2,"Molecules for firm adhesion?","Integrins (LFA-1, VLA-4) binding ICAM-1, VCAM-1."],
+[2,"Molecule for transmigration?","PECAM-1 (CD31)."],
+[2,"Main chemotactic agents?","Bacterial N-formyl peptides, C5a, LTB4, IL-8 (CXCL8)."],
+[2,"Main opsonins?","IgG (Fc) and C3b."],
+[2,"Most efficient bactericidal system of neutrophils?","H2O2–MPO–halide system producing hypochlorous acid."],
+[2,"Enzyme of respiratory burst?","NADPH oxidase (phagocyte oxidase)."],
+[2,"Immediate transient increase in permeability is due to?","Endothelial contraction (histamine, bradykinin, leukotrienes)."],
+[2,"Immediate sustained leakage occurs in?","Direct endothelial injury (burns, toxins)."],
+[2,"Main source of histamine?","Mast cells (also basophils, platelets)."],
+[2,"Mediators of fever?","IL-1, TNF (and IL-6) acting via PGE2 in the hypothalamus."],
+[2,"Mediators of pain?","Prostaglandins (PGE2) and bradykinin."],
+[2,"Leukotrienes causing bronchospasm?","LTC4, LTD4, LTE4."],
+[2,"Leukotriene causing chemotaxis?","LTB4."],
+[2,"Anti-inflammatory arachidonic acid products?","Lipoxins (and resolvins)."],
+[2,"Platelet-aggregating prostanoid?","Thromboxane A2."],
+[2,"Prostanoid inhibiting platelet aggregation?","Prostacyclin (PGI2)."],
+[2,"Anaphylatoxins?","C3a and C5a."],
+[2,"Membrane attack complex?","C5b–C9."],
+[2,"Acute phase proteins?","CRP, fibrinogen, serum amyloid A."],
+[2,"Why is ESR raised in inflammation?","Fibrinogen and acute phase proteins promote rouleaux formation."],
+[2,"Leukocytosis types?","Neutrophilia (bacteria), lymphocytosis (viruses), eosinophilia (allergy, parasites)."],
+[2,"Cytokine maintaining granuloma?","TNF (anti-TNF therapy can reactivate TB)."],
+[2,"Cytokine activating macrophages in granulomas?","IFN-γ from TH1 cells."],
+[2,"Hard vs soft tubercle?","Hard: no caseation; soft: central caseous necrosis."],
+[2,"Ghon focus?","Primary subpleural caseous lesion in lower upper/upper lower lobe."],
+[2,"Ghon complex?","Ghon focus plus caseous hilar lymph node."],
+[2,"Ranke complex?","Calcified and fibrosed Ghon complex."],
+[2,"Simon foci?","Apical lesions from haematogenous seeding in primary TB, sources of reactivation."],
+[2,"Basic lesion of syphilis?","Obliterative endarteritis with plasma cell infiltrate."],
+[2,"Gumma?","Necrotising granuloma of tertiary syphilis with coagulative necrosis and plasma cells."],
+[2,"Primary syphilis lesion?","Painless indurated hard chancre."],
+[2,"Secondary syphilis lesions?","Mucocutaneous rash (palms, soles), condylomata lata, mucous patches."],
+[2,"Tertiary syphilis aorta?","Aortitis with tree-bark intima and ascending aortic aneurysm."],
+[2,"Collagen replaced during remodelling?","Type III collagen replaced by type I collagen."],
+[2,"Main growth factors in repair?","TGF-β, PDGF, FGF, VEGF, EGF."],
+[2,"Wound strength at 1 week vs 3 months?","About 10% at 1 week; 70–80% at 3 months."],
+[2,"Keloid?","Excess collagen scar extending beyond the wound margin."],
+[2,"Hypertrophic scar?","Raised excess scar confined within the wound."],
+[3,"Leukocyte adhesion deficiency type 1 defect?","β2 integrin (CD18) chain."],
+[3,"Leukocyte adhesion deficiency type 2 defect?","Sialyl-Lewis X (fucosylation) — selectin ligand."],
+[3,"Chronic granulomatous disease defect?","NADPH oxidase; recurrent catalase-positive infections."],
+[3,"Chédiak-Higashi syndrome defect?","LYST gene; defective phagolysosome fusion, giant granules."],
+[3,"Myeloperoxidase deficiency?","Recurrent Candida infections; usually mild."],
+[3,"Toll-like receptor for LPS?","TLR4."],
+[3,"Inflammasome product?","Active IL-1β via caspase-1."],
+[3,"Asteroid and Schaumann bodies?","Inclusions in giant cells of sarcoidosis."],
+[3,"Cat-scratch granuloma?","Stellate necrotising granuloma with neutrophils (Bartonella henselae)."],
+[3,"Granulomatous disease of bowel?","Crohn's disease (non-caseating)."],
+[3,"Morphological types of acute inflammation?","Serous, fibrinous, suppurative (purulent), ulcer."],
+[3,"Bread-and-butter appearance?","Fibrinous pericarditis."],
+[3,"Systemic effects of inflammation?","Fever, acute phase response, leukocytosis, tachycardia, sepsis."],
+[3,"Secondary TB complications?","Haemoptysis, Rasmussen aneurysm, empyema, bronchiectasis, amyloidosis, aspergilloma."],
+[3,"Miliary TB?","Haematogenous spread with 2 mm millet-seed lesions in many organs."],
+[3,"HIV-associated TB features?","Lower lobe, non-cavitary, extrapulmonary, poorly formed granulomas, many bacilli."],
+[3,"Congenital syphilis late signs?","Hutchinson teeth, saddle nose, saber shins, interstitial keratitis, deafness."],
+[3,"Factors delaying wound healing (local)?","Infection, foreign body, poor blood supply, mechanical stress."],
+[3,"Factors delaying wound healing (systemic)?","Diabetes, malnutrition (protein, vitamin C, zinc), steroids, old age."],
+[3,"Vitamin C role in healing?","Hydroxylation of proline/lysine for collagen cross-linking."],
+[4,"Q (exam): Vascular events in acute inflammation — sequence?","Vasoconstriction → vasodilatation → increased permeability → exudate → stasis → margination."],
+[4,"Q (exam): Cellular events in acute inflammation — sequence?","Margination, rolling, adhesion, transmigration, chemotaxis, phagocytosis and killing."],
+[4,"Q (exam): Mediators by effect — fever, pain, chemotaxis?","Fever: IL-1, TNF, PGE2; pain: PGE2, bradykinin; chemotaxis: C5a, LTB4, IL-8."],
+[4,"Q (exam): Outcomes of acute inflammation?","Resolution, abscess, healing by fibrosis, progression to chronic inflammation."],
+[4,"Q (exam): First vs second intention healing — key differences?","Wound type, amount of granulation tissue, contraction, scar size, time."],
+[4,"Q (NEET-PG pattern): Most important chemotactic factor for neutrophils?","IL-8 (CXCL8) and C5a, LTB4."],
+[4,"Q (NEET-PG pattern): Respiratory burst enzyme deficient in CGD?","NADPH oxidase."],
+[4,"Q (NEET-PG pattern): Cytokine primarily responsible for granuloma formation?","IFN-γ (with TNF to maintain)."],
+[4,"Q (NEET-PG pattern): Collagen in early granulation tissue?","Type III."],
+[4,"Q (NEET-PG pattern): Langhans giant cells are formed by fusion of?","Epithelioid macrophages."]],
+q:[
+[1,"Main cell in acute inflammation:",["Lymphocyte","Neutrophil","Macrophage","Plasma cell"],1,"Neutrophils arrive first (6–24 h)."],
+[1,"Main cell in chronic inflammation:",["Neutrophil","Eosinophil","Macrophage","Basophil"],2,"Macrophages dominate chronic inflammation."],
+[1,"First vascular response in acute inflammation:",["Vasodilatation","Transient vasoconstriction","Stasis","Increased permeability"],1,"Seconds-long arteriolar constriction."],
+[1,"Redness in inflammation is due to:",["Vasoconstriction","Vasodilatation","Oedema","Haemorrhage"],1,"Increased blood flow."],
+[1,"Swelling in inflammation is due to:",["Exudate","Transudate","Haemorrhage","Fibrosis"],0,"Protein-rich fluid leaks."],
+[1,"Exudate has specific gravity:",["< 1.012","1.012","> 1.020","1.000"],2,"High protein content."],
+[1,"Pus is rich in:",["Lymphocytes","Neutrophils","Plasma cells","Eosinophils"],1,"Purulent exudate."],
+[1,"Localised collection of pus:",["Ulcer","Abscess","Cellulitis","Sinus"],1,"Abscess."],
+[1,"Rolling of leukocytes is mediated by:",["Integrins","Selectins","PECAM-1","ICAM-1"],1,"Weak, transient binding."],
+[1,"Firm adhesion of leukocytes is due to:",["Selectins","Integrins","Cadherins","Mucins"],1,"Integrins bind ICAM-1/VCAM-1."],
+[1,"Transmigration of leukocytes is mediated by:",["PECAM-1","E-selectin","P-selectin","VCAM-1"],0,"CD31."],
+[1,"Opsonin among the following:",["C3b","C5a","Histamine","Bradykinin"],0,"C3b coats microbes."],
+[1,"Epithelioid cells are modified:",["Fibroblasts","Macrophages","Neutrophils","Lymphocytes"],1,"Activated macrophages."],
+[1,"Horseshoe arrangement of nuclei is seen in:",["Foreign body giant cell","Langhans giant cell","Touton giant cell","Reed-Sternberg cell"],1,"Peripheral nuclei."],
+[1,"Caseating granuloma is typical of:",["Sarcoidosis","Tuberculosis","Crohn's","Foreign body"],1,"Central caseation."],
+[1,"Non-caseating granulomas are typical of:",["TB","Sarcoidosis","Histoplasmosis","Syphilis"],1,"Sarcoidosis."],
+[1,"Healing of a clean surgical wound:",["First intention","Second intention","Regeneration only","Organisation"],0,"Edges apposed."],
+[1,"Wound contraction is caused by:",["Fibroblasts","Myofibroblasts","Macrophages","Endothelial cells"],1,"Contractile fibroblasts."],
+[1,"Granulation tissue consists of:",["Fibrin only","New capillaries and fibroblasts","Epithelium","Fat"],1,"Pink granular tissue."],
+[1,"Hard chancre is seen in:",["Primary syphilis","Secondary syphilis","Tertiary syphilis","Chancroid"],0,"Painless indurated ulcer."],
+[1,"Gumma is a lesion of:",["Primary syphilis","Secondary syphilis","Tertiary syphilis","Congenital syphilis only"],2,"Necrotising granuloma."],
+[1,"Ghon complex is seen in:",["Primary TB","Secondary TB","Miliary TB","Tuberculoma"],0,"Ghon focus + hilar node."],
+[1,"Fever in inflammation is caused mainly by:",["Histamine","IL-1 and TNF","Bradykinin","C3b"],1,"Act via PGE2."],
+[1,"Mast cells release:",["Histamine","C3b","Fibrinogen","Thrombin"],0,"Preformed vasoactive amine."],
+[1,"Keloid is:",["Deficient scar","Excess scar beyond wound margins","Infected wound","Normal scar"],1,"More common in dark skin."],
+[1,"Loss of function as a cardinal sign was added by:",["Celsus","Virchow","Cohnheim","Metchnikoff"],1,"Celsus gave four signs."],
+[1,"Phagocytosis was discovered by:",["Metchnikoff","Koch","Pasteur","Virchow"],0,"Elie Metchnikoff."],
+[1,"Collagen type in mature scar:",["Type I","Type II","Type III","Type IV"],0,"Strong type I collagen."],
+[1,"Ulcer is:",["Collection of pus","Surface defect from necrosis","Fibrous tract","Blister"],1,"Loss of surface epithelium."],
+[1,"Serous inflammation example:",["Skin blister","Abscess","Fibrinous pericarditis","Gangrene"],0,"Watery protein-poor exudate."],
+[2,"Leukocyte extravasation mainly occurs in:",["Arterioles","Capillaries","Post-capillary venules","Large veins"],2,"Venules have the right receptors."],
+[2,"Most potent chemotactic agent among:",["C3a","C5a","C3b","Bradykinin"],1,"C5a and LTB4, IL-8."],
+[2,"LTB4 is primarily:",["Vasoconstrictor","Chemotactic agent","Bronchodilator","Anticoagulant"],1,"Neutrophil chemotaxis."],
+[2,"Bronchospasm is caused by:",["LTB4","LTC4/D4/E4","PGI2","Lipoxin"],1,"Cysteinyl leukotrienes."],
+[2,"Pain mediators:",["PGE2 and bradykinin","Histamine and serotonin","C3b and IgG","TXA2 and PGI2"],0,"Sensitise nerve endings."],
+[2,"Anti-inflammatory lipid mediator:",["LTB4","Lipoxin","TXA2","PAF"],1,"Lipoxins inhibit neutrophil recruitment."],
+[2,"Thromboxane A2 causes:",["Vasodilatation","Platelet aggregation and vasoconstriction","Bronchodilation","Inhibition of platelets"],1,"Opposite of PGI2."],
+[2,"Anaphylatoxins are:",["C3a, C5a","C3b, C4b","C5b–C9","C1q"],0,"Cause mast cell degranulation."],
+[2,"Membrane attack complex is:",["C3b","C5a","C5b–C9","C1qrs"],2,"Forms pores."],
+[2,"Most efficient bactericidal system of neutrophils:",["Lysozyme","H2O2–MPO–halide","Lactoferrin","Defensins"],1,"Produces HOCl."],
+[2,"Respiratory burst is due to:",["Myeloperoxidase","NADPH oxidase","Catalase","Lysozyme"],1,"Generates superoxide."],
+[2,"Immediate transient response is due to:",["Direct injury","Endothelial contraction","Leukocyte injury","Transcytosis"],1,"Histamine-mediated."],
+[2,"Immediate sustained response is seen in:",["Mild sunburn","Severe burns","Allergy","Histamine release"],1,"Direct endothelial damage."],
+[2,"Acute phase reactant:",["Albumin","CRP","Transferrin","Prealbumin"],1,"Albumin falls (negative reactant)."],
+[2,"ESR rises in inflammation because of:",["Leukocytosis","Raised fibrinogen","Anaemia only","Thrombocytosis"],1,"Promotes rouleaux."],
+[2,"Eosinophilia occurs in:",["Bacterial infection","Viral infection","Parasitic infection","Typhoid"],2,"Also allergy."],
+[2,"Lymphocytosis is typical of:",["Viral infections","Pyogenic infections","Allergy","Burns"],0,"Also pertussis, TB."],
+[2,"Cytokine activating macrophages in granuloma:",["IL-4","IFN-γ","IL-10","TGF-β"],1,"From TH1 cells."],
+[2,"Cytokine needed to maintain granulomas:",["TNF","IL-2","IL-5","IL-13"],0,"Anti-TNF drugs reactivate TB."],
+[2,"Ranke complex is:",["Primary TB with cavity","Calcified Ghon complex","Secondary TB","Miliary TB"],1,"Healed primary complex."],
+[2,"Secondary TB commonly involves:",["Lower lobes","Apex of lung","Hilum","Pleura only"],1,"High oxygen tension."],
+[2,"Basic histological lesion of syphilis:",["Caseation","Obliterative endarteritis with plasma cells","Fibrinoid necrosis","Granuloma with eosinophils"],1,"All stages."],
+[2,"Condylomata lata are seen in:",["Primary syphilis","Secondary syphilis","Tertiary syphilis","Gonorrhoea"],1,"Moist flat papules."],
+[2,"Tree-bark appearance of aorta is seen in:",["Atherosclerosis","Syphilitic aortitis","Takayasu","Marfan"],1,"Scarring of media."],
+[2,"Main growth factor for fibrosis:",["TGF-β","IL-1","TNF","IFN-γ"],0,"Stimulates collagen synthesis."],
+[2,"Angiogenesis is mainly induced by:",["VEGF","EGF","IL-2","TNF"],0,"Key angiogenic factor."],
+[2,"Wound strength at end of 1 week is about:",["10%","50%","80%","100%"],0,"Reaches 70–80% by 3 months."],
+[2,"Type III collagen predominates in:",["Mature scar","Early granulation tissue","Bone","Cartilage"],1,"Replaced by type I."],
+[2,"Healing by second intention differs by:",["Less granulation tissue","Wound contraction","Faster healing","Smaller scar"],1,"Myofibroblast contraction."],
+[2,"Fibrinous inflammation is seen in:",["Pericarditis","Skin blister","Abscess","Cellulitis"],0,"Bread-and-butter pericardium."],
+[3,"Leukocyte adhesion deficiency type 1 is due to defect in:",["Selectin ligand","β2 integrin (CD18)","NADPH oxidase","MPO"],1,"Impaired firm adhesion."],
+[3,"Chronic granulomatous disease patients get infections with:",["Catalase-negative organisms","Catalase-positive organisms","Viruses","Parasites"],1,"S. aureus, Aspergillus."],
+[3,"Chédiak-Higashi syndrome shows:",["Giant granules in neutrophils","Absent neutrophils","Excess eosinophils","Normal neutrophils"],0,"Defective lysosomal trafficking."],
+[3,"Toll-like receptor recognising LPS:",["TLR2","TLR3","TLR4","TLR9"],2,"Gram-negative endotoxin."],
+[3,"Inflammasome activates:",["Caspase-1 → IL-1β","Caspase-8","Caspase-3","BCL-2"],0,"Pyroptosis and IL-1 release."],
+[3,"Asteroid bodies are seen in:",["TB","Sarcoidosis","Leprosy","Syphilis"],1,"Inclusions in giant cells."],
+[3,"Stellate granuloma with central neutrophils:",["Cat-scratch disease","Sarcoidosis","TB","Crohn's"],0,"Bartonella henselae."],
+[3,"Non-caseating granuloma in bowel suggests:",["Ulcerative colitis","Crohn's disease","Amoebiasis","Typhoid"],1,"Transmural granulomatous inflammation."],
+[3,"Rasmussen aneurysm occurs in:",["TB cavity wall","Syphilitic aorta","Berry aneurysm","AV fistula"],0,"Pulmonary artery branch in cavity."],
+[3,"Miliary TB lesions measure about:",["2 mm","2 cm","5 cm","10 cm"],0,"Millet seed size."],
+[3,"Feature of TB in advanced HIV:",["Apical cavities","Well-formed granulomas","Disseminated disease with few granulomas","Always smear positive"],2,"Poor immune response."],
+[3,"Hutchinson teeth are seen in:",["Congenital syphilis","Rubella","CMV","Toxoplasmosis"],0,"Notched incisors."],
+[3,"Vitamin essential for collagen cross-linking:",["Vitamin A","Vitamin C","Vitamin D","Vitamin K"],1,"Prolyl/lysyl hydroxylase cofactor."],
+[3,"Zinc deficiency impairs:",["Clotting","Wound healing","Vision only","Bone growth only"],1,"Cofactor for many enzymes."],
+[3,"Steroids impair healing mainly by:",["↑ Inflammation","↓ Collagen synthesis and inflammation","↑ Angiogenesis","↑ Fibrosis"],1,"Anti-inflammatory and anti-fibrotic."],
+[3,"Proud flesh is:",["Keloid","Exuberant granulation tissue","Hypertrophic scar","Contracture"],1,"Blocks re-epithelialisation."],
+[3,"Myofibroblasts contain:",["Desmin only","α-smooth muscle actin","Keratin","Vimentin only"],1,"Contractile features."],
+[3,"Labile cells (continuously dividing) include:",["Neurons","Hepatocytes","Epithelium of skin and GI tract","Cardiac muscle"],2,"Regenerate readily."],
+[3,"Permanent (non-dividing) cells:",["Hepatocytes","Neurons","Renal tubular cells","Fibroblasts"],1,"Also cardiac muscle."],
+[3,"Stable (quiescent) cells:",["Bone marrow","Hepatocytes","Skin epithelium","Neurons"],1,"Liver, kidney, pancreas."],
+[3,"Healing of fracture — primary callus forms at about:",["1 day","1 week","6 months","1 year"],1,"Procallus within the first week."],
+[3,"Leukocyte defect with delayed umbilical cord separation:",["LAD-1","CGD","Chédiak-Higashi","MPO deficiency"],0,"Classic clinical clue."],
+[3,"Pyogenic bacteria typically cause:",["Granulomas","Suppurative inflammation","Fibrinoid necrosis","Serous inflammation only"],1,"Pus formation."],
+[3,"Chronic inflammation without preceding acute phase occurs in:",["Abscess","Viral infections and autoimmunity","Burns","Fractures"],1,"Persistent agents or autoimmunity."],
+[4,"(University pattern) Sequence of leukocyte events:",["Rolling → margination → adhesion","Margination → rolling → adhesion → transmigration","Adhesion → rolling → chemotaxis","Chemotaxis → rolling → adhesion"],1,"Standard order."],
+[4,"(NEET-PG pattern) Most important chemokine for neutrophil chemotaxis:",["IL-8","IL-2","IL-4","IL-10"],0,"CXCL8."],
+[4,"(NEET-PG pattern) Defect in CGD:",["Myeloperoxidase","NADPH oxidase","Integrins","Lysosomal trafficking"],1,"No respiratory burst."],
+[4,"(NEET-PG pattern) Bradykinin is degraded by:",["Kininase II (ACE)","MPO","Catalase","Plasmin"],0,"Explains ACE-inhibitor cough."],
+[4,"(University pattern) Langhans giant cells are characteristic of:",["Foreign body reaction","Tuberculosis","Hodgkin lymphoma","Giant cell tumour"],1,"Also sarcoidosis, leprosy."],
+[4,"(NEET-PG pattern) Granuloma formation is a type of:",["Type I hypersensitivity","Type II","Type III","Type IV"],3,"Cell-mediated."],
+[4,"(NEET-PG pattern) Earliest cells to arrive at site of acute inflammation:",["Monocytes","Neutrophils","Lymphocytes","Plasma cells"],1,"Within 6–24 h."],
+[4,"(University pattern) Healing by first intention — epithelial bridging occurs by:",["24–48 hours","1 week","2 weeks","1 month"],0,"Thin layer seals the incision."],
+[4,"(NEET-PG pattern) Major cell in granulation tissue producing collagen:",["Macrophage","Fibroblast","Endothelial cell","Neutrophil"],1,"Under TGF-β."],
+[4,"(NEET-PG pattern) Vascular leakage by VEGF is through:",["Endothelial contraction","Transcytosis","Direct injury","Leukocyte injury"],1,"Vesiculo-vacuolar organelles."],
+[4,"(University pattern) Primary TB focus is called:",["Simon focus","Ghon focus","Assmann focus","Puhl focus"],1,"Subpleural."],
+[4,"(NEET-PG pattern) Macrophages persisting in chronic inflammation are mainly activated by:",["IL-4 (alternative)","IFN-γ (classical)","IL-10","TGF-β"],1,"M1 activation for killing."],
+[4,"(NEET-PG pattern) Mediator responsible for increased permeability in delayed prolonged leakage:",["Histamine","Leukocyte-mediated injury","Serotonin","Bradykinin"],1,"Neutrophil products."],
+[4,"(University pattern) Most important factor delaying wound healing:",["Infection","Age","Site","Size"],0,"Infection is the single most important."],
+[4,"(NEET-PG pattern) Type of necrosis in syphilitic gumma:",["Caseous","Coagulative (rubbery)","Liquefactive","Fat"],1,"Gummatous coagulative necrosis."],
+[4,"(NEET-PG pattern) Delayed separation of umbilical cord + recurrent infections without pus:",["CGD","LAD-1","Chédiak-Higashi","Job syndrome"],1,"Neutrophils cannot leave vessels."]]};
+
 /* ============ core helpers ============ */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -1851,7 +2344,7 @@ function nodeHTML(n){
 /* ============ quiz engine ============ */
 let QUIZ_TIMER=null, LASTQ=null;
 const PRAISE=["Spot on!","Correct — nice!","Yes! Textbook answer.","Nailed it.","Right, keep going!"];
-function runQuiz(box,qs,{timed=0,title="Quiz",onDone}={}){
+function runQuiz(box,qs,{timed=0,title="Quiz",onDone,onAnswer}={}){
   clearInterval(QUIZ_TIMER);let i=0,score=0;const ans=[];let left=timed*qs.length;
   const fmt=s=>`${Math.floor(s/60)}:${pad(s%60)}`;
   if(timed){QUIZ_TIMER=setInterval(()=>{left--;const el=$(".timer",box);if(el)el.textContent="⏱ "+fmt(Math.max(0,left));if(left<=0){clearInterval(QUIZ_TIMER);finish();}},1000);}
@@ -1860,7 +2353,7 @@ function runQuiz(box,qs,{timed=0,title="Quiz",onDone}={}){
     <div class="bar" aria-hidden="true"><i style="width:${Math.round(i/qs.length*100)}%"></i></div>
     <h3>${esc(q.q)}</h3><p class="note kbd-hint">Tip: press 1–4 to answer, Enter for next.</p><div class="stack">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><b>${"ABCD"[k]}</b><span>${esc(o)}</span></button>`).join("")}</div><div class="fb" aria-live="polite"></div></div>`;
     $$(".opt",box).forEach(b=>b.onclick=()=>pick(+b.dataset.k));}
-  function pick(k){if(ans[i]!=null)return;ans[i]=k;const q=qs[i],ok=k===q.a;if(ok)score++;
+  function pick(k){if(ans[i]!=null)return;ans[i]=k;const q=qs[i],ok=k===q.a;if(ok)score++;if(onAnswer)onAnswer(q,ok);
     $$(".opt",box).forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("right");else if(j===k)b.classList.add("wrong");});
     $(".fb",box).innerHTML=`<div class="explain"><b>${ok?PRAISE[i%PRAISE.length]:"Not quite."}</b> ${esc(q.e||"")}</div><div class="row" style="margin-top:12px"><button class="btn pri" id="qnext">${i<qs.length-1?"Next question":"See results"}</button></div>`;
     $("#qnext",box).onclick=()=>{i++;i<qs.length?show():finish();};$("#qnext",box).focus();}
@@ -1873,7 +2366,7 @@ function runQuiz(box,qs,{timed=0,title="Quiz",onDone}={}){
     box.innerHTML=`<div class="card stack"><div class="row between"><div><span class="eyebrow">${esc(title)} · result</span><div class="score">${score}/${qs.length}</div><p class="muted">${pct>=80?"Excellent — exam ready on this set.":pct>=50?"Good base. Revise the misses below.":"Revisit the concepts and flowchart, then try again."}</p></div><div class="ring" style="--p:${pct}"><span>${pct}%</span></div></div>
     <details ${pct<100?"open":""}><summary><b>Review answers</b></summary><div class="stack" style="margin-top:10px">${qs.map((q,k)=>`<div class="explain"><b>${ans[k]===q.a?"✓":"✗"} ${esc(q.q)}</b><br>Answer: ${esc(q.o[q.a])}${ans[k]!=null&&ans[k]!==q.a?` · You chose: ${esc(q.o[ans[k]])}`:ans[k]==null?" · Not answered":""}<br><span class="muted">${esc(q.e||"")}</span>${ans[k]!==q.a?`<div class="row" style="margin-top:6px"><button class="btn sm" data-act="q-explain" data-i="${k}">Explain this with AI</button></div><div class="ai-out" id="qx${k}"></div>`:""}</div>`).join("")}</div></details>
     <div class="row"><button class="btn pri" id="qagain">Try again</button>${onDone?'<button class="btn" id="qback">Back</button>':""}</div></div>`;
-    $("#qagain",box).onclick=()=>runQuiz(box,shuffle(qs),{timed,title,onDone});if(onDone)$("#qback",box).onclick=onDone;
+    $("#qagain",box).onclick=()=>runQuiz(box,shuffle(qs),{timed,title,onDone,onAnswer});if(onDone)$("#qback",box).onclick=onDone;
     if(pct===100)confetti();}
   show();
 }
@@ -1980,23 +2473,21 @@ function vChapter(id){const c=CH[id],s=SUB[c.s];S.lastCh=id;save();
   POST=()=>renderTab(id);
   return `<header class="ch-head" data-s="${c.s}"><div class="crumbs"><a href="#s-${c.s}">${esc(s.name)}</a> / Chapter ${c.n} · ${esc(c.paper)}</div><h1>${esc(c.t)}</h1>
   <div class="row chprog"><div class="bar" style="flex:1;min-width:160px" aria-label="Concepts understood"><i id="chbar" style="width:${readPct(id)}%;background:var(--sc)"></i></div><span class="note" id="chread">${(S.read[id]||[]).length}/${c.core.length} concepts understood</span></div>
-  <div class="row"><span class="chip">${c.topics.length} exam topics</span><span class="chip">${c.hy.length} flashcards</span><span class="chip">${c.mcq.length} bank MCQs</span>${S.quiz[id]?`<span class="chip">Quiz best ${S.quiz[id].best}%</span>`:""}<button class="btn sm ${chDone(id)?"":"pri"}" data-act="done" data-id="${id}">${chDone(id)?"✓ Completed":"Mark chapter complete (+25 XP)"}</button></div></header>
+  <div class="row"><span class="chip">${c.topics.length} exam topics</span><span class="chip">${cardPool(id).length} flashcards</span><span class="chip">${quizPool(id).length} MCQs</span>${QB[id]?'<span class="chip" style="color:var(--good)">✓ 100+100 levelled bank</span>':""}${S.quiz[id]?`<span class="chip">Quiz best ${S.quiz[id].best}%</span>`:""}<button class="btn sm ${chDone(id)?"":"pri"}" data-act="done" data-id="${id}">${chDone(id)?"✓ Completed":"Mark chapter complete (+25 XP)"}</button></div></header>
   <div data-s="${c.s}" class="stack"><div class="tabs" role="tablist">${[["learn","Learn"],["flow","Flowchart"],["cards","Flashcards"],["quiz","Quiz"],["ai","AI Lab"]].map(t=>`<button role="tab" data-act="tab" data-t="${t[0]}" class="${CHTAB===t[0]?"on":""}" aria-selected="${CHTAB===t[0]}">${t[1]}</button>`).join("")}</div><div id="tabbody"></div>
   <div class="row between">${prev?`<a class="btn" href="#c-${prev.id}">← ${esc(prev.t)}</a>`:"<span></span>"}${next?`<a class="btn" href="#c-${next.id}">${esc(next.t)} →</a>`:`<a class="btn" href="#s-${c.s}">Back to roadmap</a>`}</div></div>`;
 }
 function renderTab(id){const c=CH[id],b=$("#tabbody");if(!b)return;clearInterval(QUIZ_TIMER);
   if(CHTAB==="learn"){
-    b.innerHTML=`<div class="grid g2" style="align-items:start"><section class="stack"><h2>Core concepts</h2>${syllabusLinks(id)?`<div class="row">${syllabusLinks(id)}</div>`:""}<p class="note">Tick each concept once you can explain it without looking.</p><ol class="concepts">${c.core.map((x,k)=>{const on=(S.read[id]||[]).includes(k);return `<li class="${on?"got":""}"><span>${esc(x)}</span><button class="tick" data-act="read" data-k="${k}" aria-pressed="${on}" aria-label="Mark concept ${k+1} understood">${on?"✓":""}</button></li>`;}).join("")}</ol></section>
+    b.innerHTML=`<div class="grid g2" style="align-items:start"><section class="stack"><h2>Core concepts</h2>${syllabusLinks(id)?`<div class="row">${syllabusLinks(id)}</div>`:""}<p class="note">Tick each concept once you can explain it without looking. <span class="term demo">Underlined terms</span> open a definition.</p><ol class="concepts">${c.core.map((x,k)=>{const on=(S.read[id]||[]).includes(k);return `<li class="${on?"got":""}"><span>${linkTerms(x)}</span><button class="tick" data-act="read" data-k="${k}" aria-pressed="${on}" aria-label="Mark concept ${k+1} understood">${on?"✓":""}</button></li>`;}).join("")}</ol>${chapterTerms(c).length?`<div class="card stack termhost"><div class="row between"><h3>Key terms</h3><span class="note">Tap a term for its meaning; tap More for the full explanation</span></div><div class="row">${chapterTerms(c).map(k=>`<button class="chip term" data-act="term" data-t="${esc(k)}">${esc(k)}</button>`).join("")}</div></div>`:""}</section>
     <section class="card stack"><div class="row between"><h2>Exam topics</h2><span class="note">${SUB[c.s].std?"Standard priority":"From past-paper list"}</span></div><p class="note"><b>Answers</b> opens Simplify, Short, Medium and Long model answers${ansCount(id)?` — offline for ${ansCount(id)}/${c.topics.length} topics here`:""}.</p><p class="note"><span class="tag L">LAQ</span> long answer · <span class="tag S">SN</span> short note · <span class="tag D">DIFF</span> difference · <span class="tag N">NMC</span> added from NMC syllabus</p>
     <div>${c.topics.map((t,k)=>`<div class="topic"><span>${starsHTML(t[1])} ${tagHTML(t[2])} ${nmc(t)}<br><b>${esc(t[0])}</b></span><span class="acts"><button class="btn sm star ${isSaved(id,k)?"on":""}" data-act="save" data-c="${id}" data-k="${k}" aria-pressed="${isSaved(id,k)}" title="Save to revision list">${isSaved(id,k)?"★":"☆"}</button><button class="btn sm ${hasAns(id,k)?"pri":""}" data-act="ans-open" data-c="${id}" data-k="${k}" data-u="tai${k}" aria-expanded="false">${hasAns(id,k)?"Answers ✓":"Answers"}</button></span><div class="inline-ai" id="tai${k}"></div></div>`).join("")}</div></section></div>`;
   } else if(CHTAB==="flow"){
     b.innerHTML=`<section class="card stack"><div class="row between"><div><span class="eyebrow">Revision flowchart</span><h2>${esc(c.flow.t)}</h2></div><div class="row"><button class="btn sm" data-act="recall">Recall mode</button><button class="btn sm" data-act="flow-ai">Explain with AI</button></div></div><p class="note" id="recallnote">Recall mode blurs each step. Say the step aloud, then tap to check.</p><div id="flowbox">${flowHTML(c.flow.n)}</div><div class="ai-out" id="flowai"></div>${FLOWS.filter(f=>f.ch===id).length?`<div class="stack"><b>Explained flowcharts for this chapter</b><p class="note">Every step has a written explanation; tap through them one by one.</p><div class="row">${FLOWS.filter(f=>f.ch===id).map(f=>`<a class="chip" href="#fc-${f.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(f.t)} →</a>`).join("")}</div></div>`:`<a class="btn sm" href="#fc-ch-${id}">Open in step-by-step viewer</a>`}</section>`;
   } else if(CHTAB==="cards"){
-    b.innerHTML=`<section class="card stack"><div class="row between"><h2>Flashcards</h2><button class="btn sm" data-act="more-cards">+ Generate more with AI</button></div><div id="deck">${deckHTML()}</div><div class="ai-out" id="cardai"></div></section>`;
-    runDeck($("#deck"),chCards(c),{chId:id});
+    mountCards(id);
   } else if(CHTAB==="quiz"){
-    b.innerHTML=`<section class="stack"><div class="row between"><h2>Chapter quiz</h2><button class="btn sm" data-act="ai-quiz">Generate 5 fresh MCQs with AI</button></div><div id="quizbox"></div></section>`;
-    runQuiz($("#quizbox"),shuffle(bankQs([id])),{title:"Chapter quiz"});
+    mountQuiz(id);
   } else {
     b.innerHTML=`<section class="card stack"><div class="row between"><h2>AI Lab for this chapter</h2>${langToggle()}</div>
     <div class="grid g3"><div class="field"><label for="labsum">Smart summary</label><select id="labsum"><option value="one-page">One-page chapter summary</option><option value="10 points">10-point rapid revision</option><option value="night-before">Night-before-exam sheet</option><option value="viva">Viva questions with crisp answers</option></select><button class="btn" data-act="lab-sum">Summarise</button></div>
@@ -2184,7 +2675,7 @@ const ACT={
  "t-answer":el=>{const c=CH[location.hash.slice(3)],t=c.topics[+el.dataset.k];aiStream($("#tai"+el.dataset.k),modelAnswerPrompt(c,t),{key:"topic"});},
  recall:el=>{const f=$("#flowbox");const on=f.classList.toggle("recall");$$(".fbox,.fcol",f).forEach(x=>x.classList.remove("shown"));el.textContent=on?"Show all":"Recall mode";},
  "flow-ai":()=>{const c=CH[location.hash.slice(3)];aiStream($("#flowai"),`${RULES()}${ctx(c)}\n\nThe student is revising this flowchart: "${c.flow.t}". Steps: ${JSON.stringify(c.flow.n)}.\nExplain each step of the flow in order (why each leads to the next), then give a 1-line mnemonic for the whole sequence and one likely exam question that this flowchart answers.`,{key:"flow"});},
- "more-cards":async()=>{const c=CH[location.hash.slice(3)];const v=await aiJSON($("#cardai"),`${RULES()}${ctx(c)}\n\nCreate 8 new flashcards on this chapter that are NOT already in the high-yield list. Reply with only a JSON array of {"q": short question, "a": crisp answer under 25 words}.`,{key:"cards"});if(Array.isArray(v)){const add=v.filter(x=>x&&x.q&&x.a).map(x=>`${String(x.q).replace(/::/g,":")}::${String(x.a).replace(/::/g,":")}`);S.custom[c.id]=[...(S.custom[c.id]||[]),...add];save();$("#cardai").innerHTML=`<p class="note">Added ${add.length} AI cards to this chapter's deck.</p>`;runDeck($("#deck"),chCards(c),{chId:c.id});}},
+ "more-cards":async()=>{const c=CH[location.hash.slice(3)];const v=await aiJSON($("#cardai"),`${RULES()}${ctx(c)}\n\nCreate 8 new flashcards on this chapter that are NOT already in the high-yield list. Reply with only a JSON array of {"q": short question, "a": crisp answer under 25 words}.`,{key:"cards"});if(Array.isArray(v)){const add=v.filter(x=>x&&x.q&&x.a).map(x=>`${String(x.q).replace(/::/g,":")}::${String(x.a).replace(/::/g,":")}`);S.custom[c.id]=[...(S.custom[c.id]||[]),...add];save();mountCards(c.id);$("#cardai").innerHTML=`<p class="note">Added ${add.length} AI cards to this chapter's deck.</p>`;}},
  "ai-quiz":async()=>{const id=location.hash.slice(3);const box=$("#quizbox");const tmp=document.createElement("div");tmp.className="ai-out";box.prepend(tmp);const v=await aiJSON(tmp,mcqPrompt(5,[id]),{key:"quiz"});const qs=normQs(v,id);if(qs.length)runQuiz(box,qs,{title:"AI quiz"});else if(v)tmp.innerHTML='<p class="notice">Could not read the questions. Press the button again.</p>';},
  "lab-sum":()=>{const c=CH[location.hash.slice(3)];aiStream($("#labout"),`${RULES()}${ctx(c)}\n\nWrite a ${$("#labsum").value} for this chapter. Use tables for differences and arrows for pathways.`,{key:"lab"});},
  "lab-q":()=>{const c=CH[location.hash.slice(3)];aiStream($("#labout"),`${RULES()}${ctx(c)}\n\nGenerate ${$("#labq").value} from this chapter in Indian university exam style, prioritising the starred topics. After each question give a model answer outline (headings + key points + diagram/flow to draw).`,{key:"lab"});},
@@ -2488,6 +2979,109 @@ Object.assign(ACT,{
    const spec={simplify:"Explain it in very simple language: big idea, an everyday analogy, 4–6 plain bullet points, a memory hook. Under 220 words.",short:"Write a 2–3 mark short answer (60–90 words): definition plus key facts.",medium:"Write a 5-mark answer (200–260 words) with headings and must-write points; use a table if it is a difference question.",long:"Write a 10-mark long answer (400–550 words): definition/introduction, headed sections (etiology, pathogenesis/mechanism, features, diagnosis or uses, complications), a flowchart or table in text, and a conclusion."}[len];
    aiStream(document.getElementById("ag-"+u),`${RULES()}${ctx(CH[c])}\n\nTopic: "${t[0]}". ${spec} End with which standard textbook chapter to read.`,{key:"ans"+u});}
 });
+
+/* ============ Practice engine: levelled flashcards with spaced repetition, adaptive quiz ladder, mistakes bank ============ */
+const LV=["","Basic","Intermediate","Advanced","Exam-pattern"];
+const LV_CLS=["","lv1","lv2","lv3","lv4"];
+const SRS_DAYS=[0,1,3,7,14,30];
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return dstr(d);};
+function ensureP(){S.srs=S.srs||{};S.mist=S.mist||{};S.qa=S.qa||{};}
+function cardPool(id){const c=CH[id];const out=[];
+  (QB[id]?QB[id].c:[]).forEach((x,i)=>out.push({key:`${id}:c${i}`,lv:x[0],q:x[1],a:x[2],src:"bank"}));
+  c.hy.forEach((x,i)=>{const h=hy(x);out.push({key:`${id}:h${i}`,lv:2,q:h.q,a:h.a,src:"core"});});
+  (S.custom[id]||[]).forEach((x,i)=>{const h=hy(x);out.push({key:`${id}:x${i}`,lv:2,q:h.q,a:h.a,src:"ai"});});
+  return out;}
+function quizPool(id){const out=[];
+  (QB[id]?QB[id].q:[]).forEach((x,i)=>out.push({key:`${id}:q${i}`,lv:x[0],q:x[1],o:x[2],a:x[3],e:x[4],ch:id}));
+  CH[id].mcq.forEach((m,i)=>out.push({key:`${id}:m${i}`,lv:2,q:m[0],o:m[1],a:m[2],e:m[3],ch:id}));
+  return out;}
+const lvChip=l=>`<span class="lvchip ${LV_CLS[l]}">${LV[l]}</span>`;
+
+/* ---------- Flashcards tab ---------- */
+let FC={id:null,mode:"due",lv:0,queue:[],i:0,pool:[]};
+function srsStats(pool){ensureP();const t=today();let nw=0,due=0,learn=0,mast=0;pool.forEach(c=>{const s=S.srs[c.key];if(!s)nw++;else{if(s.due<=t)due++;if(s.b>=4)mast++;else learn++;}});return {nw,due,learn,mast,total:pool.length};}
+function cardsTabHTML(id){const pool=cardPool(id);const st=srsStats(pool);const banked=!!QB[id];
+  return `<section class="card stack"><div class="row between"><div><h2>Flashcards</h2><p class="note">${banked?`${QB[id].c.length} levelled cards + ${pool.length-QB[id].c.length} core/AI cards.`:`${pool.length} core cards. The 100-card levelled bank for this chapter is being written.`} Spaced repetition brings back the cards you find hard.</p></div><button class="btn sm" data-act="more-cards">+ Generate with AI</button></div>
+  <div class="srsbar"><div><b>${st.nw}</b><span>New</span></div><div><b>${st.due}</b><span>Due today</span></div><div><b>${st.learn}</b><span>Learning</span></div><div><b>${st.mast}</b><span>Mastered</span></div></div>
+  <div class="bar" aria-label="Mastered"><i style="width:${Math.round(st.mast/Math.max(1,st.total)*100)}%;background:var(--good)"></i></div>
+  <div class="row" role="group" aria-label="Deck"><span class="note">Deck</span>${[["due","Due + new"],["all","Browse all"],["weak","Weak cards"]].map(m=>`<button class="btn sm ${FC.mode===m[0]?"pri":""}" data-act="fc-mode" data-m="${m[0]}">${m[1]}</button>`).join("")}</div>
+  <div class="row" role="group" aria-label="Level"><span class="note">Level</span><button class="btn sm ${!FC.lv?"pri":""}" data-act="fc-lv" data-l="0">All</button>${[1,2,3,4].map(l=>`<button class="btn sm ${FC.lv===l?"pri":""}" data-act="fc-lv" data-l="${l}">${LV[l]} (${pool.filter(c=>c.lv===l).length})</button>`).join("")}</div>
+  <div id="deck"></div><div class="ai-out" id="cardai"></div></section>`;}
+function buildQueue(id){ensureP();const t=today();let pool=cardPool(id);if(FC.lv)pool=pool.filter(c=>c.lv===FC.lv);
+  if(FC.mode==="due"){const due=pool.filter(c=>S.srs[c.key]&&S.srs[c.key].due<=t);const nw=pool.filter(c=>!S.srs[c.key]).sort((a,b)=>a.lv-b.lv).slice(0,20);pool=[...due,...nw];}
+  else if(FC.mode==="weak")pool=pool.filter(c=>S.srs[c.key]&&S.srs[c.key].b<=1);
+  else pool=pool.slice().sort((a,b)=>a.lv-b.lv);
+  FC.pool=pool;FC.queue=FC.mode==="all"?pool.map((_,i)=>i):shuffle(pool.map((_,i)=>i));FC.i=0;}
+function drawDeck(){const box=$("#deck");if(!box)return;
+  if(!FC.queue.length||FC.i>=FC.queue.length){box.innerHTML=`<div class="card stack" style="align-items:center;text-align:center"><h3>${FC.queue.length?"Session complete 🎉":"Nothing to review here"}</h3><p class="note">${FC.mode==="due"?"All due cards are done for today. Come back tomorrow, or browse all cards.":FC.mode==="weak"?"No weak cards — great work.":"Pick another level."}</p><div class="row"><button class="btn" data-act="fc-mode" data-m="all">Browse all</button><button class="btn" data-act="fc-mode" data-m="due">Due + new</button></div></div>`;return;}
+  const c=FC.pool[FC.queue[FC.i]];const s=(S.srs||{})[c.key];
+  box.innerHTML=`<div class="deck"><div class="row between" style="width:100%;max-width:620px"><span class="note">Card ${FC.i+1} of ${FC.queue.length}</span><span class="row" style="gap:6px">${lvChip(c.lv)}${c.src!=="bank"?`<span class="chip">${c.src==="ai"?"AI card":"Core card"}</span>`:""}${s?`<span class="chip">Box ${s.b}</span>`:'<span class="chip">New</span>'}</span></div>
+  <button class="fcard" id="fc" aria-label="Flashcard, press to flip"><div class="in"><div class="face front"><span class="eyebrow">Question</span>${esc(c.q)}<span class="note">Tap or press Space to reveal</span></div><div class="face back"><span class="eyebrow">Answer</span>${esc(c.a)}</div></div></button>
+  <div class="row rate" style="justify-content:center"><button class="btn" id="fcprev" data-act="fc-step" data-d="-1">←</button><button class="btn r1" id="r1" data-act="fc-rate" data-r="1">Again <small>1</small></button><button class="btn r2" id="r2" data-act="fc-rate" data-r="2">Hard <small>2</small></button><button class="btn r3 pri" id="fcgot" data-act="fc-rate" data-r="3">Good <small>3</small></button><button class="btn r4" id="r4" data-act="fc-rate" data-r="4">Easy <small>4</small></button><button class="btn" id="fcnext" data-act="fc-step" data-d="1">→</button></div>
+  <p class="note kbd-hint">Keys: Space flip · 1 Again · 2 Hard · 3 Good · 4 Easy · ← → skip</p></div>`;
+  $("#fc").onclick=()=>$("#fc").classList.toggle("flip");}
+function rateCard(r){ensureP();const c=FC.pool[FC.queue[FC.i]];const s=S.srs[c.key]||{b:0,n:0};let b=s.b;
+  if(r===1){b=0;const cur=FC.queue.splice(FC.i,1)[0];FC.queue.splice(Math.min(FC.queue.length,FC.i+3),0,cur);FC.i--;}
+  else if(r===2)b=Math.max(1,b);else if(r===3)b=Math.min(5,b+1);else b=Math.min(5,b+2);
+  S.srs[c.key]={b,due:addDays(r===1?0:r===2?1:SRS_DAYS[b]),n:(s.n||0)+1};save();if(r>=3){S.xp+=1;touchStreak();save();renderSide();}
+  FC.i++;drawDeck();const st=srsStats(cardPool(FC.id));const bar=$(".srsbar");if(bar)bar.innerHTML=`<div><b>${st.nw}</b><span>New</span></div><div><b>${st.due}</b><span>Due today</span></div><div><b>${st.learn}</b><span>Learning</span></div><div><b>${st.mast}</b><span>Mastered</span></div>`;}
+function mountCards(id){FC.id=id;$("#tabbody").innerHTML=cardsTabHTML(id);buildQueue(id);drawDeck();}
+
+/* ---------- Quiz tab ---------- */
+function qStats(pool){ensureP();let att=0,cor=0;const byLv=[0,0,0,0,0].map(()=>({a:0,c:0}));pool.forEach(q=>{const r=S.qa[q.key];if(r){att++;if(r.c>0&&r.last)cor++;byLv[q.lv].a++;if(r.last)byLv[q.lv].c++;}});return {att,cor,byLv,total:pool.length,mist:pool.filter(q=>S.mist[q.key]).length};}
+function quizTabHTML(id){const pool=quizPool(id);const st=qStats(pool);const banked=!!QB[id];
+  return `<section class="stack"><div class="card stack"><div class="row between"><div><h2>Quiz</h2><p class="note">${banked?`${QB[id].q.length} levelled MCQs`:`${pool.length} MCQs (the 100-question levelled bank for this chapter is being written)`} · attempted ${st.att}/${st.total} · ${st.mist} in mistakes bank</p></div></div>
+  <div class="lvgrid">${[1,2,3,4].map(l=>{const n=pool.filter(q=>q.lv===l).length;const b=st.byLv[l];return `<div class="lvcell ${LV_CLS[l]}"><b>${LV[l]}</b><span>${n} questions</span><span class="note">${b.a?`${Math.round(b.c/b.a*100)}% right`:"Not tried"}</span></div>`;}).join("")}</div>
+  <div class="grid g2">
+   <div class="mode"><b>🪜 Adaptive ladder</b><span class="note">Starts Basic. 3 right in a row moves you up a level; a miss moves you down and saves it to Mistakes. 20 questions.</span><button class="btn pri" data-act="qz-ladder">Start ladder</button></div>
+   <div class="mode"><b>🎯 Level practice</b><span class="note">Drill one level.</span><div class="row"><select id="qzlv" aria-label="Level">${[1,2,3,4].map(l=>`<option value="${l}">${LV[l]}</option>`).join("")}</select><select id="qzn" aria-label="Count"><option value="10">10</option><option value="20">20</option><option value="999">All</option></select><button class="btn" data-act="qz-level">Start</button></div></div>
+   <div class="mode"><b>🔁 Mistakes bank (${st.mist})</b><span class="note">Re-test everything you got wrong. Correct answers leave the bank.</span><button class="btn" data-act="qz-mist" ${st.mist?"":"disabled"}>Review mistakes</button></div>
+   <div class="mode"><b>📝 Full chapter test</b><span class="note">All ${pool.length} questions, mixed levels.</span><label class="check"><input type="checkbox" id="qztime"> Timed (45 s per question)</label><button class="btn" data-act="qz-full">Start test</button></div>
+  </div><div class="row"><button class="btn sm" data-act="ai-quiz">Generate 5 fresh MCQs with AI</button></div></div><div id="quizbox"></div></section>`;}
+function recordAns(q,ok){ensureP();const r=S.qa[q.key]||{c:0,w:0};if(ok)r.c++;else r.w++;r.last=ok?1:0;S.qa[q.key]=r;if(!ok)S.mist[q.key]=1;save();}
+function mountQuiz(id){$("#tabbody").innerHTML=quizTabHTML(id);}
+function startList(qs,opts){const box=$("#quizbox");runQuiz(box,qs,opts);box.scrollIntoView({behavior:"smooth",block:"start"});}
+function runLadder(box,pool,n=20){clearInterval(QUIZ_TIMER);let level=1,streak=0,i=0,score=0,top=1;const asked=new Set(),log=[];
+  const pick=()=>{for(const d of [0,1,-1,2,-2,3,-3]){const L=level+d;if(L<1||L>4)continue;const cand=pool.filter(q=>q.lv===L&&!asked.has(q.key));if(cand.length){const fresh=cand.filter(q=>!(S.qa[q.key]&&S.qa[q.key].last));return shuffle(fresh.length?fresh:cand)[0];}}return null;};
+  function show(){const q=pick();if(!q||i>=n){finish();return;}asked.add(q.key);
+    box.innerHTML=`<div class="card q"><div class="row between"><span class="eyebrow">Adaptive ladder · Q${i+1} of ${n}</span><span class="ladder" aria-label="Level ${level}">${[1,2,3,4].map(l=>`<i class="${l<=level?LV_CLS[l]+" on":""}"></i>`).join("")}<b>${LV[level]}</b></span></div>
+    <div class="row" style="gap:6px">${lvChip(q.lv)}<span class="note">Streak ${streak}/3</span></div><h3>${esc(q.q)}</h3><p class="note kbd-hint">Tip: press 1–4 to answer, Enter for next.</p>
+    <div class="stack">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><b>${"ABCD"[k]}</b><span>${esc(o)}</span></button>`).join("")}</div><div class="fb" aria-live="polite"></div></div>`;
+    $$(".opt",box).forEach(b=>b.onclick=()=>answer(q,+b.dataset.k));}
+  function answer(q,k){if($(".opt[disabled]",box))return;const ok=k===q.a;recordAns(q,ok);log.push({q,k,ok});i++;let msg="";
+    if(ok){score++;streak++;if(streak>=3&&level<4){level++;streak=0;msg=` ⬆ Level up: ${LV[level]}!`;top=Math.max(top,level);}}else{streak=0;if(level>1){level--;msg=` ⬇ Back to ${LV[level]}.`;}}
+    $$(".opt",box).forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("right");else if(j===k)b.classList.add("wrong");});
+    $(".fb",box).innerHTML=`<div class="explain"><b>${ok?"Correct.":"Not quite."}${msg}</b> ${esc(q.e||"")}</div><div class="row" style="margin-top:12px"><button class="btn pri" id="qnext">${i<n?"Next question":"See results"}</button></div>`;$("#qnext",box).onclick=show;$("#qnext",box).focus();}
+  function finish(){const tot=log.length;if(!tot){box.innerHTML='<p class="note">No questions available.</p>';return;}const pct=Math.round(score/tot*100);
+    const id=log[0].q.ch;const o=S.quiz[id]||{best:0,last:0,n:0};S.quiz[id]={best:Math.max(o.best,pct),last:pct,n:o.n+1};S.hist.unshift({d:today(),title:"Adaptive ladder",score,total:tot});S.hist=S.hist.slice(0,30);save();if(score)addXP(score*10+(top-1)*10,`ladder · reached ${LV[top]}`);
+    box.innerHTML=`<div class="card stack"><div class="row between"><div><span class="eyebrow">Adaptive ladder · result</span><div class="score">${score}/${tot}</div><p class="muted">Highest level reached: <b>${LV[top]}</b>. Finished at ${LV[level]}.</p></div><div class="ring" style="--p:${pct}"><span>${pct}%</span></div></div>
+    <div class="lvgrid">${[1,2,3,4].map(l=>{const a=log.filter(x=>x.q.lv===l);return `<div class="lvcell ${LV_CLS[l]}"><b>${LV[l]}</b><span>${a.length?`${a.filter(x=>x.ok).length}/${a.length} right`:"—"}</span></div>`;}).join("")}</div>
+    <details ${pct<100?"open":""}><summary><b>Review answers</b></summary><div class="stack" style="margin-top:10px">${log.map(x=>`<div class="explain"><b>${x.ok?"✓":"✗"} ${esc(x.q.q)}</b><br>Answer: ${esc(x.q.o[x.q.a])}${x.ok?"":` · You chose: ${esc(x.q.o[x.k])}`}<br><span class="muted">${esc(x.q.e||"")}</span></div>`).join("")}</div></details>
+    <div class="row"><button class="btn pri" data-act="qz-ladder">Climb again</button>${log.some(x=>!x.ok)?'<button class="btn" data-act="qz-mist">Review mistakes</button>':""}</div></div>`;if(pct===100)confetti();}
+  show();box.scrollIntoView({behavior:"smooth",block:"start"});}
+
+/* ---------- Glossary drill-down ---------- */
+const GL_KEYS=(()=>{const all=Object.keys(GLOSS).map(k=>[k,k]).concat(Object.entries(GLOSS_ALIAS));return all.sort((a,b)=>b[0].length-a[0].length);})();
+const GL_RE=new RegExp("\\b("+GL_KEYS.map(([k])=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")\\b","gi");
+function glossKey(m){const l=m.toLowerCase();return GLOSS[l]?l:GLOSS_ALIAS[l];}
+function linkTerms(text){const used=new Set();return esc(text).replace(GL_RE,(m)=>{const k=glossKey(m);if(!k||used.has(k))return m;used.add(k);return `<button class="term" data-act="term" data-t="${esc(k)}">${m}</button>`;});}
+function chapterTerms(c){const txt=[...c.core,...c.topics.map(t=>t[0]),...c.hy].join(" ");const set=new Set();(txt.match(GL_RE)||[]).forEach(m=>{const k=glossKey(m);if(k)set.add(k);});return [...set];}
+function termBox(k){const g=GLOSS[k];return `<div class="termbox" data-k="${esc(k)}"><div class="row between"><b>${esc(k.replace(/\b\w/g,c=>c.toUpperCase()))}</b><button class="btn sm ghost" data-act="term-close" aria-label="Close">✕</button></div><p>${esc(g[0])}</p><button class="btn sm" data-act="term-more">More ▸</button><p class="more" hidden>${esc(g[1])}</p></div>`;}
+
+Object.assign(ACT,{
+ "fc-mode":el=>{FC.mode=el.dataset.m;mountCards(FC.id||location.hash.slice(3));},
+ "fc-lv":el=>{FC.lv=+el.dataset.l;mountCards(FC.id||location.hash.slice(3));},
+ "fc-rate":el=>{const f=$("#fc");if(f&&!f.classList.contains("flip")){f.classList.add("flip");return;}rateCard(+el.dataset.r);},
+ "fc-step":el=>{FC.i=Math.max(0,Math.min(FC.queue.length,FC.i+(+el.dataset.d)));drawDeck();},
+ "qz-ladder":()=>{const id=location.hash.slice(3);runLadder($("#quizbox"),quizPool(id));},
+ "qz-level":()=>{const id=location.hash.slice(3);const l=+$("#qzlv").value,n=+$("#qzn").value;const qs=shuffle(quizPool(id).filter(q=>q.lv===l)).slice(0,n);if(!qs.length){toast("No questions at this level yet");return;}startList(qs,{title:`${LV[l]} practice`,onAnswer:recordAns});},
+ "qz-mist":()=>{const id=location.hash.slice(3);ensureP();const qs=shuffle(quizPool(id).filter(q=>S.mist[q.key]));if(!qs.length){toast("Mistakes bank is empty");return;}startList(qs,{title:"Mistakes bank",onAnswer:(q,ok)=>{recordAns(q,ok);if(ok){delete S.mist[q.key];save();}}});},
+ "qz-full":()=>{const id=location.hash.slice(3);const t=$("#qztime").checked?45:0;startList(shuffle(quizPool(id)),{title:"Full chapter test",timed:t,onAnswer:recordAns});},
+ term:el=>{const li=el.closest("li,.termhost");if(!li)return;const ex=li.querySelector(".termbox");if(ex&&ex.dataset.k===el.dataset.t){ex.remove();return;}if(ex)ex.remove();li.insertAdjacentHTML("beforeend",termBox(el.dataset.t));},
+ "term-more":el=>{const p=el.parentElement.querySelector(".more");p.hidden=!p.hidden;el.textContent=p.hidden?"More ▸":"Less ▴";},
+ "term-close":el=>el.closest(".termbox").remove()
+});
+document.addEventListener("keydown",e=>{if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||!$("#r1"))return;if(["1","2","3","4"].includes(e.key)){e.preventDefault();$(`[data-act="fc-rate"][data-r="${e.key}"]`).click();}},true);
 
 applyFS();mountDrawer();renderSide();route();
 

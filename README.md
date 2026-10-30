@@ -2,6 +2,7 @@
 
 Open-source study site for MBBS 2nd-year students: Pathology, Microbiology, Pharmacology,
 Community Medicine and Forensic Medicine & Toxicology. 66 chapters with concepts, 107 interactive flowcharts (41 with every step explained),
+a Notes & Books PDF reader with subject- and page-wise bookmarks,
 an exam radar from past-paper priorities, flashcards, an MCQ bank, mock tests, a study planner and
 ten AI tools (tutor, simplifier, question generator, summaries, flashcards, mock tests,
 personalised coaching, voice tutor, planner, doubt resolution).
@@ -10,6 +11,7 @@ personalised coaching, voice tutor, planner, doubt resolution).
 index.html      the whole site (HTML + CSS + JS in one file)
 api/ai.js       AI proxy: keeps your Anthropic API key on the server, streams answers
 vercel.json     security headers
+docs/           reference PDFs shown in Notes & Books (seniors' priority lists, class notes)
 src/            editable source (content per subject, app.js, style.css) — run `python3 build.py` to regenerate index.html
 ```
 
@@ -37,6 +39,14 @@ Optional: *Settings → Domains* to attach your own domain (e.g. `atlas.yourcoll
 Upload only `index.html` to **GitHub Pages** (repo → Settings → Pages → Deploy from branch)
 or **Netlify Drop** (drag the folder onto app.netlify.com/drop). Everything works except the AI
 tools, which show a friendly "not switched on" message.
+
+## Notes & Books
+
+- `docs/` PDFs are public reference documents shown to every student.
+- Copyrighted books (M for Microbiology, Patho Main File, Prof Buster Paper 1 & 2) are **not** in this repo.
+  Each student adds their own PDF in the Library; it is stored only in that browser (IndexedDB) and never uploaded.
+- Bookmarks (page, subject, chapter, note) are saved in the student's browser.
+- "Explain this page with AI" sends an image of the current page to the AI backend.
 
 ## Costs and safety
 

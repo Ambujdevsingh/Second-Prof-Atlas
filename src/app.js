@@ -18,7 +18,7 @@ const hy=s=>{const [q,a]=s.split("::");return {q,a};};
 
 /* ============ state (per-viewer, this browser only) ============ */
 const KEY="secondprofatlas_v1";
-const defState=()=>({xp:0,streak:0,last:null,done:{},quiz:{},known:{},custom:{},plan:null,lang:"en",hist:[],lastCh:null,daily:null,read:{},saved:[],fs:100,seen:false,flowDone:{}});
+const defState=()=>({xp:0,streak:0,last:null,done:{},quiz:{},known:{},custom:{},plan:null,lang:"en",hist:[],lastCh:null,daily:null,read:{},saved:[],fs:100,seen:false,flowDone:{},bm:[],mybooks:[]});
 let S=(()=>{try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(v)return Object.assign(defState(),v);}catch(e){}return defState();})();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const LEVELS=[[0,"Fresher"],[100,"Ward Explorer"],[300,"Slide Reader"],[700,"Viva Ready"],[1200,"Prof Warrior"],[2000,"Topper Track"],[3500,"Gold Medal Mode"]];
@@ -62,10 +62,12 @@ const AI_URL=window.ATLAS_AI_URL||"/api/ai";
   AISTATE=(SAMPLE||WEBAI)?"ready":"off";$$(".aibadge").forEach(b=>b.outerHTML=aiBadge());
 })();
 /* one call path for both hosts: Claude app (sample) or a website (/api/ai) */
-async function callAI(input,{signal,onText,tier,chat}={}){
-  if(SAMPLE){const o={signal};if(onText)o.onText=onText;if(tier)o.modelTier=tier;if(chat)o.cache=false;return SAMPLE(input,o);}
+async function blobB64(b){const buf=new Uint8Array(await b.arrayBuffer());let s="";for(let i=0;i<buf.length;i+=32768)s+=String.fromCharCode.apply(null,buf.subarray(i,i+32768));return btoa(s);}
+async function callAI(input,{signal,onText,tier,chat,images}={}){
+  if(SAMPLE){const o={signal};if(onText)o.onText=onText;if(tier)o.modelTier=tier;if(chat||images)o.cache=false;if(images)o.images=images;return SAMPLE(input,o);}
   const messages=typeof input==="string"?[{role:"user",content:input}]:input;
-  let r;try{r=await fetch(AI_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages}),signal});}
+  const imgs=images?await Promise.all(images.map(async b=>({media_type:b.type||"image/jpeg",data:await blobB64(b)}))):undefined;
+  let r;try{r=await fetch(AI_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages,images:imgs}),signal});}
   catch(e){throw {code:signal&&signal.aborted?"cancelled":"upstream_error"};}
   if(!r.ok)throw {code:r.status===429?"rate_limited":r.status===413?"prompt_too_large":"upstream_error"};
   const rd=r.body.getReader(),dec=new TextDecoder();let text="";
@@ -83,12 +85,12 @@ function ctx(c){if(!c)return"";const s=SUB[c.s];return `\n\nCHAPTER NOTES — ${
 const thinking=(m="Thinking")=>`<span class="thinking"><i></i><i></i><i></i> ${m}…</span>`;
 const offMsg=()=>AISTATE==="checking"?`<p>Connecting to the AI tutor… try again in a few seconds.</p>`:IN_CLAUDE?`<p><b>AI features run on your own Claude account.</b> Choose <b>Allow</b> when this page asks to use Claude. Chapters, flowcharts, flashcards, quizzes, the question bank and the study planner all work without AI.</p>`:`<p><b>The AI tutor is not switched on for this website yet.</b> Everything else works: chapters, flowcharts, flashcards, quizzes, mock tests from the question bank and the study planner.</p>`;
 const CTL={};
-function errMsg(e){switch(e&&e.code){case"cancelled":return"";case"not_granted":case"sampling_disabled":case"not_declared":case"capability_disabled":case"capability_removed":return"AI is not allowed for this page right now. Allow Claude for this page to use the AI tools.";case"rate_limited":return"Too many AI requests at once. Wait a minute, then try again.";case"session_expired":return"Your Claude session expired. Sign in again, then retry.";case"refused":return"Claude could not answer that. Rephrase the question and try again.";case"prompt_too_large":return"That request is too long. Pick fewer chapters or a shorter question.";case"invalid_json":return"The answer came back in an unexpected format. Press the button again.";case"empty_completion":return"No answer came back. Try a simpler request.";default:return"Connection problem while answering. Press the button again.";}}
-async function aiStream(out,input,{key="main",tier,chat=false}={}){
+function errMsg(e){switch(e&&e.code){case"cancelled":return"";case"not_granted":case"sampling_disabled":case"not_declared":case"capability_disabled":case"capability_removed":return"AI is not allowed for this page right now. Allow Claude for this page to use the AI tools.";case"images_unavailable":return"Reading page images is not available in this view. Ask the AI Tutor about the topic instead.";case"image_rejected":return"That page image could not be read. Try zooming out or another page.";case"rate_limited":return"Too many AI requests at once. Wait a minute, then try again.";case"session_expired":return"Your Claude session expired. Sign in again, then retry.";case"refused":return"Claude could not answer that. Rephrase the question and try again.";case"prompt_too_large":return"That request is too long. Pick fewer chapters or a shorter question.";case"invalid_json":return"The answer came back in an unexpected format. Press the button again.";case"empty_completion":return"No answer came back. Try a simpler request.";default:return"Connection problem while answering. Press the button again.";}}
+async function aiStream(out,input,{key="main",tier,chat=false,images}={}){
   if(!SAMPLE&&!WEBAI){out.innerHTML=offMsg();return null;}
   CTL[key]?.abort();const ctl=new AbortController();CTL[key]=ctl;
   out.innerHTML=thinking();showStop(key,true);
-  try{const r=await callAI(input,{signal:ctl.signal,tier,chat,onText:({text})=>{out.innerHTML=md(text);}});out.innerHTML=md(r.text)+(r.truncated?'<p class="note">The answer was cut short. Ask for a smaller part.</p>':"");return r.text;}
+  try{const r=await callAI(input,{signal:ctl.signal,tier,chat,images,onText:({text})=>{out.innerHTML=md(text);}});out.innerHTML=md(r.text)+(r.truncated?'<p class="note">The answer was cut short. Ask for a smaller part.</p>':"");return r.text;}
   catch(e){if(e&&e.code==="refused")out.innerHTML="";else out.innerHTML=e&&e.text?md(e.text):"";const m=errMsg(e);if(m)out.insertAdjacentHTML("beforeend",`<p class="notice">${esc(m)}</p>`);return null;}
   finally{showStop(key,false);}
 }
@@ -192,7 +194,7 @@ function chCards(c){return [...c.hy,...(S.custom[c.id]||[])].map(hy);}
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);const x=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cs=getComputedStyle(document.documentElement);const cols=["--path","--micro","--pharm","--cm","--fmt","--star"].map(v=>cs.getPropertyValue(v).trim());const P=Array.from({length:140},()=>({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-2,c:cols[Math.floor(Math.random()*cols.length)],r:Math.random()*6+3,a:Math.random()*6}));let f=0;(function step(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});if(++f<120)requestAnimationFrame(step);else cv.remove();})();}
 
 /* ============ layout ============ */
-const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
+const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
@@ -212,6 +214,7 @@ function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab
     if(!on&&inTab(a)&&n==="subjects"&&(h.startsWith("c-")||h.startsWith("s-")))on=true;
     if(!on&&n==="studio"&&isTool&&(h!=="planner"||inTab(a)))on=true;
     if(!on&&n==="flowcharts"&&h.startsWith("fc-"))on=true;
+    if(!on&&n==="notes"&&h.startsWith("read-"))on=true;
     a.classList.toggle("on",on);if(on)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});}
 const topbar=()=>`<div class="topbar"><div class="search">${ico("search",18)}<input id="q" type="search" placeholder="Search topics: DIC, Widal, β-blockers, hanging…" autocomplete="off" aria-label="Search topics"><div class="results" id="qres" hidden></div></div><span class="streak">🔥 ${S.streak} · ${S.xp} XP</span><button class="btn sm" id="focusbtn" data-act="focus" title="25-minute focus session (+15 XP)">${ico("focus",16)}<span id="focustxt">${FOCUS.end?fmtLeft():"Focus 25:00"}</span></button><span class="fsctl" role="group" aria-label="Text size"><button class="btn sm" data-act="fs" data-d="-10" aria-label="Smaller text">A−</button><button class="btn sm" data-act="fs" data-d="10" aria-label="Larger text">A+</button></span>${aiBadge()}</div>`;
 
@@ -277,7 +280,7 @@ function vChapter(id){const c=CH[id],s=SUB[c.s];S.lastCh=id;save();
 }
 function renderTab(id){const c=CH[id],b=$("#tabbody");if(!b)return;clearInterval(QUIZ_TIMER);
   if(CHTAB==="learn"){
-    b.innerHTML=`<div class="grid g2" style="align-items:start"><section class="stack"><h2>Core concepts</h2><p class="note">Tick each concept once you can explain it without looking.</p><ol class="concepts">${c.core.map((x,k)=>{const on=(S.read[id]||[]).includes(k);return `<li class="${on?"got":""}"><span>${esc(x)}</span><button class="tick" data-act="read" data-k="${k}" aria-pressed="${on}" aria-label="Mark concept ${k+1} understood">${on?"✓":""}</button></li>`;}).join("")}</ol></section>
+    b.innerHTML=`<div class="grid g2" style="align-items:start"><section class="stack"><h2>Core concepts</h2>${syllabusLinks(id)?`<div class="row">${syllabusLinks(id)}</div>`:""}<p class="note">Tick each concept once you can explain it without looking.</p><ol class="concepts">${c.core.map((x,k)=>{const on=(S.read[id]||[]).includes(k);return `<li class="${on?"got":""}"><span>${esc(x)}</span><button class="tick" data-act="read" data-k="${k}" aria-pressed="${on}" aria-label="Mark concept ${k+1} understood">${on?"✓":""}</button></li>`;}).join("")}</ol></section>
     <section class="card stack"><div class="row between"><h2>Exam topics</h2><span class="note">${SUB[c.s].std?"Standard priority":"From past-paper list"}</span></div><p class="note"><span class="tag L">LAQ</span> long answer · <span class="tag S">SN</span> short note · <span class="tag D">DIFF</span> difference · <span class="tag N">NMC</span> added from NMC syllabus</p>
     <div>${c.topics.map((t,k)=>`<div class="topic"><span>${starsHTML(t[1])} ${tagHTML(t[2])} ${nmc(t)}<br><b>${esc(t[0])}</b></span><span class="acts"><button class="btn sm star ${isSaved(id,k)?"on":""}" data-act="save" data-c="${id}" data-k="${k}" aria-pressed="${isSaved(id,k)}" title="Save to revision list">${isSaved(id,k)?"★":"☆"}</button><button class="btn sm" data-act="t-simplify" data-k="${k}">Simplify</button><button class="btn sm" data-act="t-answer" data-k="${k}">Model answer</button></span><div class="inline-ai ai-out" id="tai${k}"></div></div>`).join("")}</div></section></div>`;
   } else if(CHTAB==="flow"){
@@ -422,11 +425,12 @@ function mountDrawer(){if($("#fab"))return;document.body.insertAdjacentHTML("bef
 function drawerCh(){const h=location.hash.slice(1);return h.startsWith("c-")&&CH[h.slice(2)]?CH[h.slice(2)]:(S.lastCh&&CH[S.lastCh])||null;}
 
 /* ============ router ============ */
-const ROUTES={flowcharts:vFlowcharts,saved:vSaved,home:vHome,subjects:vSubjects,radar:vRadar,roadmap:vRoadmap,studio:vStudio,progress:vProgress,tutor:vTutor,simplify:vSimplify,qgen:vQgen,summary:vSummary,cards:vCards,mock:vMock,coach:vCoach,voice:vVoice,planner:vPlanner,doubt:vDoubt};
+const ROUTES={notes:vNotes,flowcharts:vFlowcharts,saved:vSaved,home:vHome,subjects:vSubjects,radar:vRadar,roadmap:vRoadmap,studio:vStudio,progress:vProgress,tutor:vTutor,simplify:vSimplify,qgen:vQgen,summary:vSummary,cards:vCards,mock:vMock,coach:vCoach,voice:vVoice,planner:vPlanner,doubt:vDoubt};
 function route(){clearInterval(QUIZ_TIMER);if(typeof FL_WALK!=="undefined"&&FL_WALK){clearInterval(FL_WALK);FL_WALK=null;}const shEl=$("#sheet");if(shEl)shEl.hidden=true;Object.values(CTL).forEach(c=>c.abort());try{speechSynthesis.cancel();}catch(e){}POST=null;
   const h=(location.hash||"#home").slice(1);let html;
   if(h.startsWith("s-")&&SUB[h.slice(2)])html=vSubject(h.slice(2));
   else if(h.startsWith("fc-")&&FLOWMAP[h.slice(3)])html=vFlow(h.slice(3));
+  else if(h.startsWith("read-"))html=vRead(h.slice(5));
   else if(h.startsWith("c-")&&CH[h.slice(2)]){if(LAST_ROUTE!==h)CHTAB="learn";html=vChapter(h.slice(2));}
   else html=(ROUTES[h]||vHome)();
   LAST_ROUTE=h;

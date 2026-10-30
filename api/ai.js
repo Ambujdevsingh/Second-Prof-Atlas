@@ -42,11 +42,20 @@ export default async function handler(req) {
   while (msgs.length && msgs[0].role !== "user") msgs.shift();
   if (!msgs.length || msgs[msgs.length - 1].role !== "user") return json({ error: "Conversation must end with a user turn" }, 400);
   if (msgs.reduce((a, m) => a + m.content.length, 0) > MAX_CHARS) return json({ error: "Too long" }, 413);
+  // optional page images (base64 JPEG/PNG/WebP), attached to the final user turn
+  const imgs = Array.isArray(body.images) ? body.images.slice(0, 2) : [];
+  if (imgs.reduce((a, i) => a + String(i && i.data || "").length, 0) > 3_000_000) return json({ error: "Image too large" }, 413);
+  const okType = t => ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(t);
+  const apiMsgs = msgs.map(m => ({ role: m.role, content: m.content }));
+  if (imgs.length) {
+    const last = apiMsgs[apiMsgs.length - 1];
+    last.content = [...imgs.filter(i => i && okType(i.media_type) && typeof i.data === "string").map(i => ({ type: "image", source: { type: "base64", media_type: i.media_type, data: i.data } })), { type: "text", text: last.content }];
+  }
 
   const upstream = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5", max_tokens: 3000, stream: true, messages: msgs }),
+    body: JSON.stringify({ model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5", max_tokens: 3000, stream: true, messages: apiMsgs }),
   });
   if (!upstream.ok || !upstream.body) {
     const status = upstream.status === 429 ? 429 : 502;

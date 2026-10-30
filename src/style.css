@@ -297,3 +297,21 @@ dl.terms dd{margin:2px 0 0}
 .sheet-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
 .sheet-grid a{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:10px; text-decoration:none; font-weight:700}
 @media (max-width:900px){.flview{grid-template-columns:minmax(0,1fr)} .flpanel{position:static; order:-1}}
+
+/* ---- notes & books ---- */
+.sr{position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none}
+label.btn:focus-within{outline:3px solid var(--accent); outline-offset:2px}
+.doccard{display:grid; grid-template-columns:44px minmax(0,1fr); gap:12px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--sc); border-radius:var(--r); padding:14px; box-shadow:var(--shadow)}
+.docicon{width:44px; height:52px; border-radius:8px; background:var(--ss); color:var(--sc); display:grid; place-items:center}
+.pg{font-family:var(--f-mono); font-size:.8rem; font-weight:700; color:var(--sc); background:var(--ss); border:none; border-radius:6px; padding:3px 7px; text-decoration:none; white-space:nowrap; cursor:pointer}
+.bmrow{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:10px; align-items:start; padding:8px; border-radius:10px; border:1px solid var(--line)}
+.bmrow.on{border-color:var(--sc); background:var(--ss)}
+.tocrow{display:grid; grid-template-columns:auto minmax(0,1fr); gap:10px; align-items:start; text-align:left; border:1px solid transparent; background:none; padding:6px; border-radius:8px; font:inherit; color:var(--ink)}
+.tocrow:hover,.tocrow.on{background:var(--ss); border-color:var(--sc)}
+.rdview{display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:16px; align-items:start}
+.rdcanvas{overflow:auto; padding:12px; background:var(--sunk); min-height:300px}
+.rdcanvas canvas{display:block; margin:0 auto; background:#fff; box-shadow:var(--shadow); max-width:none}
+.rdside{position:sticky; top:calc(12px + env(safe-area-inset-top,0px))}
+.rdbar{gap:8px}
+.pgin{padding:6px 8px; border:1px solid var(--line); border-radius:8px}
+@media (max-width:900px){.rdview{grid-template-columns:minmax(0,1fr)} .rdside{position:static}}

@@ -18,7 +18,7 @@ const hy=s=>{const [q,a]=s.split("::");return {q,a};};
 
 /* ============ state (per-viewer, this browser only) ============ */
 const KEY="secondprofatlas_v1";
-const defState=()=>({xp:0,streak:0,last:null,done:{},quiz:{},known:{},custom:{},plan:null,lang:"en",hist:[],lastCh:null,daily:null,read:{},saved:[],fs:100,seen:false});
+const defState=()=>({xp:0,streak:0,last:null,done:{},quiz:{},known:{},custom:{},plan:null,lang:"en",hist:[],lastCh:null,daily:null,read:{},saved:[],fs:100,seen:false,flowDone:{}});
 let S=(()=>{try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(v)return Object.assign(defState(),v);}catch(e){}return defState();})();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const LEVELS=[[0,"Fresher"],[100,"Ward Explorer"],[300,"Slide Reader"],[700,"Viva Ready"],[1200,"Prof Warrior"],[2000,"Topper Track"],[3500,"Gold Medal Mode"]];
@@ -192,14 +192,16 @@ function chCards(c){return [...c.hy,...(S.custom[c.id]||[])].map(hy);}
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);const x=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cs=getComputedStyle(document.documentElement);const cols=["--path","--micro","--pharm","--cm","--fmt","--star"].map(v=>cs.getPropertyValue(v).trim());const P=Array.from({length:140},()=>({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-2,c:cols[Math.floor(Math.random()*cols.length)],r:Math.random()*6+3,a:Math.random()*6}));let f=0;(function step(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});if(++f<120)requestAnimationFrame(step);else cv.remove();})();}
 
 /* ============ layout ============ */
-const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
+const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
   <nav class="nav" aria-label="Main">${NAV.map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],18)}${n[1]}</a>`).join("")}
   <span class="grp mono">Subjects</span>${SUBJECTS.map(s=>`<a href="#s-${s.id}" data-nav="s-${s.id}" data-s="${s.id}"><span class="dot" style="background:var(--sc)"></span>${esc(s.name)}</a>`).join("")}</nav>
   <div class="xpcard"><div class="row between"><b>${esc(L.name)}</b><span class="mono">${S.xp} XP</span></div><div class="bar"><i style="width:${L.pct}%"></i></div><span class="note">${L.next?`${L.next-S.xp} XP to next level`:"Top level reached"} · 🔥 ${S.streak}-day streak</span></div>`;
-  $("#tabbar").innerHTML=[["home","Home","home"],["subjects","Learn","book"],["radar","Radar","radar"],["studio","AI","spark"],["progress","Me","chart"]].map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],22)}${n[1]}</a>`).join("");
+  $("#tabbar").innerHTML=[["home","Home","home"],["subjects","Learn","book"],["flowcharts","Flows","flow"],["studio","AI","spark"]].map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],22)}${n[1]}</a>`).join("")+`<button type="button" class="tabmore" data-act="sheet" aria-haspopup="dialog">${ico("list",22)}More</button>`;
+  let sh=$("#sheet");if(!sh){document.body.insertAdjacentHTML("beforeend",'<div id="sheet" hidden><div class="sheet-in" role="dialog" aria-label="All sections"></div></div>');sh=$("#sheet");}
+  $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go">${ico(n[2],20)}<span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
 function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab=a=>!!a.closest("#tabbar");
@@ -209,6 +211,7 @@ function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab
     if(!on&&n===chS&&!inTab(a))on=true;
     if(!on&&inTab(a)&&n==="subjects"&&(h.startsWith("c-")||h.startsWith("s-")))on=true;
     if(!on&&n==="studio"&&isTool&&(h!=="planner"||inTab(a)))on=true;
+    if(!on&&n==="flowcharts"&&h.startsWith("fc-"))on=true;
     a.classList.toggle("on",on);if(on)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});}
 const topbar=()=>`<div class="topbar"><div class="search">${ico("search",18)}<input id="q" type="search" placeholder="Search topics: DIC, Widal, β-blockers, hanging…" autocomplete="off" aria-label="Search topics"><div class="results" id="qres" hidden></div></div><span class="streak">🔥 ${S.streak} · ${S.xp} XP</span><button class="btn sm" id="focusbtn" data-act="focus" title="25-minute focus session (+15 XP)">${ico("focus",16)}<span id="focustxt">${FOCUS.end?fmtLeft():"Focus 25:00"}</span></button><span class="fsctl" role="group" aria-label="Text size"><button class="btn sm" data-act="fs" data-d="-10" aria-label="Smaller text">A−</button><button class="btn sm" data-act="fs" data-d="10" aria-label="Larger text">A+</button></span>${aiBadge()}</div>`;
 
@@ -278,7 +281,7 @@ function renderTab(id){const c=CH[id],b=$("#tabbody");if(!b)return;clearInterval
     <section class="card stack"><div class="row between"><h2>Exam topics</h2><span class="note">${SUB[c.s].std?"Standard priority":"From past-paper list"}</span></div><p class="note"><span class="tag L">LAQ</span> long answer · <span class="tag S">SN</span> short note · <span class="tag D">DIFF</span> difference · <span class="tag N">NMC</span> added from NMC syllabus</p>
     <div>${c.topics.map((t,k)=>`<div class="topic"><span>${starsHTML(t[1])} ${tagHTML(t[2])} ${nmc(t)}<br><b>${esc(t[0])}</b></span><span class="acts"><button class="btn sm star ${isSaved(id,k)?"on":""}" data-act="save" data-c="${id}" data-k="${k}" aria-pressed="${isSaved(id,k)}" title="Save to revision list">${isSaved(id,k)?"★":"☆"}</button><button class="btn sm" data-act="t-simplify" data-k="${k}">Simplify</button><button class="btn sm" data-act="t-answer" data-k="${k}">Model answer</button></span><div class="inline-ai ai-out" id="tai${k}"></div></div>`).join("")}</div></section></div>`;
   } else if(CHTAB==="flow"){
-    b.innerHTML=`<section class="card stack"><div class="row between"><div><span class="eyebrow">Revision flowchart</span><h2>${esc(c.flow.t)}</h2></div><div class="row"><button class="btn sm" data-act="recall">Recall mode</button><button class="btn sm" data-act="flow-ai">Explain with AI</button></div></div><p class="note" id="recallnote">Recall mode blurs each step. Say the step aloud, then tap to check.</p><div id="flowbox">${flowHTML(c.flow.n)}</div><div class="ai-out" id="flowai"></div></section>`;
+    b.innerHTML=`<section class="card stack"><div class="row between"><div><span class="eyebrow">Revision flowchart</span><h2>${esc(c.flow.t)}</h2></div><div class="row"><button class="btn sm" data-act="recall">Recall mode</button><button class="btn sm" data-act="flow-ai">Explain with AI</button></div></div><p class="note" id="recallnote">Recall mode blurs each step. Say the step aloud, then tap to check.</p><div id="flowbox">${flowHTML(c.flow.n)}</div><div class="ai-out" id="flowai"></div>${FLOWS.filter(f=>f.ch===id).length?`<div class="stack"><b>Explained flowcharts for this chapter</b><p class="note">Every step has a written explanation; tap through them one by one.</p><div class="row">${FLOWS.filter(f=>f.ch===id).map(f=>`<a class="chip" href="#fc-${f.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(f.t)} →</a>`).join("")}</div></div>`:`<a class="btn sm" href="#fc-ch-${id}">Open in step-by-step viewer</a>`}</section>`;
   } else if(CHTAB==="cards"){
     b.innerHTML=`<section class="card stack"><div class="row between"><h2>Flashcards</h2><button class="btn sm" data-act="more-cards">+ Generate more with AI</button></div><div id="deck">${deckHTML()}</div><div class="ai-out" id="cardai"></div></section>`;
     runDeck($("#deck"),chCards(c),{chId:id});
@@ -419,10 +422,11 @@ function mountDrawer(){if($("#fab"))return;document.body.insertAdjacentHTML("bef
 function drawerCh(){const h=location.hash.slice(1);return h.startsWith("c-")&&CH[h.slice(2)]?CH[h.slice(2)]:(S.lastCh&&CH[S.lastCh])||null;}
 
 /* ============ router ============ */
-const ROUTES={saved:vSaved,home:vHome,subjects:vSubjects,radar:vRadar,roadmap:vRoadmap,studio:vStudio,progress:vProgress,tutor:vTutor,simplify:vSimplify,qgen:vQgen,summary:vSummary,cards:vCards,mock:vMock,coach:vCoach,voice:vVoice,planner:vPlanner,doubt:vDoubt};
-function route(){clearInterval(QUIZ_TIMER);Object.values(CTL).forEach(c=>c.abort());try{speechSynthesis.cancel();}catch(e){}POST=null;
+const ROUTES={flowcharts:vFlowcharts,saved:vSaved,home:vHome,subjects:vSubjects,radar:vRadar,roadmap:vRoadmap,studio:vStudio,progress:vProgress,tutor:vTutor,simplify:vSimplify,qgen:vQgen,summary:vSummary,cards:vCards,mock:vMock,coach:vCoach,voice:vVoice,planner:vPlanner,doubt:vDoubt};
+function route(){clearInterval(QUIZ_TIMER);if(typeof FL_WALK!=="undefined"&&FL_WALK){clearInterval(FL_WALK);FL_WALK=null;}const shEl=$("#sheet");if(shEl)shEl.hidden=true;Object.values(CTL).forEach(c=>c.abort());try{speechSynthesis.cancel();}catch(e){}POST=null;
   const h=(location.hash||"#home").slice(1);let html;
   if(h.startsWith("s-")&&SUB[h.slice(2)])html=vSubject(h.slice(2));
+  else if(h.startsWith("fc-")&&FLOWMAP[h.slice(3)])html=vFlow(h.slice(3));
   else if(h.startsWith("c-")&&CH[h.slice(2)]){if(LAST_ROUTE!==h)CHTAB="learn";html=vChapter(h.slice(2));}
   else html=(ROUTES[h]||vHome)();
   LAST_ROUTE=h;
@@ -444,6 +448,8 @@ document.addEventListener("click",e=>{const r=$("#qres");if(r&&!e.target.closest
 /* ============ actions ============ */
 const ACT={
  stop:el=>{CTL[el.dataset.stop]?.abort();},
+ sheet:()=>{const sh=$("#sheet");sh.hidden=!sh.hidden;},
+ "sheet-go":el=>{$("#sheet").hidden=true;location.hash=el.getAttribute("href");},
  seen:()=>{S.seen=true;save();$(".onboard")?.remove();},
  fs:el=>{S.fs=Math.max(85,Math.min(130,S.fs+(+el.dataset.d)));save();applyFS();toast(`Text size ${S.fs}%`);},
  focus:()=>{if(FOCUS.end){clearInterval(FOCUS.id);FOCUS.end=0;$("#focustxt").textContent="Focus 25:00";$("#focusbtn").classList.remove("pri");toast("Focus session stopped");return;}FOCUS.end=Date.now()+25*60000;FOCUS.id=setInterval(focusTick,1000);$("#focusbtn").classList.add("pri");focusTick();toast("Focus on: 25 minutes, phone away");},
@@ -525,6 +531,7 @@ function startMic(btn){const SR=window.SpeechRecognition||window.webkitSpeechRec
   catch(e){REC=null;note.textContent="The microphone is not available here. Type your question instead.";}
 }
 document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;const f=ACT[el.dataset.act];if(f){if(el.tagName!=="A")e.preventDefault();f(el,e);}});
+document.addEventListener("click",e=>{if(e.target.id==="sheet")e.target.hidden=true;});
 document.addEventListener("click",e=>{const x=e.target.closest(".recall .fbox, .recall .fcol");if(x)x.classList.add("shown");});
 document.addEventListener("change",e=>{const el=e.target;const a=el.dataset.actChange;
   if(a==="lang"){S.lang=el.value;save();$$("#langSel").forEach(s=>s.value=S.lang);toast(S.lang==="hinglish"?"AI answers in Hinglish":"AI answers in English");}
@@ -544,4 +551,3 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&e.target.id==="drq"){e.preventDefault();ACT["dr-go"]();}if(e.key==="Enter"&&!e.shiftKey&&e.target.id==="tq"){e.preventDefault();tutorSend();}if(e.key==="Enter"&&e.target.id==="labask"){e.preventDefault();ACT["lab-ask"]();}});
 
 function applyFS(){document.documentElement.style.fontSize=S.fs+"%";}
-applyFS();mountDrawer();renderSide();route();

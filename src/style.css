@@ -229,8 +229,10 @@ canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:70}
   .side{display:none}
   .hero{grid-template-columns:minmax(0,1fr)}
   .tabbar{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--surface); border-top:1px solid var(--line); padding:6px max(8px, env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px, env(safe-area-inset-left,0px)); justify-content:space-around}
-  .tabbar a{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:.7rem; text-decoration:none; color:var(--muted); padding:4px 8px; border-radius:8px; font-weight:700}
+  .tabbar .tabmore{border:none; background:none; font:inherit}
+  .tabbar a, .tabbar .tabmore{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:.7rem; text-decoration:none; color:var(--muted); padding:4px 8px; border-radius:8px; font-weight:700}
   .tabbar a.on{color:var(--accent)}
+  .tabbar .tabmore{font-size:.7rem; color:var(--muted); padding:4px 8px; flex-direction:column; align-items:center; gap:2px; font-weight:700}
   .topic{grid-template-columns:minmax(0,1fr)}
   .topic .acts{justify-content:flex-start}
   .day{grid-template-columns:minmax(0,1fr)}
@@ -266,3 +268,32 @@ canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:70}
   #fab span{display:none}
   .topbar .fsctl, .topbar #focusbtn{order:3}
 }
+
+/* ---- flowchart library & viewer ---- */
+.flcard{display:flex; flex-direction:column; gap:8px; text-decoration:none; background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--sc); border-radius:var(--r); padding:14px; box-shadow:var(--shadow); transition:transform .12s, border-color .15s}
+.flcard:hover{transform:translateY(-2px); border-color:var(--sc)}
+.flview{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:16px; align-items:start}
+.flpanel{position:sticky; top:calc(12px + env(safe-area-inset-top,0px)); border-top:4px solid var(--sc)}
+.flpanel h3{color:var(--sc); font-size:1.2rem}
+#flexp{font-size:1.02rem}
+.fnode{font:inherit; cursor:pointer; display:flex; gap:8px; align-items:flex-start; text-align:left; color:var(--ink); transition:box-shadow .15s, transform .1s, background .15s}
+.fbox.fnode{justify-content:center; text-align:center}
+.fnode:hover{transform:translateY(-1px); box-shadow:0 0 0 3px var(--ss)}
+.fnode.sel{box-shadow:0 0 0 3px var(--sc); background:var(--ss)}
+.fbox.key.fnode{color:#fff}
+.fbox.key.fnode.sel{background:var(--sc); box-shadow:0 0 0 4px var(--ss)}
+.fcol > .fh.fnode{background:transparent; border:none; padding:2px 4px; color:var(--sc); font-family:var(--f-display); font-weight:800; border-radius:8px}
+.fcol > .fl.fnode{border:1px solid transparent; border-radius:8px; background:var(--surface); padding:6px 8px; font-size:.92rem}
+.fnum{flex:none; min-width:22px; height:22px; border-radius:11px; background:var(--sc); color:#fff; font-family:var(--f-mono); font-size:.72rem; display:grid; place-items:center; padding:0 5px}
+.fbox.key .fnum{background:#fff; color:var(--sc)}
+.xflow.recall .fnode:not(.shown){filter:blur(6px)}
+.xflow.recall .fcol, .xflow.recall .fbox.shown{filter:none}
+dl.terms{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin:0}
+dl.terms div{background:var(--ss); border-radius:10px; padding:10px 12px}
+dl.terms dt{font-weight:800; color:var(--sc)}
+dl.terms dd{margin:2px 0 0}
+#sheet{position:fixed; inset:0; z-index:55; background:rgba(15,18,34,.35); display:flex; align-items:flex-end}
+.sheet-in{background:var(--surface); width:100%; border-radius:18px 18px 0 0; padding:16px max(16px, env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px)); display:flex; flex-direction:column; gap:12px; max-height:80vh; overflow:auto}
+.sheet-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+.sheet-grid a{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:10px; text-decoration:none; font-weight:700}
+@media (max-width:900px){.flview{grid-template-columns:minmax(0,1fr)} .flpanel{position:static; order:-1}}

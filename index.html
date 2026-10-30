@@ -242,8 +242,10 @@ canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:70}
   .side{display:none}
   .hero{grid-template-columns:minmax(0,1fr)}
   .tabbar{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--surface); border-top:1px solid var(--line); padding:6px max(8px, env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px, env(safe-area-inset-left,0px)); justify-content:space-around}
-  .tabbar a{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:.7rem; text-decoration:none; color:var(--muted); padding:4px 8px; border-radius:8px; font-weight:700}
+  .tabbar .tabmore{border:none; background:none; font:inherit}
+  .tabbar a, .tabbar .tabmore{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:.7rem; text-decoration:none; color:var(--muted); padding:4px 8px; border-radius:8px; font-weight:700}
   .tabbar a.on{color:var(--accent)}
+  .tabbar .tabmore{font-size:.7rem; color:var(--muted); padding:4px 8px; flex-direction:column; align-items:center; gap:2px; font-weight:700}
   .topic{grid-template-columns:minmax(0,1fr)}
   .topic .acts{justify-content:flex-start}
   .day{grid-template-columns:minmax(0,1fr)}
@@ -279,6 +281,35 @@ canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:70}
   #fab span{display:none}
   .topbar .fsctl, .topbar #focusbtn{order:3}
 }
+
+/* ---- flowchart library & viewer ---- */
+.flcard{display:flex; flex-direction:column; gap:8px; text-decoration:none; background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--sc); border-radius:var(--r); padding:14px; box-shadow:var(--shadow); transition:transform .12s, border-color .15s}
+.flcard:hover{transform:translateY(-2px); border-color:var(--sc)}
+.flview{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:16px; align-items:start}
+.flpanel{position:sticky; top:calc(12px + env(safe-area-inset-top,0px)); border-top:4px solid var(--sc)}
+.flpanel h3{color:var(--sc); font-size:1.2rem}
+#flexp{font-size:1.02rem}
+.fnode{font:inherit; cursor:pointer; display:flex; gap:8px; align-items:flex-start; text-align:left; color:var(--ink); transition:box-shadow .15s, transform .1s, background .15s}
+.fbox.fnode{justify-content:center; text-align:center}
+.fnode:hover{transform:translateY(-1px); box-shadow:0 0 0 3px var(--ss)}
+.fnode.sel{box-shadow:0 0 0 3px var(--sc); background:var(--ss)}
+.fbox.key.fnode{color:#fff}
+.fbox.key.fnode.sel{background:var(--sc); box-shadow:0 0 0 4px var(--ss)}
+.fcol > .fh.fnode{background:transparent; border:none; padding:2px 4px; color:var(--sc); font-family:var(--f-display); font-weight:800; border-radius:8px}
+.fcol > .fl.fnode{border:1px solid transparent; border-radius:8px; background:var(--surface); padding:6px 8px; font-size:.92rem}
+.fnum{flex:none; min-width:22px; height:22px; border-radius:11px; background:var(--sc); color:#fff; font-family:var(--f-mono); font-size:.72rem; display:grid; place-items:center; padding:0 5px}
+.fbox.key .fnum{background:#fff; color:var(--sc)}
+.xflow.recall .fnode:not(.shown){filter:blur(6px)}
+.xflow.recall .fcol, .xflow.recall .fbox.shown{filter:none}
+dl.terms{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin:0}
+dl.terms div{background:var(--ss); border-radius:10px; padding:10px 12px}
+dl.terms dt{font-weight:800; color:var(--sc)}
+dl.terms dd{margin:2px 0 0}
+#sheet{position:fixed; inset:0; z-index:55; background:rgba(15,18,34,.35); display:flex; align-items:flex-end}
+.sheet-in{background:var(--surface); width:100%; border-radius:18px 18px 0 0; padding:16px max(16px, env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px)); display:flex; flex-direction:column; gap:12px; max-height:80vh; overflow:auto}
+.sheet-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+.sheet-grid a{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:10px; text-decoration:none; font-weight:700}
+@media (max-width:900px){.flview{grid-template-columns:minmax(0,1fr)} .flpanel{position:static; order:-1}}
 
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
@@ -808,6 +839,458 @@ hy:["Toxic metabolite of paracetamol?::NAPQI","Nomogram used for paracetamol poi
 mcq:[["Antidote for paracetamol overdose:",["Naloxone","N-acetylcysteine","Flumazenil","Fomepizole"],1,"NAC replenishes glutathione."],["Cherry-red lividity is a feature of:",["Cyanide","Carbon monoxide","Nitrite","Phosphorus"],1,"Carboxyhaemoglobin gives cherry-red colour."],["Legal blood alcohol limit for driving in India:",["30 mg/100 mL","50 mg/100 mL","80 mg/100 mL","100 mg/100 mL"],0,"Motor Vehicles Act sets 30 mg per 100 mL blood."]]});
 })();
 
+/* Topic-wise explained flowcharts. Node = [label, explanation]; branch = {b:[[head,node,...],...]}; key = {k:[label,explanation]}. */
+const FLOWS=[];
+FLOWS.push(
+/* ===================== PATHOLOGY ===================== */
+{id:"p-injury",s:"path",ch:"path1",t:"Cell injury: from stimulus to cell death",sum:"How a cell responds when it is damaged, and how we tell reversible from irreversible injury.",
+n:[["Injurious stimulus","Anything that disturbs cell homeostasis: hypoxia (commonest), toxins, microbes, immune reactions, genetic defects, nutritional imbalance, physical agents."],
+["Biochemical targets hit","Five key mechanisms: ATP depletion, mitochondrial damage, Ca²⁺ influx, reactive oxygen species (ROS) and membrane / DNA damage. Several usually act together."],
+["ATP falls → Na⁺/K⁺ pump fails","Without ATP the sodium pump stops; Na⁺ and water enter the cell. Anaerobic glycolysis rises → lactic acid → low pH → chromatin clumping."],
+{b:[[["Mild or brief injury","If the stimulus is removed early, the cell can return to normal."],["Cell swelling (hydropic change)","Earliest light-microscopy change: pale, swollen cytoplasm from water entry."],["Fatty change","Triglyceride droplets accumulate, mainly in liver, heart and kidney (e.g. alcohol, hypoxia)."],["Reversible injury","Blebs, ER dilation and mitochondrial swelling seen on electron microscopy, but membranes still intact."]],
+[["Severe or persistent injury","Point of no return: inability to restore mitochondrial function and severe membrane damage."],["Membrane damage + Ca²⁺ flood","Calcium activates phospholipases, proteases, endonucleases and ATPases that digest the cell."],["Nuclear changes","Pyknosis (shrinkage), karyorrhexis (fragmentation), karyolysis (fading) — the hallmark of irreversible injury."]]]},
+{b:[[["Necrosis","Death of groups of cells with membrane rupture; enzymes leak out and inflammation follows."],["Types","Coagulative (infarcts), liquefactive (brain, abscess), caseous (TB), fat (pancreatitis), fibrinoid (vasculitis), gangrenous."]],
+[["Apoptosis","Programmed, energy-dependent death of single cells; membranes stay intact, so no inflammation."],["Outcome","Apoptotic bodies are eaten by macrophages (efferocytosis) without damage to neighbours."]]]}],
+terms:[["Hydropic change","Cell swelling due to water influx; the first sign of injury."],["Pyknosis","Shrunken, dense nucleus."],["Karyorrhexis","Fragmented nucleus."],["Karyolysis","Fading of the nucleus from DNase activity."],["Efferocytosis","Phagocytosis of apoptotic cells."]],
+exam:"For a 10-mark answer on cell injury, draw this flow and add a table of reversible vs irreversible features."},
+
+{id:"p-apoptosis",s:"path",ch:"path1",t:"Apoptosis: intrinsic & extrinsic pathways",sum:"Two routes that converge on caspases to dismantle a cell cleanly.",
+n:[{b:[[["Intrinsic (mitochondrial) pathway","Triggered by DNA damage, growth-factor withdrawal, misfolded proteins. The commonest pathway."],["BH3-only sensors activated","Proteins like BIM, BID, PUMA sense stress and tip the balance."],["BAX / BAK form pores","Pro-apoptotic proteins make the mitochondrial outer membrane leaky. BCL-2 and BCL-XL normally prevent this."],["Cytochrome c released","Cytochrome c leaves the mitochondria into the cytosol."],["Apoptosome → caspase-9","Cytochrome c + APAF-1 form the apoptosome, which activates initiator caspase-9."]],
+[["Extrinsic (death receptor) pathway","Triggered when a ligand binds a death receptor on the cell surface."],["Fas–FasL or TNF–TNFR1 binding","Receptors cluster and recruit adaptor protein FADD."],["Caspase-8 activated","Initiator caspase-8 is activated (FLIP can block it)."]]]},
+["Executioner caspases 3, 6, 7","Both pathways converge here. Caspases cleave the cytoskeleton and activate DNase."],
+["Morphology","Cell shrinkage, chromatin condensation, membrane blebbing, apoptotic bodies; eosinophilic cytoplasm with dense nuclear fragments."],
+{k:["Phagocytosis without inflammation","Phosphatidylserine flips to the outer membrane — an 'eat me' signal for macrophages."]}],
+terms:[["BCL-2","Anti-apoptotic protein; overexpressed in follicular lymphoma t(14;18)."],["Caspase","Cysteine protease that cleaves after aspartate."],["APAF-1","Apoptotic protease activating factor-1, forms the apoptosome."],["Phosphatidylserine","Membrane lipid that signals 'eat me' when flipped outward."]],
+exam:"Examiners love the difference table between apoptosis and necrosis. Add this pathway diagram for full marks."},
+
+{id:"p-inflam",s:"path",ch:"path2",t:"Acute inflammation: leukocyte journey",sum:"How neutrophils leave the blood and reach the site of injury.",
+n:[["Injury or microbes detected","Tissue macrophages, mast cells and endothelium sense danger through receptors such as Toll-like receptors."],
+["Vascular changes","Brief arteriolar constriction, then vasodilatation (histamine, NO) causing redness and heat; increased permeability causes exudate and swelling."],
+["Stasis","Fluid loss concentrates red cells and slows flow, pushing leukocytes to the vessel wall."],
+["Margination","White cells move from the central axial stream to the periphery next to the endothelium."],
+["Rolling","Weak, transient binding via selectins (E-, P-selectin on endothelium; L-selectin on leukocytes)."],
+["Firm adhesion","Chemokines activate leukocyte integrins (LFA-1, VLA-4) that bind ICAM-1 and VCAM-1."],
+["Transmigration (diapedesis)","Leukocytes squeeze between endothelial cells using PECAM-1 (CD31), usually in post-capillary venules."],
+["Chemotaxis","Movement along a gradient of C5a, LTB4, IL-8 and bacterial N-formyl peptides."],
+["Phagocytosis & killing","Recognition (opsonins C3b, IgG), engulfment, then killing by the oxygen-dependent MPO–H2O2–halide system."],
+{b:[[["Resolution","Complete restoration when injury is mild and tissue can regenerate."]],[["Abscess","Pus collection when pyogenic bacteria persist."]],[["Scar / fibrosis","When tissue cannot regenerate or there is extensive damage."]],[["Chronic inflammation","When the stimulus persists (e.g. TB)."]]]}],
+terms:[["Exudate","Protein-rich fluid with cells; SG > 1.020."],["Selectins","Adhesion molecules causing rolling."],["Integrins","Adhesion molecules causing firm attachment."],["Opsonin","Molecule coating microbes to aid phagocytosis (C3b, IgG)."],["LTB4","Leukotriene B4, a strong chemotactic agent."]],
+exam:"Draw this sequence for the LAQ 'Vascular and cellular events of acute inflammation' and name the molecules at each step."},
+
+{id:"p-granuloma",s:"path",ch:"path2",t:"Tubercular granuloma formation",sum:"How the body walls off M. tuberculosis through a type IV reaction.",
+n:[["Inhaled droplet nuclei","M. tuberculosis reaches alveoli and is engulfed by alveolar macrophages."],
+["Bacilli survive inside macrophages","Mycobacteria block phagosome–lysosome fusion and multiply (first ~3 weeks, no immunity yet)."],
+["Antigen presentation","Dendritic cells carry antigen to lymph nodes and present it with MHC-II to CD4⁺ T cells."],
+["TH1 response (IL-12 driven)","CD4⁺ TH1 cells release IFN-γ — the key cytokine of protection."],
+["Macrophage activation","IFN-γ activates macrophages: they kill bacilli better (NO, ROS) and turn into epithelioid cells."],
+["Epithelioid cells & giant cells","Activated macrophages with abundant pink cytoplasm; some fuse to form Langhans giant cells with horseshoe nuclei."],
+["Lymphocyte cuff & fibroblasts","A rim of lymphocytes and fibroblasts surrounds the cluster, walling off the infection."],
+{k:["Caseating granuloma","Central cheesy necrosis forms; this is the tubercle. Healing occurs by fibrosis and calcification."]}],
+terms:[["Epithelioid cell","Activated macrophage resembling epithelial cells."],["Langhans giant cell","Multinucleate cell with peripheral horseshoe nuclei."],["Caseation","Cheese-like necrosis typical of TB."],["Ghon complex","Ghon focus plus caseous hilar lymph node (primary TB)."]],
+exam:"For 'Pathogenesis of tuberculosis' show this flow, then add primary vs secondary TB and the fate of the Ghon complex."},
+
+{id:"p-healing",s:"path",ch:"path2",t:"Wound healing: primary vs secondary intention",sum:"The stages by which a skin wound repairs itself.",
+n:[["Wound created","Tissue and vessels are cut or torn."],
+["Haemostasis (minutes)","Vasoconstriction, platelet plug and fibrin clot; the clot forms a scaffold."],
+["Inflammation (day 1–3)","Neutrophils arrive within 24 h; macrophages by day 3 clear debris and release growth factors (TGF-β, PDGF, VEGF)."],
+["Proliferation (day 3–14)","Granulation tissue forms: new capillaries (angiogenesis), fibroblasts and loose matrix. Epithelium covers the surface."],
+["Remodelling (weeks–months)","Type III collagen is replaced by stronger type I collagen; wound strength reaches about 70–80% of normal by 3 months."],
+{b:[[["Primary intention","Clean incised wound with edges apposed (surgical incision)."],["Little granulation tissue","Small gap fills quickly."],["Thin linear scar","Epithelium bridges the gap in 24–48 h."]],
+[["Secondary intention","Large wound with tissue loss or infection."],["Abundant granulation tissue","Fills the defect from below."],["Wound contraction","Myofibroblasts pull edges together."],["Larger scar","Slower healing, more fibrosis."]]]},
+{k:["Complications","Infection, dehiscence, hypertrophic scar, keloid, contracture, incisional hernia."]}],
+terms:[["Granulation tissue","New capillaries, fibroblasts and inflammatory cells in loose matrix; pink and granular."],["Myofibroblast","Fibroblast with contractile smooth-muscle features."],["Keloid","Scar growing beyond the wound margin."],["Dehiscence","Wound bursting open."]],
+exam:"Write first vs second intention as a table and list factors affecting healing (infection, nutrition, steroids, diabetes)."},
+
+{id:"p-thrombo",s:"path",ch:"path3",t:"Thrombosis → embolism → infarction",sum:"From clot formation in a vessel to tissue death downstream.",
+n:[{b:[[["Endothelial injury","Exposes collagen and tissue factor; e.g. MI, vasculitis, hypertension, smoking."]],[["Abnormal flow","Stasis (veins, atrial fibrillation) or turbulence (aneurysm) brings platelets to the wall."]],[["Hypercoagulability","Inherited (factor V Leiden) or acquired (cancer, pregnancy, OCPs, immobility)."]]]},
+["Thrombus forms","Platelets adhere and aggregate; coagulation adds fibrin. Ante-mortem thrombi show lines of Zahn."],
+{b:[[["Propagation","Thrombus grows along the vessel."]],[["Dissolution","Fibrinolysis clears a fresh thrombus."]],[["Organisation & recanalisation","Ingrowth of cells and new channels partly restore flow."]],[["Embolisation","Part breaks away and travels."]]]},
+["Embolus lodges downstream","Venous emboli (deep leg veins) go to the lungs; arterial emboli (heart, aorta) go to brain, kidney, spleen, limbs."],
+["Ischaemia","Reduced blood supply causes hypoxia, nutrient lack and waste build-up."],
+{b:[[["White (pale) infarct","Solid organs with end arteries: heart, kidney, spleen."]],[["Red (haemorrhagic) infarct","Dual supply or loose tissue, venous occlusion: lung, intestine, ovarian torsion."]]]},
+{k:["Coagulative necrosis then scar","Most infarcts show coagulative necrosis (brain shows liquefactive) and heal by fibrosis."]}],
+terms:[["Virchow's triad","Endothelial injury, abnormal flow, hypercoagulability."],["Lines of Zahn","Alternating layers of platelets/fibrin and RBCs in an ante-mortem thrombus."],["Paradoxical embolism","Venous embolus crossing to arterial side through an ASD/PFO."],["Infarct","Area of ischaemic necrosis."]],
+exam:"Commonly asked: 'Define thrombosis. Describe pathogenesis and fate of a thrombus.' Use the top half of this chart."},
+
+{id:"p-shock",s:"path",ch:"path3",t:"Shock: stages and pathogenesis",sum:"Why tissues fail when circulation collapses.",
+n:[{b:[[["Hypovolaemic","Loss of blood or fluid (haemorrhage, burns, vomiting)."]],[["Cardiogenic","Pump failure (MI, arrhythmia, tamponade)."]],[["Septic","Infection causes vasodilatation and leaky vessels."]],[["Anaphylactic / neurogenic","Allergy or spinal injury causes massive vasodilatation."]]]},
+["Fall in tissue perfusion","Cardiac output or vascular tone drops, so organs receive too little oxygen."],
+["Stage 1: non-progressive (compensated)","Baroreceptors trigger sympathetic surge, catecholamines, RAAS and ADH; heart rate rises and blood is diverted to brain and heart."],
+["Stage 2: progressive","Compensation fails; anaerobic metabolism causes lactic acidosis, which relaxes arterioles and pools blood; cells begin to die."],
+["Stage 3: irreversible","Severe cell and organ damage; lysosomal enzymes leak; myocardial depressant factors; even restoring volume cannot save the patient."],
+{k:["Multi-organ dysfunction","Shock lung (ARDS), acute tubular necrosis, ischaemic bowel, DIC, centrilobular liver necrosis, brain damage."]}],
+terms:[["MODS","Multiple organ dysfunction syndrome."],["Lactic acidosis","Acid build-up from anaerobic glycolysis."],["Warm shock","Early septic shock with warm, flushed skin from vasodilatation."]],
+exam:"For the LAQ on shock, give classification, this three-stage flow and the morphological changes in each organ."},
+
+{id:"p-carcino",s:"path",ch:"path5",t:"Multistep carcinogenesis",sum:"How a normal cell accumulates mutations and becomes a metastatic cancer.",
+n:[["Carcinogen exposure","Chemical (tobacco, aflatoxin), physical (UV, radiation) or viral (HPV, HBV, EBV)."],
+["Initiation","Permanent, irreversible DNA mutation in a cell. A single exposure can initiate."],
+["Promotion","Promoters (hormones, phorbol esters, chronic inflammation) make initiated cells proliferate; reversible if removed."],
+{b:[[["Oncogene activation","Gain of function: RAS, MYC, ERBB2 (HER2), BCR-ABL push the cell to divide."]],[["Tumour suppressor loss","Loss of brakes: RB (G1→S checkpoint), p53 (DNA damage response); needs two hits."]],[["Apoptosis evasion","BCL-2 overexpression, p53 loss."]],[["Telomerase","Allows unlimited divisions (immortality)."]]]},
+["Progression","More mutations and genomic instability create aggressive subclones."],
+["Angiogenesis","VEGF from tumour cells builds new vessels; tumours cannot grow beyond 1–2 mm without them."],
+["Invasion","Loss of E-cadherin, breakdown of basement membrane by MMPs, migration into stroma."],
+{k:["Metastasis","Spread via lymphatics (carcinomas), blood (sarcomas) or body cavities (ovary). The defining feature of malignancy."]}],
+terms:[["Proto-oncogene","Normal growth gene that can become an oncogene."],["Knudson two-hit","Both alleles of a tumour suppressor must be lost."],["MMP","Matrix metalloproteinase, digests extracellular matrix."],["Genomic instability","Tendency to accumulate mutations (e.g. defective DNA repair)."]],
+exam:"Use this for 'Molecular basis of cancer' and add the hallmarks of cancer as a list."},
+
+{id:"p-ida",s:"path",ch:"path7",t:"Iron deficiency anaemia: how it develops",sum:"The sequence from negative iron balance to microcytic anaemia.",
+n:[["Negative iron balance","Blood loss (hookworm, menorrhagia, GI bleeding), poor diet, increased need (pregnancy, growth) or malabsorption."],
+["Stage 1: storage depletion","Marrow and liver iron stores fall first; serum ferritin drops (<15 µg/L). Hb still normal."],
+["Stage 2: iron-deficient erythropoiesis","Serum iron falls, TIBC rises, transferrin saturation <16%, free erythrocyte protoporphyrin rises."],
+["Stage 3: frank anaemia","Hb falls; red cells become microcytic (MCV < 80 fL) and hypochromic (MCH low)."],
+["Peripheral smear","Microcytic hypochromic cells, anisopoikilocytosis, pencil cells, target cells."],
+["Clinical features","Fatigue, pallor, koilonychia (spoon nails), angular cheilitis, glossitis, pica, Plummer-Vinson syndrome."],
+{k:["Treatment response","Oral iron raises reticulocytes in 5–10 days and Hb by about 1 g/dL per week; continue 3–6 months to refill stores."]}],
+terms:[["Ferritin","Storage form of iron; best single test for iron deficiency."],["TIBC","Total iron-binding capacity; rises in iron deficiency."],["Koilonychia","Spoon-shaped nails."],["Mentzer index","MCV/RBC count; >13 favours IDA over thalassaemia trait."]],
+exam:"Write the three stages with lab values; examiners give marks for ferritin, TIBC and transferrin saturation."},
+
+{id:"p-dic",s:"path",ch:"path9",t:"DIC: consumption and bleeding",sum:"Why patients clot and bleed at the same time.",
+n:[{b:[[["Tissue factor release","Obstetric complications (abruptio placentae, amniotic fluid embolism), APL, trauma, adenocarcinoma."]],[["Endothelial injury","Sepsis (endotoxin), burns, snake bite, heat stroke."]]]},
+["Widespread activation of coagulation","Thrombin is generated throughout the circulation."],
+["Microthrombi in small vessels","Fibrin deposits block microcirculation in kidney, brain, lungs and skin."],
+{b:[[["Ischaemic organ damage","Renal failure, confusion, ARDS, skin necrosis."],["Microangiopathic haemolysis","RBCs are sheared on fibrin strands → schistocytes."]],
+[["Consumption of platelets & factors","Platelets, fibrinogen, V and VIII get used up."],["Secondary fibrinolysis","Plasmin breaks clots → fibrin degradation products and D-dimer, which also act as anticoagulants."],["Bleeding","Oozing from venepuncture sites, petechiae, GI and wound bleeding."]]]},
+{k:["Lab picture","↓ platelets, ↑ PT, ↑ aPTT, ↓ fibrinogen, ↑ D-dimer, schistocytes on smear. Treat the cause; give platelets, FFP, cryoprecipitate."]}],
+terms:[["D-dimer","Fragment produced when plasmin degrades cross-linked fibrin."],["Schistocyte","Fragmented red cell (helmet cell)."],["FDP","Fibrin degradation products."],["APL","Acute promyelocytic leukaemia (AML-M3)."]],
+exam:"A favourite short note. Draw this flow, list causes in two columns and finish with the lab table."},
+
+{id:"p-mi",s:"path",ch:"path10",t:"Atherosclerosis to myocardial infarction",sum:"How a plaque becomes a heart attack and what happens to the muscle over time.",
+n:[["Stable atheromatous plaque","Fibrofatty plaque with a lipid core and fibrous cap narrows the coronary artery (angina on exertion)."],
+["Plaque disruption","Thin-capped, lipid-rich 'vulnerable' plaques rupture or erode, often due to inflammation and shear stress."],
+["Platelet aggregation & thrombus","Exposed collagen and lipid trigger a thrombus that suddenly occludes the artery."],
+["Ischaemia","Within 60 seconds ATP falls and contraction stops; injury is reversible for about 20–40 minutes."],
+["Irreversible necrosis","After 20–40 min of severe ischaemia, cells begin to die from the subendocardium outward (wavefront)."],
+{b:[[["0–12 h","Usually no gross change; waviness of fibres; coagulative necrosis begins at 4–12 h."]],[["1–3 days","Neutrophil infiltrate; mottled yellow-tan infarct."]],[["3–7 days","Macrophages remove dead cells; softest stage — risk of rupture."]],[["1–2 weeks","Granulation tissue at the margins."]],[["2–8 weeks","Collagen scar forms."]]]},
+{k:["Complications","Arrhythmias (commonest early cause of death), heart failure, cardiogenic shock, rupture, papillary muscle rupture, mural thrombus, ventricular aneurysm, Dressler syndrome."]}],
+terms:[["Troponin I/T","Most specific marker of myocardial necrosis; rises 3–4 h, stays 7–10 days."],["CK-MB","Returns to normal in 2–3 days; used for re-infarction."],["Contraction band necrosis","Seen at the edge of reperfused infarcts."],["Dressler syndrome","Autoimmune pericarditis weeks after MI."]],
+exam:"For 'Myocardial infarction' combine this flow with a table of morphological changes by time and a list of cardiac markers."},
+
+{id:"p-rhd",s:"path",ch:"path10",t:"Rheumatic fever to rheumatic heart disease",sum:"Molecular mimicry after a sore throat that scars heart valves.",
+n:[["Group A streptococcal pharyngitis","Untreated throat infection with Streptococcus pyogenes (not skin infection)."],
+["Latent period of 2–3 weeks","Antibodies and T cells develop against streptococcal M protein."],
+["Molecular mimicry","Anti-M protein antibodies cross-react with cardiac myosin, valve glycoproteins, joint and brain antigens."],
+["Acute rheumatic fever","Major Jones criteria: carditis, migratory polyarthritis, Sydenham chorea, erythema marginatum, subcutaneous nodules."],
+["Pancarditis","Aschoff bodies with Anitschkow (caterpillar) cells in all three layers; fibrinous pericarditis; verrucous vegetations on valve closure lines."],
+["Recurrent attacks","Each new streptococcal infection reactivates the process; secondary penicillin prophylaxis prevents this."],
+{k:["Chronic RHD","Valve fibrosis and commissural fusion: mitral stenosis (fish-mouth valve) is commonest; MacCallum plaque in left atrium; complications include AF, thrombi, IE."]}],
+terms:[["Aschoff body","Pathognomonic granuloma of rheumatic carditis."],["Anitschkow cell","Activated macrophage with caterpillar-like chromatin."],["ASO titre","Anti-streptolysin O antibody, evidence of recent strep infection."],["Fish-mouth valve","Stenotic mitral valve from commissural fusion."]],
+exam:"For the RHD long answer, write etiopathogenesis with this flow, then Jones criteria and morphology of acute vs chronic stages."}
+);
+
+FLOWS.push(
+{id:"p-b12",s:"path",ch:"path7",t:"Vitamin B12 absorption & megaloblastic anaemia",sum:"Where B12 absorption can fail and what the deficiency does.",
+n:[["Dietary B12","Only in animal foods (meat, eggs, milk); strict vegetarians are at risk."],
+["Stomach: released by acid & pepsin","B12 binds R-binder (haptocorrin) from saliva."],
+["Duodenum: pancreatic proteases free B12","B12 now binds intrinsic factor (IF) secreted by gastric parietal cells."],
+["Terminal ileum: IF–B12 absorbed","Cubilin receptors take up the complex. Ileal resection or Crohn's disease blocks this."],
+["Transport & storage","Transcobalamin II carries B12; liver stores last 3–5 years, so deficiency develops slowly."],
+{b:[[["Pernicious anaemia","Autoimmune gastritis destroys parietal cells; anti-IF and anti-parietal cell antibodies."]],[["Other causes","Gastrectomy, fish tapeworm, bacterial overgrowth, metformin, vegan diet."]]]},
+["Defective DNA synthesis","B12 is needed to regenerate tetrahydrofolate; thymidine synthesis slows and nuclei mature late (nuclear–cytoplasmic asynchrony)."],
+{b:[[["Blood","Macro-ovalocytes, hypersegmented neutrophils, pancytopenia; megaloblasts in marrow; ineffective erythropoiesis (↑ LDH, ↑ bilirubin)."]],[["Nerves","Raised methylmalonic acid damages myelin → subacute combined degeneration of the cord (B12 only, not folate)."]]]}],
+terms:[["Intrinsic factor","Glycoprotein from parietal cells needed for B12 absorption."],["Megaloblast","Large red-cell precursor with immature nucleus."],["SACD","Subacute combined degeneration of dorsal and lateral columns."],["Schilling test","Old test to locate the cause of B12 malabsorption."]],
+exam:"For megaloblastic anaemia, describe B12 and folate metabolism, then causes, blood/marrow picture and lab diagnosis."},
+
+{id:"p-cirrhosis",s:"path",ch:"path13",t:"Cirrhosis and portal hypertension",sum:"How chronic liver injury scars the liver and backs up portal blood.",
+n:[["Chronic liver injury","Alcohol, chronic HBV/HCV, NAFLD, autoimmune, Wilson disease, haemochromatosis."],
+["Hepatocyte death & inflammation","Kupffer cells release cytokines (TGF-β, PDGF)."],
+["Stellate (Ito) cell activation","Vitamin A–storing cells become myofibroblasts and lay down collagen in the space of Disse."],
+["Bridging fibrosis + regenerative nodules","Fibrous septa link portal tracts and central veins; surviving hepatocytes form nodules. This is cirrhosis."],
+["Increased resistance to portal flow","Distorted vasculature and sinusoidal capillarisation raise portal pressure (> 10 mmHg)."],
+{b:[[["Portosystemic shunts","Oesophageal varices (bleeding), caput medusae, haemorrhoids."]],[["Splenomegaly","Congestive splenomegaly causes hypersplenism and thrombocytopenia."]],[["Ascites","Portal hypertension + low albumin + RAAS activation."]],[["Hepatic encephalopathy","Ammonia bypasses the liver through shunts."]]]},
+{k:["Liver failure features","Jaundice, low albumin, prolonged PT, spider naevi, palmar erythema, gynaecomastia; risk of hepatocellular carcinoma."]}],
+terms:[["Space of Disse","Space between sinusoid endothelium and hepatocytes."],["Caput medusae","Dilated periumbilical veins."],["Micronodular","Nodules < 3 mm (alcohol)."],["Macronodular","Nodules > 3 mm (post-viral)."]],
+exam:"For cirrhosis: definition, etiology, pathogenesis (this flow), classification and complications."},
+
+{id:"p-nephrotic",s:"path",ch:"path14",t:"Nephrotic syndrome pathophysiology",sum:"Why a leaky glomerular filter causes oedema and high cholesterol.",
+n:[["Podocyte / GBM injury","Minimal change disease (children), membranous nephropathy, FSGS, diabetic nephropathy, amyloidosis."],
+["Loss of charge & size barrier","Effaced podocyte foot processes and damaged GBM let albumin through."],
+["Massive proteinuria (> 3.5 g/day)","Urine is frothy; selective proteinuria (albumin only) suggests minimal change disease."],
+["Hypoalbuminaemia (< 3 g/dL)","Liver synthesis cannot keep up with urinary loss."],
+{b:[[["Low oncotic pressure","Fluid moves into tissues."],["Generalised oedema","Periorbital puffiness, then anasarca."]],[["Liver makes more lipoproteins","Compensatory synthesis rises."],["Hyperlipidaemia & lipiduria","Oval fat bodies and fatty casts in urine."]]]},
+{k:["Complications","Infections (loss of immunoglobulins), thrombosis (loss of antithrombin III, renal vein thrombosis), protein malnutrition."]}],
+terms:[["Podocyte","Visceral epithelial cell with foot processes."],["Selective proteinuria","Loss of low-molecular-weight proteins like albumin."],["Anasarca","Generalised massive oedema."],["Oval fat body","Lipid-laden tubular cell in urine."]],
+exam:"Contrast nephritic vs nephrotic as a table; this flow earns pathogenesis marks."},
+
+{id:"p-dm",s:"path",ch:"path16",t:"Diabetes mellitus: pathogenesis of complications",sum:"How chronic hyperglycaemia damages vessels, nerves and organs.",
+n:[{b:[[["Type 1 DM","Autoimmune destruction of β-cells (HLA-DR3/DR4, anti-GAD) → absolute insulin deficiency."]],[["Type 2 DM","Insulin resistance (obesity, visceral fat) + progressive β-cell dysfunction."]]]},
+["Chronic hyperglycaemia","Persistently high glucose exposes all tissues to sugar."],
+{b:[[["AGE formation","Non-enzymatic glycation of proteins crosslinks collagen and activates inflammation."]],[["Polyol pathway","Aldose reductase turns glucose into sorbitol in nerves and lens → osmotic damage, cataract."]],[["PKC activation","Increases VEGF, TGF-β and vascular permeability."]],[["Oxidative stress","ROS damage endothelium."]]]},
+{b:[[["Microvascular","Hyaline arteriolosclerosis and basement-membrane thickening."],["Retinopathy","Microaneurysms, exudates, neovascularisation."],["Nephropathy","Kimmelstiel-Wilson nodules; microalbuminuria first."],["Neuropathy","Symmetric distal sensory loss; diabetic foot."]],
+[["Macrovascular","Accelerated atherosclerosis."],["Coronary artery disease","MI is the commonest cause of death."],["Stroke & peripheral vascular disease","Gangrene of the lower limb."]]]},
+{k:["Acute complications","Diabetic ketoacidosis (Type 1), hyperosmolar hyperglycaemic state (Type 2), hypoglycaemia from treatment."]}],
+terms:[["AGE","Advanced glycation end-product."],["HbA1c","Glycated haemoglobin, reflects 2–3 month glucose control; ≥ 6.5% diagnostic."],["Kimmelstiel-Wilson lesion","Nodular glomerulosclerosis."],["Insulin resistance","Reduced tissue response to insulin."]],
+exam:"The DM long answer: classification, pathogenesis of type 1 and 2, this complications flow, morphology and diagnosis criteria."},
+
+/* ===================== MICROBIOLOGY ===================== */
+{id:"m-pathogenesis",s:"micro",ch:"micro1",t:"Bacterial pathogenesis: steps of infection",sum:"What a bacterium must do to cause disease.",
+n:[["Transmission & entry","Contact, droplet, airborne, faeco-oral, vector or vertical routes bring the organism to a portal of entry."],
+["Adhesion","Pili/fimbriae and adhesins bind host receptors (e.g. E. coli P-fimbriae to uroepithelium)."],
+["Colonisation & multiplication","Bacteria multiply using iron-capturing siderophores and evade normal flora competition."],
+{b:[[["Invasion","Spread into tissues using enzymes: hyaluronidase, collagenase, streptokinase."]],[["Immune evasion","Capsule (anti-phagocytic), IgA protease, protein A, antigenic variation, intracellular survival."]]]},
+{b:[[["Exotoxins","Secreted proteins with specific actions: diphtheria, tetanus, cholera, botulinum."]],[["Endotoxin (LPS)","Released from Gram-negative walls; fever, shock, DIC."]]]},
+{k:["Tissue damage & disease","Direct damage + damage from the host's own immune response; outcome depends on dose, virulence and host immunity."]}],
+terms:[["Virulence","Degree of pathogenicity."],["Adhesin","Bacterial molecule that binds host cells."],["Siderophore","Iron-binding molecule."],["Superantigen","Toxin that activates many T cells non-specifically (TSST-1)."]],
+exam:"Use for 'Virulence factors of bacteria' and add examples of each factor."},
+
+{id:"m-hiv",s:"micro",ch:"micro7",t:"HIV life cycle & pathogenesis",sum:"How HIV enters CD4 cells and destroys the immune system.",
+n:[["Transmission","Sexual (commonest), blood and needles, mother-to-child (in utero, delivery, breastfeeding)."],
+["Attachment","gp120 binds CD4, then co-receptor CCR5 (early) or CXCR4 (late)."],
+["Fusion & entry","gp41 mediates fusion of viral and cell membranes."],
+["Reverse transcription","Reverse transcriptase converts viral RNA to DNA (error-prone → drug resistance). Target of NRTIs and NNRTIs."],
+["Integration","Integrase inserts viral DNA into host genome (provirus). Target of dolutegravir."],
+["Transcription & assembly","Host machinery makes viral RNA and proteins; protease cleaves polyproteins (target of protease inhibitors)."],
+["Budding","New virions bud from the cell and infect more CD4 cells."],
+{b:[[["Acute HIV","2–6 weeks: flu-like illness, high viral load; antibody may be negative (window period)."]],[["Clinical latency","Years of slow CD4 decline; virus active in lymph nodes."]],[["AIDS","CD4 < 200/µL or AIDS-defining illness: TB, PCP, cryptococcal meningitis, toxoplasmosis, CMV, Kaposi."]]]}],
+terms:[["gp120","Envelope glycoprotein binding CD4."],["Provirus","Integrated viral DNA."],["Viral load","HIV RNA copies per mL; monitors ART."],["Window period","Time before antibodies are detectable."]],
+exam:"For the HIV LAQ: structure, transmission, this pathogenesis flow, clinical stages and lab diagnosis (NACO strategies)."},
+
+{id:"m-hbv",s:"micro",ch:"micro7",t:"Hepatitis B: course and serology timeline",sum:"Which marker appears when, and how to read the pattern.",
+n:[["Exposure","Blood, sexual or perinatal transmission; incubation 1–6 months."],
+["HBsAg appears","First marker (before symptoms); means current infection."],
+["HBeAg & HBV DNA","Mark active replication and high infectivity."],
+["IgM anti-HBc","Appears with symptoms; marker of acute infection and the only marker in the window period."],
+{b:[[["Recovery (adults ~95%)","HBsAg disappears → window period → anti-HBs appears = immunity."],["Anti-HBe","Signals falling infectivity."]],[["Chronic infection","HBsAg persists > 6 months; IgG anti-HBc."],["Risks","Cirrhosis and hepatocellular carcinoma. 90% of infected neonates become chronic."]]]},
+{k:["Vaccinated person","Anti-HBs only (no anti-HBc), because the vaccine contains only HBsAg."]}],
+terms:[["Dane particle","Complete infectious HBV virion."],["Window period","Gap between HBsAg loss and anti-HBs appearance."],["HBeAg","Marker of high infectivity."],["Australia antigen","Old name for HBsAg."]],
+exam:"Draw the serology timeline and a table of marker patterns; very commonly asked."},
+
+{id:"m-cholera",s:"micro",ch:"micro4",t:"Cholera: how the toxin causes rice-water stools",sum:"A toxin that switches on intestinal salt and water secretion.",
+n:[["Ingestion of contaminated water","High infective dose (10⁸) because the organism is acid-sensitive."],
+["Reaches small intestine","Darting motility (flagellum) and mucinase help it penetrate mucus."],
+["Adhesion via TCP","Toxin co-regulated pilus attaches to enterocytes; no invasion."],
+["Cholera toxin (A + 5B)","B subunits bind GM1 ganglioside; A subunit enters the cell."],
+["ADP-ribosylation of Gs","Gs protein is locked 'on' → adenylate cyclase permanently active → ↑ cAMP."],
+["Cl⁻ secretion via CFTR, ↓ Na⁺ absorption","Water follows salt into the gut lumen."],
+{k:["Rice-water stools & dehydration","Up to 1 L/hour of isotonic fluid loss; treat with ORS (works because glucose-Na⁺ co-transport is intact) and IV Ringer lactate."]}],
+terms:[["TCP","Toxin co-regulated pilus."],["GM1 ganglioside","Receptor for cholera toxin."],["CFTR","Chloride channel."],["TCBS agar","Selective medium; yellow colonies of V. cholerae."]],
+exam:"Draw this mechanism for 'Pathogenesis of cholera' and add lab diagnosis (VR medium, TCBS)."},
+
+{id:"m-rabies",s:"micro",ch:"micro7",t:"Rabies: from bite to brain, and PEP",sum:"Why post-exposure prophylaxis must be immediate.",
+n:[["Bite or scratch by rabid animal","Dogs cause most human rabies in India; virus is in saliva."],
+["Local multiplication in muscle","Virus multiplies at the wound site (incubation 1–3 months; shorter for head/face bites)."],
+["Enters peripheral nerves","Binds nicotinic ACh receptors and moves to the CNS by retrograde axonal transport. Antibodies cannot reach it here."],
+["CNS infection","Spreads in brain; Negri bodies in hippocampus and Purkinje cells."],
+["Centrifugal spread","Travels out to salivary glands, skin, cornea (basis of corneal impression smear)."],
+{k:["Clinical rabies is fatal","Hydrophobia, aerophobia, furious or paralytic forms. Prevention is everything."]},
+{b:[[["Category I","Touching/feeding, licks on intact skin","No PEP"]],[["Category II","Nibbling, minor scratches without bleeding","Wound wash + vaccine"]],[["Category III","Bites/scratches with bleeding, licks on broken skin or mucosa","Wound wash + vaccine + rabies immunoglobulin"]]]}],
+terms:[["Negri body","Eosinophilic cytoplasmic inclusion in neurons."],["Hydrophobia","Painful pharyngeal spasms on attempting to drink."],["RIG","Rabies immunoglobulin, infiltrated into the wound."],["Essen schedule","IM vaccine on days 0, 3, 7, 14 (and 28)."]],
+exam:"For rabies: pathogenesis flow, clinical features, lab diagnosis and the WHO category table for PEP."},
+
+{id:"m-typhoid",s:"micro",ch:"micro4",t:"Typhoid fever pathogenesis",sum:"Why typhoid is a systemic illness and how diagnosis changes by week.",
+n:[["Ingestion of S. Typhi","Contaminated food or water; carriers (gall bladder) spread it."],
+["Invades M cells of Peyer's patches","Crosses the ileal mucosa without causing diarrhoea at first."],
+["Primary bacteraemia","Spreads to liver, spleen, bone marrow, where it multiplies inside macrophages (incubation 7–14 days)."],
+["Secondary bacteraemia","Released in large numbers → step-ladder fever, relative bradycardia, rose spots, splenomegaly."],
+["Gall bladder seeding","Bacilli re-enter the gut via bile and re-infect Peyer's patches."],
+["Peyer's patch ulceration","Longitudinal ulcers; in week 3 they may bleed or perforate."],
+{k:["Diagnosis by week (BASU)","Week 1 blood culture, week 2 Widal (antibodies), week 3 stool, week 4 urine; bone marrow culture is most sensitive."]}],
+terms:[["M cell","Specialised epithelial cell over Peyer's patches."],["Rose spots","Blanching pink macules on the trunk."],["Vi antigen","Capsular antigen of S. Typhi; basis of a vaccine."],["Chronic carrier","Excretes bacilli > 1 year, often from gall bladder."]],
+exam:"Pathogenesis + lab diagnosis of enteric fever is a classic LAQ; this flow plus a Widal interpretation note covers it."},
+
+{id:"m-immune",s:"micro",ch:"micro2",t:"Immune response to a new antigen",sum:"From antigen entry to antibodies and memory.",
+n:[["Antigen enters","Microbe or vaccine antigen enters tissues."],
+["Antigen-presenting cell","Dendritic cells capture, process and carry antigen to lymph nodes."],
+{b:[[["MHC-II presentation","Extracellular antigens to CD4⁺ helper T cells."]],[["MHC-I presentation","Intracellular (viral) antigens to CD8⁺ cytotoxic T cells."]]]},
+{b:[[["TH1","IFN-γ → macrophage activation (cell-mediated immunity)."]],[["TH2","IL-4, IL-5 → B cells, IgE, eosinophils."]],[["CD8⁺ CTL","Kills infected cells via perforin and granzymes."]]]},
+["B cell activation","B cells bind antigen and receive T-cell help (CD40L, cytokines)."],
+["Plasma cells & antibodies","Primary response: IgM first after 1–2 week lag, then IgG by class switching."],
+{k:["Memory cells","Secondary response is faster, larger, mainly IgG with higher affinity — the basis of booster doses."]}],
+terms:[["APC","Antigen-presenting cell."],["MHC","Major histocompatibility complex."],["Class switching","Change from IgM to IgG/IgA/IgE."],["Affinity maturation","Antibodies bind more tightly over time."]],
+exam:"Use for 'Primary vs secondary immune response' and add a graph of antibody titre vs time."},
+
+{id:"m-dengue",s:"micro",ch:"micro7",t:"Dengue: from bite to severe dengue",sum:"Why second infections can be more dangerous.",
+n:[["Aedes aegypti bite","Day-biting mosquito breeding in clean stored water."],
+["Febrile phase (days 1–3)","High fever, headache, retro-orbital pain, myalgia; NS1 antigen detectable."],
+["Critical phase (days 3–7)","As fever falls, plasma leakage may begin: rising haematocrit, falling platelets."],
+["Secondary infection, different serotype","Non-neutralising antibodies from the first infection help virus enter macrophages (antibody-dependent enhancement)."],
+["Cytokine storm & endothelial leak","TNF, IL-6 and others increase vascular permeability."],
+{b:[[["Dengue with warning signs","Abdominal pain, vomiting, mucosal bleed, liver enlargement, rising HCT with falling platelets."]],[["Severe dengue","Shock from plasma leakage, severe bleeding or organ damage."]]]},
+{k:["Recovery phase","Fluid reabsorbed; watch for fluid overload. Diagnosis: NS1 (day 1–5), IgM ELISA (after day 5)."]}],
+terms:[["ADE","Antibody-dependent enhancement."],["NS1","Non-structural protein 1, early antigen."],["Haematocrit","Rises with plasma leakage."],["Breteau index","Positive containers per 100 houses."]],
+exam:"Write WHO classification, this pathogenesis and the lab tests by day of illness."}
+);
+
+FLOWS.push(
+/* ===================== PHARMACOLOGY ===================== */
+{id:"ph-chol",s:"pharm",ch:"pharm2",t:"Cholinergic transmission & drug targets",sum:"Each step of acetylcholine signalling and the drug acting there.",
+n:[["Choline uptake into nerve ending","Na⁺-choline transporter; blocked by hemicholinium."],
+["ACh synthesis","Choline acetyltransferase joins choline + acetyl-CoA."],
+["Storage in vesicles","Vesicular transporter (blocked by vesamicol)."],
+["Release by Ca²⁺-triggered exocytosis","Botulinum toxin cleaves SNARE proteins and blocks release → flaccid paralysis."],
+{b:[[["Muscarinic receptors (M1–M3)","Glands, heart, smooth muscle."],["Agonists","Pilocarpine, bethanechol."],["Antagonists","Atropine, glycopyrrolate, ipratropium, tropicamide."]],[["Nicotinic receptors","NM at skeletal muscle; NN at ganglia."],["NM blockers","d-tubocurarine, vecuronium (competitive); succinylcholine (depolarising)."]]]},
+["ACh broken down by acetylcholinesterase","Ends the signal within milliseconds."],
+{b:[[["Reversible anticholinesterases","Neostigmine, pyridostigmine (myasthenia), physostigmine (crosses BBB), donepezil (Alzheimer)."]],[["Irreversible (organophosphates)","Phosphorylate the enzyme; 'ageing' makes it permanent."]]]},
+{k:["OP poisoning treatment","Atropine for muscarinic effects + pralidoxime early to reactivate the enzyme before ageing."]}],
+terms:[["SLUDGE","Salivation, lacrimation, urination, defecation, GI upset, emesis."],["Ageing","Loss of an alkyl group making OP–enzyme bond permanent."],["Myasthenic crisis","Weakness from too little drug; cholinergic crisis from too much."]],
+exam:"Use for 'Classify anticholinesterases' and 'Treatment of OP poisoning'."},
+
+{id:"ph-adrenergic",s:"pharm",ch:"pharm2",t:"Adrenergic receptors: effects and drugs",sum:"Match each receptor to its effect and to agonists/antagonists.",
+n:[["Noradrenaline / adrenaline released","From sympathetic nerves and adrenal medulla."],
+{b:[[["α1 (Gq)","Vasoconstriction, mydriasis, bladder sphincter contraction."],["Agonist","Phenylephrine"],["Blocker","Prazosin (HTN), tamsulosin (BPH)"]],[["α2 (Gi)","↓ Noradrenaline release (presynaptic), ↓ BP centrally."],["Agonist","Clonidine, methyldopa, brimonidine"]],[["β1 (Gs)","↑ Heart rate & force, ↑ renin."],["Agonist","Dobutamine"],["Blocker","Atenolol, metoprolol, bisoprolol"]],[["β2 (Gs)","Bronchodilatation, vasodilatation, uterine relaxation, glycogenolysis."],["Agonist","Salbutamol, terbutaline, formoterol"],["Non-selective blocker","Propranolol (avoid in asthma)"]]]},
+["Termination","Re-uptake (uptake-1, blocked by cocaine & TCAs) and metabolism by MAO and COMT."],
+{k:["Clinical choice","Anaphylaxis: adrenaline IM; septic shock: noradrenaline; cardiogenic shock: dobutamine; asthma: salbutamol."]}],
+terms:[["Gq / Gs / Gi","G-proteins: Gq ↑ Ca²⁺, Gs ↑ cAMP, Gi ↓ cAMP."],["Uptake-1","Neuronal re-uptake of noradrenaline."],["Cardioselective","β1-selective blockers."]],
+exam:"A receptor table plus this flow answers 'Classify adrenergic drugs with uses'."},
+
+{id:"ph-aa",s:"pharm",ch:"pharm3",t:"Arachidonic acid pathway & NSAIDs",sum:"Where NSAIDs, steroids and montelukast act.",
+n:[["Membrane phospholipids","Cell injury or stimulation activates phospholipase A2."],
+["Phospholipase A2 → arachidonic acid","Glucocorticoids inhibit PLA2 indirectly (via lipocortin/annexin-1) — so they block both arms."],
+{b:[[["Cyclo-oxygenase (COX-1, COX-2)","Blocked by NSAIDs; aspirin irreversibly; celecoxib selectively COX-2."],["PGE2, PGI2","Pain, fever, vasodilatation, gastric protection (PGE2), renal blood flow."],["TXA2 (platelets)","Aggregation, vasoconstriction; low-dose aspirin blocks it."]],
+[["5-Lipoxygenase","Blocked by zileuton."],["LTB4","Neutrophil chemotaxis."],["LTC4, D4, E4","Bronchospasm, mucus; receptor blocked by montelukast."]]]},
+{k:["Why NSAIDs cause side effects","↓ PGE2 → gastric ulcers; ↓ renal PGs → fluid retention; shunting to leukotrienes → aspirin-induced asthma."]}],
+terms:[["PLA2","Phospholipase A2."],["COX-2","Inducible enzyme in inflammation."],["Annexin-1","Steroid-induced protein that inhibits PLA2."],["Reye's syndrome","Liver and brain injury with aspirin in children with viral illness."]],
+exam:"Draw this for 'Mechanism of action of NSAIDs' and 'Uses and adverse effects of aspirin'."},
+
+{id:"ph-insulin",s:"pharm",ch:"pharm4",t:"Insulin release & oral antidiabetic targets",sum:"How a β-cell secretes insulin and where each drug works.",
+n:[["Glucose enters β-cell (GLUT2)","Glucokinase starts metabolism."],
+["ATP rises","More ATP from glucose metabolism."],
+["K-ATP channel closes","Sulfonylureas (glimepiride, gliclazide) close this channel directly → risk of hypoglycaemia."],
+["Depolarisation → Ca²⁺ influx","Voltage-gated calcium channels open."],
+["Insulin granules released","GLP-1 agonists and DPP-4 inhibitors amplify glucose-dependent release (low hypoglycaemia risk)."],
+{b:[[["Liver","Metformin ↓ gluconeogenesis via AMPK."]],[["Muscle & fat","Pioglitazone (PPAR-γ) ↑ insulin sensitivity."]],[["Kidney","SGLT2 inhibitors (gliflozins) cause glycosuria."]],[["Gut","Acarbose slows carbohydrate digestion."]]]},
+{k:["Choice","Metformin first-line; add SGLT2/GLP-1 for heart or kidney disease; insulin if uncontrolled."]}],
+terms:[["K-ATP channel","ATP-sensitive potassium channel (SUR1 subunit)."],["Incretin","Gut hormone (GLP-1) enhancing insulin release after meals."],["AMPK","AMP-activated protein kinase."]],
+exam:"For 'Classify oral hypoglycaemic agents', draw this and add ADRs: hypoglycaemia (SU), lactic acidosis (metformin)."},
+
+{id:"ph-raas",s:"pharm",ch:"pharm7",t:"RAAS and antihypertensive drug sites",sum:"Follow the hormone cascade and see where each drug blocks it.",
+n:[["Low BP / low Na⁺ / sympathetic drive","Sensed by the kidney's juxtaglomerular cells; β1 stimulation also releases renin (β-blockers block this)."],
+["Renin cleaves angiotensinogen","Aliskiren directly inhibits renin."],
+["Angiotensin I","Inactive decapeptide."],
+["ACE converts to angiotensin II","ACE inhibitors (enalapril, ramipril) block this; ACE also breaks down bradykinin → dry cough."],
+["Angiotensin II acts on AT1 receptors","ARBs (losartan, telmisartan) block AT1; no cough."],
+{b:[[["Vasoconstriction","↑ Peripheral resistance."]],[["Aldosterone release","Na⁺ and water retention; spironolactone blocks it."]],[["ADH & thirst","↑ Volume."]],[["Cardiac remodelling","Hypertrophy and fibrosis."]]]},
+{k:["Result","↑ Blood pressure. Other classes: thiazides (↓ volume), CCBs like amlodipine (vasodilatation), α1 blockers, central α2 agonists."]}],
+terms:[["Juxtaglomerular cells","Renin-secreting cells of the afferent arteriole."],["Bradykinin","Vasodilator peptide broken down by ACE."],["AT1 receptor","Angiotensin II type 1 receptor."]],
+exam:"Draw for 'Classify antihypertensives' and 'ACE inhibitors: MOA, uses, ADRs'."},
+
+{id:"ph-coag",s:"pharm",ch:"pharm8",t:"Coagulation cascade & anticoagulant sites",sum:"Where heparin, warfarin, the newer oral anticoagulants and fibrinolytics act.",
+n:[{b:[[["Intrinsic pathway","XII → XI → IX → VIII; measured by aPTT."]],[["Extrinsic pathway","Tissue factor + VII; measured by PT/INR."]]]},
+["Factor X activated (Xa)","Rivaroxaban, apixaban (direct); LMWH and fondaparinux (via antithrombin)."],
+["Prothrombin (II) → thrombin (IIa)","Dabigatran (direct); unfractionated heparin (via antithrombin, inhibits IIa and Xa)."],
+["Fibrinogen → fibrin clot","Thrombin also activates platelets."],
+["Warfarin","Blocks vitamin K epoxide reductase → liver makes non-functional II, VII, IX, X (and proteins C, S). Takes days to act."],
+["Plasmin dissolves clot","Fibrinolytics (streptokinase, alteplase, tenecteplase) convert plasminogen to plasmin; tranexamic acid blocks this."],
+{k:["Antidotes","Heparin → protamine; warfarin → vitamin K / FFP / PCC; dabigatran → idarucizumab; fibrinolytic bleeding → tranexamic acid."]}],
+terms:[["Antithrombin III","Natural anticoagulant enhanced by heparin."],["INR","International normalised ratio; target 2–3 on warfarin."],["Vitamin K–dependent factors","II, VII, IX, X."]],
+exam:"For anticoagulants: classification, this flow, heparin vs warfarin table and antidotes."},
+
+{id:"ph-digoxin",s:"pharm",ch:"pharm7",t:"Digoxin: mechanism and toxicity",sum:"Why digoxin strengthens the heart and why low K⁺ makes it dangerous.",
+n:[["Digoxin binds Na⁺/K⁺-ATPase","Competes with K⁺ at the pump; so hypokalaemia increases binding and toxicity."],
+["Intracellular Na⁺ rises","The pump can no longer expel sodium."],
+["Na⁺/Ca²⁺ exchanger slows","Less Ca²⁺ leaves the cell."],
+["More Ca²⁺ stored in sarcoplasmic reticulum","More Ca²⁺ released with each beat."],
+["Positive inotropy","Stronger contraction; useful in heart failure with AF."],
+["Vagal effect","Slows SA node and AV conduction → controls ventricular rate in AF."],
+{k:["Toxicity","Nausea, vomiting, xanthopsia (yellow vision), bigeminy, any arrhythmia, AV block. Treat: stop drug, correct K⁺, digoxin-specific Fab fragments."]}],
+terms:[["Inotropy","Force of contraction."],["Narrow therapeutic index","Small gap between effective and toxic dose (0.5–0.9 ng/mL target)."],["Xanthopsia","Yellow vision."]],
+exam:"For 'Digitalis in CHF', give MOA (this flow), uses, toxicity and its management."},
+
+{id:"ph-levodopa",s:"pharm",ch:"pharm6",t:"Levodopa pathway in Parkinsonism",sum:"Why carbidopa and other add-ons are given with levodopa.",
+n:[["Oral levodopa","Dopamine itself cannot cross the blood–brain barrier; its precursor levodopa can."],
+{b:[[["Peripheral decarboxylation","Dopa decarboxylase in gut and blood converts most levodopa to dopamine → nausea, hypotension, arrhythmia."],["Carbidopa blocks this","Peripheral decarboxylase inhibitor (does not enter brain); cuts dose by 75%. Pyridoxine would increase peripheral conversion."]],[["Peripheral COMT","Converts levodopa to 3-O-methyldopa."],["Entacapone blocks this","Prolongs levodopa action; reduces wearing-off."]]]},
+["Crosses BBB","Amino acid transporter (competition with dietary protein)."],
+["Converted to dopamine in brain","Replenishes striatal dopamine."],
+["Dopamine broken down by MAO-B","Selegiline, rasagiline inhibit MAO-B and prolong action."],
+{k:["Long-term problems","Wearing-off, on-off phenomenon, dyskinesia, hallucinations. Dopamine agonists (pramipexole) are alternatives in younger patients."]}],
+terms:[["Dopa decarboxylase","Enzyme converting levodopa to dopamine."],["On-off phenomenon","Sudden swings between mobility and immobility."],["COMT","Catechol-O-methyltransferase."]],
+exam:"Asked as 'Why levodopa + carbidopa?' — this flow answers it completely."},
+
+{id:"ph-att",s:"pharm",ch:"pharm11",t:"Antitubercular drugs: sites of action",sum:"How the first-line drugs attack M. tuberculosis.",
+n:[["M. tuberculosis population","Rapidly dividing (cavity), slow (inside macrophages), semi-dormant (caseous tissue)."],
+{b:[[["Isoniazid (H)","Inhibits mycolic acid synthesis (InhA); bactericidal for rapidly dividing bacilli."],["ADR","Peripheral neuropathy (give pyridoxine), hepatitis."]],[["Rifampicin (R)","Inhibits DNA-dependent RNA polymerase; kills all populations incl. semi-dormant."],["ADR","Orange urine, hepatitis, flu-like syndrome; strong enzyme inducer."]],[["Pyrazinamide (Z)","Active in acidic intracellular environment; sterilising in the first 2 months."],["ADR","Hepatotoxicity, hyperuricaemia."]],[["Ethambutol (E)","Inhibits arabinosyl transferase (cell wall); bacteriostatic, prevents resistance."],["ADR","Optic neuritis (red-green colour vision)."]]]},
+["Intensive phase: HRZE × 2 months","Rapid kill and prevention of resistance."],
+["Continuation phase: HRE × 4 months","Sterilises remaining bacilli."],
+{k:["Rifampicin resistance","Detected by CBNAAT; switch to MDR/RR-TB regimen (bedaquiline, linezolid, fluoroquinolone)."]}],
+terms:[["Bactericidal","Kills bacteria."],["Sterilising activity","Kills semi-dormant persisters, preventing relapse."],["MDR-TB","Resistant to at least isoniazid and rifampicin."]],
+exam:"Classify ATT, draw this, then add the NTEP regimen and ADR table."},
+
+/* ===================== COMMUNITY MEDICINE ===================== */
+{id:"cm-natural",s:"cm",ch:"cm1",t:"Natural history of disease & prevention",sum:"The course of a disease and where each level of prevention fits.",
+n:[["Agent–host–environment interact","Epidemiological triad; disease needs all three."],
+["Pre-pathogenesis phase","Person exposed to risk factors but no disease yet."],
+{b:[[["Primordial prevention","Stop risk factors from emerging (healthy lifestyle norms, tobacco control laws)."]],[["Primary prevention","Health promotion + specific protection (immunisation, iodised salt, chemoprophylaxis)."]]]},
+["Early pathogenesis","Subclinical changes; disease detectable by tests (iceberg below the surface)."],
+["Secondary prevention","Early diagnosis & treatment: screening (Pap smear, BP check), case finding."],
+["Clinical disease","Signs and symptoms appear."],
+["Tertiary prevention","Disability limitation (treatment to prevent complications) and rehabilitation (physical, vocational, social)."],
+{k:["Outcomes","Recovery, disability, carrier state, chronic disease or death."]}],
+terms:[["Epidemiological triad","Agent, host, environment."],["Iceberg phenomenon","Hidden subclinical cases outnumber visible cases."],["Specific protection","Measures against a particular disease (vaccine)."]],
+exam:"Draw Leavell & Clark's diagram with levels of prevention; give one example of each."},
+
+{id:"cm-screen",s:"cm",ch:"cm2",t:"Evaluating a screening test",sum:"Read a 2×2 table and calculate test performance.",
+n:[["Apply test to population","Compare test result with a gold standard (true disease status)."],
+{b:[[["True positive (a)","Test +, disease +"]],[["False positive (b)","Test +, disease −"]],[["False negative (c)","Test −, disease +"]],[["True negative (d)","Test −, disease −"]]]},
+{b:[[["Sensitivity = a/(a+c)","Ability to detect those WITH disease; high sensitivity rules OUT (SnNout)."]],[["Specificity = d/(b+d)","Ability to identify those WITHOUT disease; high specificity rules IN (SpPin)."]]]},
+{b:[[["PPV = a/(a+b)","Chance that a positive test is truly diseased; rises with prevalence."]],[["NPV = d/(c+d)","Chance that a negative test is truly disease-free."]]]},
+{k:["Choosing a test","Screening needs high sensitivity (miss few cases); confirmation needs high specificity (few false positives)."]}],
+terms:[["Gold standard","Best available reference test."],["Prevalence","Proportion with disease at a point in time."],["Yield","Number of previously unrecognised cases detected."]],
+exam:"Numerical questions are common: practise filling the 2×2 table first, then calculate."},
+
+{id:"cm-epidemic",s:"cm",ch:"cm2",t:"Investigation of an epidemic",sum:"The standard 10 steps in order.",
+n:[["1. Verify the diagnosis","Clinical exam and lab confirmation of cases."],
+["2. Confirm the epidemic","Compare current cases with the usual (expected) frequency."],
+["3. Define population at risk","Map the area and get a population count (denominator)."],
+["4. Rapid search for cases","Case definition; active and passive case finding; line listing."],
+["5. Data analysis by time, place, person","Epidemic curve, spot map, attack rates by age/sex."],
+["6. Formulate hypothesis","Likely source, mode of transmission, exposure."],
+["7. Test hypothesis","Analytical study (case-control / cohort)."],
+["8. Evaluate ecological factors","Sanitation, water, vectors, food handling."],
+["9. Further investigation of population at risk","Follow-up to find additional cases and high-risk groups."],
+{k:["10. Write the report","Background, findings, control measures and recommendations."]}],
+terms:[["Epidemic curve","Graph of cases by date of onset; shows common-source vs propagated pattern."],["Attack rate","Cases ÷ population at risk during an epidemic."],["Line list","Table of cases with key variables."]],
+exam:"Write all ten steps in order; add an example such as a cholera outbreak."},
+
+{id:"cm-water",s:"cm",ch:"cm6",t:"Large-scale water purification",sum:"From river water to safe tap water.",
+n:[["Raw water intake","River or lake water with suspended matter and microbes."],
+["Storage","Natural purification: sedimentation of 90% suspended matter, 90% bacterial reduction in a week, oxidation of organic matter."],
+{b:[[["Slow sand filter","Biological; Schmutzdecke (vital layer) does the main work; small area, cheap, slow (2–3 m³/m²/day)."]],[["Rapid sand filter","Mechanical; coagulation with alum, flocculation, sedimentation; backwashing; fast (200 m³/m²/day)."]]]},
+["Disinfection by chlorination","Satisfies chlorine demand; break-point chlorination gives free residual chlorine."],
+{k:["Safe water standard","Free residual chlorine 0.5 mg/L after 1 hour contact; checked by orthotoluidine test."]}],
+terms:[["Schmutzdecke","Biological slime layer in slow sand filters."],["Break-point chlorination","Point after which added chlorine appears as free residual."],["Chlorine demand","Chlorine used up by organic matter and reducing agents."]],
+exam:"Draw the plant flow and give slow vs rapid sand filter as a table."},
+
+/* ===================== FMT ===================== */
+{id:"f-pm",s:"fmt",ch:"fmt4",t:"Post-mortem changes timeline",sum:"Changes after death used to estimate time since death.",
+n:[["Somatic death","Irreversible stoppage of heart, lungs and brain."],
+["Immediate changes","Insensibility, loss of reflexes, no pulse or respiration; primary muscular flaccidity."],
+["Algor mortis (cooling)","Body cools, roughly 0.5–1 °F per hour in Indian conditions; rectal temperature is used."],
+["Livor mortis (hypostasis)","Blood settles in dependent parts: appears at 1–2 h, fixed by 6–8 h. Colour clues: cherry-red (CO), bright red (cyanide), brown (nitrites)."],
+["Rigor mortis","ATP depletion locks actin-myosin; starts 1–2 h (heart first, then eyelids, face, neck, limbs — Nysten's rule); fully established by ~12 h; passes off in 18–36 h."],
+["Decomposition","Greenish discoloration of right iliac fossa at 12–18 h, marbling, bloating, maggots, skin slippage."],
+{b:[[["Adipocere","Moist, warm conditions: fat hydrolysed into soapy wax (weeks)."]],[["Mummification","Dry, hot conditions: body desiccates (months)."]]]}],
+terms:[["Nysten's rule","Order in which rigor appears and disappears."],["Cadaveric spasm","Instant stiffening at death; cannot be simulated."],["Marbling","Branching green-black veins from haemoglobin breakdown."]],
+exam:"For 'Estimation of time since death', present this timeline and add stomach contents, vitreous K⁺ and entomology."},
+
+{id:"f-hanging",s:"fmt",ch:"fmt6",t:"Hanging: mechanism of death and findings",sum:"Why hanging kills and how to prove it was ante-mortem.",
+n:[["Ligature around neck, body weight as force","Usually suicidal; knot often at the side (typical: at occiput)."],
+{b:[[["Venous occlusion","Jugular veins close first (2 kg) → congestion, petechiae."]],[["Arterial occlusion","Carotids (5 kg) and vertebral arteries (30 kg) → cerebral ischaemia."]],[["Airway occlusion","Tongue base pushed against pharynx."]],[["Vagal inhibition","Pressure on carotid sinus → reflex cardiac arrest."]],[["Cervical fracture","Judicial hanging: C2 fracture (hangman's fracture)."]]]},
+["External findings","Oblique ligature mark above thyroid cartilage, non-continuous (gap at knot), parchment-like base."],
+["Ante-mortem proof","Dribbling of saliva from the angle of mouth opposite the knot (surest sign), vital reaction in mark, petechiae."],
+{k:["Internal findings","Neck tissue haemorrhage, carotid intimal tears; hyoid fracture uncommon (more in throttling)."]}],
+terms:[["Typical hanging","Knot at the occiput, ligature symmetrical."],["Partial hanging","Body not fully suspended; still fatal."],["Hangman's fracture","Bilateral C2 pedicle fracture."]],
+exam:"Asked as 'Hanging vs strangulation' — pair this with the difference table."},
+
+{id:"f-methanol",s:"fmt",ch:"fmt9",t:"Methanol poisoning: metabolism and treatment",sum:"Why methanol blinds and kills, and how the antidote works.",
+n:[["Methanol ingested","Spurious liquor (hooch tragedies), solvents; fatal dose 60–240 mL."],
+["Alcohol dehydrogenase","Converts methanol to formaldehyde. Fomepizole or ethanol block this enzyme (antidote)."],
+["Aldehyde dehydrogenase","Formaldehyde to formic acid."],
+["Formic acid accumulates","High anion gap metabolic acidosis; inhibits cytochrome oxidase in optic nerve."],
+{b:[[["Eyes","Blurred vision, 'snowfield' vision, optic atrophy, blindness."]],[["Brain","Headache, coma, basal ganglia (putamen) necrosis."]],[["Systemic","Abdominal pain, Kussmaul breathing, death."]]]},
+{k:["Treatment","Fomepizole / ethanol, sodium bicarbonate for acidosis, folinic acid (helps break down formate), haemodialysis."]}],
+terms:[["Anion gap","Na⁺ − (Cl⁻ + HCO3⁻); high in methanol poisoning."],["Fomepizole","Alcohol dehydrogenase inhibitor."],["Hooch tragedy","Mass poisoning from adulterated liquor."]],
+exam:"Draw the metabolism; marks are given for naming each enzyme and the antidote's site of action."},
+
+{id:"f-firearm",s:"fmt",ch:"fmt5",t:"Firearm wound: estimating range",sum:"Use the features around an entry wound to judge distance.",
+n:[["Bullet fired","Products leaving muzzle: bullet, flame, smoke, unburnt powder, gases."],
+{b:[[["Contact shot","Muzzle on skin: gases enter; stellate tear over bone; muzzle imprint; cherry-red tissue (CO)."]],[["Close shot (within flame range)","Burning, singeing of hair, blackening (smoke), tattooing."]],[["Near shot","Tattooing (powder particles embedded) ± blackening; no burning."]],[["Distant shot","Only bullet effects: round hole with abrasion collar and grease collar."]]]},
+["Entry wound features","Smaller, inverted margins, abrasion collar, grease/dirt collar."],
+["Exit wound features","Larger, irregular, everted margins, no collar."],
+{k:["Medicolegal use","Range helps decide suicide, homicide or accident; preserve clothing for gunshot residue."]}],
+terms:[["Tattooing","Embedded unburnt powder; cannot be washed off."],["Blackening","Smoke soot; can be wiped off."],["Abrasion collar","Rim of abraded skin at entry."]],
+exam:"Range of fire table plus entry vs exit features make a full short note."}
+);
+
 /* ============ core helpers ============ */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -828,7 +1311,7 @@ const hy=s=>{const [q,a]=s.split("::");return {q,a};};
 
 /* ============ state (per-viewer, this browser only) ============ */
 const KEY="secondprofatlas_v1";
-const defState=()=>({xp:0,streak:0,last:null,done:{},quiz:{},known:{},custom:{},plan:null,lang:"en",hist:[],lastCh:null,daily:null,read:{},saved:[],fs:100,seen:false});
+const defState=()=>({xp:0,streak:0,last:null,done:{},quiz:{},known:{},custom:{},plan:null,lang:"en",hist:[],lastCh:null,daily:null,read:{},saved:[],fs:100,seen:false,flowDone:{}});
 let S=(()=>{try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(v)return Object.assign(defState(),v);}catch(e){}return defState();})();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const LEVELS=[[0,"Fresher"],[100,"Ward Explorer"],[300,"Slide Reader"],[700,"Viva Ready"],[1200,"Prof Warrior"],[2000,"Topper Track"],[3500,"Gold Medal Mode"]];
@@ -1002,14 +1485,16 @@ function chCards(c){return [...c.hy,...(S.custom[c.id]||[])].map(hy);}
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);const x=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cs=getComputedStyle(document.documentElement);const cols=["--path","--micro","--pharm","--cm","--fmt","--star"].map(v=>cs.getPropertyValue(v).trim());const P=Array.from({length:140},()=>({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-2,c:cols[Math.floor(Math.random()*cols.length)],r:Math.random()*6+3,a:Math.random()*6}));let f=0;(function step(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});if(++f<120)requestAnimationFrame(step);else cv.remove();})();}
 
 /* ============ layout ============ */
-const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
+const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
   <nav class="nav" aria-label="Main">${NAV.map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],18)}${n[1]}</a>`).join("")}
   <span class="grp mono">Subjects</span>${SUBJECTS.map(s=>`<a href="#s-${s.id}" data-nav="s-${s.id}" data-s="${s.id}"><span class="dot" style="background:var(--sc)"></span>${esc(s.name)}</a>`).join("")}</nav>
   <div class="xpcard"><div class="row between"><b>${esc(L.name)}</b><span class="mono">${S.xp} XP</span></div><div class="bar"><i style="width:${L.pct}%"></i></div><span class="note">${L.next?`${L.next-S.xp} XP to next level`:"Top level reached"} · 🔥 ${S.streak}-day streak</span></div>`;
-  $("#tabbar").innerHTML=[["home","Home","home"],["subjects","Learn","book"],["radar","Radar","radar"],["studio","AI","spark"],["progress","Me","chart"]].map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],22)}${n[1]}</a>`).join("");
+  $("#tabbar").innerHTML=[["home","Home","home"],["subjects","Learn","book"],["flowcharts","Flows","flow"],["studio","AI","spark"]].map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],22)}${n[1]}</a>`).join("")+`<button type="button" class="tabmore" data-act="sheet" aria-haspopup="dialog">${ico("list",22)}More</button>`;
+  let sh=$("#sheet");if(!sh){document.body.insertAdjacentHTML("beforeend",'<div id="sheet" hidden><div class="sheet-in" role="dialog" aria-label="All sections"></div></div>');sh=$("#sheet");}
+  $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go">${ico(n[2],20)}<span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
 function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab=a=>!!a.closest("#tabbar");
@@ -1019,6 +1504,7 @@ function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab
     if(!on&&n===chS&&!inTab(a))on=true;
     if(!on&&inTab(a)&&n==="subjects"&&(h.startsWith("c-")||h.startsWith("s-")))on=true;
     if(!on&&n==="studio"&&isTool&&(h!=="planner"||inTab(a)))on=true;
+    if(!on&&n==="flowcharts"&&h.startsWith("fc-"))on=true;
     a.classList.toggle("on",on);if(on)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});}
 const topbar=()=>`<div class="topbar"><div class="search">${ico("search",18)}<input id="q" type="search" placeholder="Search topics: DIC, Widal, β-blockers, hanging…" autocomplete="off" aria-label="Search topics"><div class="results" id="qres" hidden></div></div><span class="streak">🔥 ${S.streak} · ${S.xp} XP</span><button class="btn sm" id="focusbtn" data-act="focus" title="25-minute focus session (+15 XP)">${ico("focus",16)}<span id="focustxt">${FOCUS.end?fmtLeft():"Focus 25:00"}</span></button><span class="fsctl" role="group" aria-label="Text size"><button class="btn sm" data-act="fs" data-d="-10" aria-label="Smaller text">A−</button><button class="btn sm" data-act="fs" data-d="10" aria-label="Larger text">A+</button></span>${aiBadge()}</div>`;
 
@@ -1088,7 +1574,7 @@ function renderTab(id){const c=CH[id],b=$("#tabbody");if(!b)return;clearInterval
     <section class="card stack"><div class="row between"><h2>Exam topics</h2><span class="note">${SUB[c.s].std?"Standard priority":"From past-paper list"}</span></div><p class="note"><span class="tag L">LAQ</span> long answer · <span class="tag S">SN</span> short note · <span class="tag D">DIFF</span> difference · <span class="tag N">NMC</span> added from NMC syllabus</p>
     <div>${c.topics.map((t,k)=>`<div class="topic"><span>${starsHTML(t[1])} ${tagHTML(t[2])} ${nmc(t)}<br><b>${esc(t[0])}</b></span><span class="acts"><button class="btn sm star ${isSaved(id,k)?"on":""}" data-act="save" data-c="${id}" data-k="${k}" aria-pressed="${isSaved(id,k)}" title="Save to revision list">${isSaved(id,k)?"★":"☆"}</button><button class="btn sm" data-act="t-simplify" data-k="${k}">Simplify</button><button class="btn sm" data-act="t-answer" data-k="${k}">Model answer</button></span><div class="inline-ai ai-out" id="tai${k}"></div></div>`).join("")}</div></section></div>`;
   } else if(CHTAB==="flow"){
-    b.innerHTML=`<section class="card stack"><div class="row between"><div><span class="eyebrow">Revision flowchart</span><h2>${esc(c.flow.t)}</h2></div><div class="row"><button class="btn sm" data-act="recall">Recall mode</button><button class="btn sm" data-act="flow-ai">Explain with AI</button></div></div><p class="note" id="recallnote">Recall mode blurs each step. Say the step aloud, then tap to check.</p><div id="flowbox">${flowHTML(c.flow.n)}</div><div class="ai-out" id="flowai"></div></section>`;
+    b.innerHTML=`<section class="card stack"><div class="row between"><div><span class="eyebrow">Revision flowchart</span><h2>${esc(c.flow.t)}</h2></div><div class="row"><button class="btn sm" data-act="recall">Recall mode</button><button class="btn sm" data-act="flow-ai">Explain with AI</button></div></div><p class="note" id="recallnote">Recall mode blurs each step. Say the step aloud, then tap to check.</p><div id="flowbox">${flowHTML(c.flow.n)}</div><div class="ai-out" id="flowai"></div>${FLOWS.filter(f=>f.ch===id).length?`<div class="stack"><b>Explained flowcharts for this chapter</b><p class="note">Every step has a written explanation; tap through them one by one.</p><div class="row">${FLOWS.filter(f=>f.ch===id).map(f=>`<a class="chip" href="#fc-${f.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(f.t)} →</a>`).join("")}</div></div>`:`<a class="btn sm" href="#fc-ch-${id}">Open in step-by-step viewer</a>`}</section>`;
   } else if(CHTAB==="cards"){
     b.innerHTML=`<section class="card stack"><div class="row between"><h2>Flashcards</h2><button class="btn sm" data-act="more-cards">+ Generate more with AI</button></div><div id="deck">${deckHTML()}</div><div class="ai-out" id="cardai"></div></section>`;
     runDeck($("#deck"),chCards(c),{chId:id});
@@ -1229,10 +1715,11 @@ function mountDrawer(){if($("#fab"))return;document.body.insertAdjacentHTML("bef
 function drawerCh(){const h=location.hash.slice(1);return h.startsWith("c-")&&CH[h.slice(2)]?CH[h.slice(2)]:(S.lastCh&&CH[S.lastCh])||null;}
 
 /* ============ router ============ */
-const ROUTES={saved:vSaved,home:vHome,subjects:vSubjects,radar:vRadar,roadmap:vRoadmap,studio:vStudio,progress:vProgress,tutor:vTutor,simplify:vSimplify,qgen:vQgen,summary:vSummary,cards:vCards,mock:vMock,coach:vCoach,voice:vVoice,planner:vPlanner,doubt:vDoubt};
-function route(){clearInterval(QUIZ_TIMER);Object.values(CTL).forEach(c=>c.abort());try{speechSynthesis.cancel();}catch(e){}POST=null;
+const ROUTES={flowcharts:vFlowcharts,saved:vSaved,home:vHome,subjects:vSubjects,radar:vRadar,roadmap:vRoadmap,studio:vStudio,progress:vProgress,tutor:vTutor,simplify:vSimplify,qgen:vQgen,summary:vSummary,cards:vCards,mock:vMock,coach:vCoach,voice:vVoice,planner:vPlanner,doubt:vDoubt};
+function route(){clearInterval(QUIZ_TIMER);if(typeof FL_WALK!=="undefined"&&FL_WALK){clearInterval(FL_WALK);FL_WALK=null;}const shEl=$("#sheet");if(shEl)shEl.hidden=true;Object.values(CTL).forEach(c=>c.abort());try{speechSynthesis.cancel();}catch(e){}POST=null;
   const h=(location.hash||"#home").slice(1);let html;
   if(h.startsWith("s-")&&SUB[h.slice(2)])html=vSubject(h.slice(2));
+  else if(h.startsWith("fc-")&&FLOWMAP[h.slice(3)])html=vFlow(h.slice(3));
   else if(h.startsWith("c-")&&CH[h.slice(2)]){if(LAST_ROUTE!==h)CHTAB="learn";html=vChapter(h.slice(2));}
   else html=(ROUTES[h]||vHome)();
   LAST_ROUTE=h;
@@ -1254,6 +1741,8 @@ document.addEventListener("click",e=>{const r=$("#qres");if(r&&!e.target.closest
 /* ============ actions ============ */
 const ACT={
  stop:el=>{CTL[el.dataset.stop]?.abort();},
+ sheet:()=>{const sh=$("#sheet");sh.hidden=!sh.hidden;},
+ "sheet-go":el=>{$("#sheet").hidden=true;location.hash=el.getAttribute("href");},
  seen:()=>{S.seen=true;save();$(".onboard")?.remove();},
  fs:el=>{S.fs=Math.max(85,Math.min(130,S.fs+(+el.dataset.d)));save();applyFS();toast(`Text size ${S.fs}%`);},
  focus:()=>{if(FOCUS.end){clearInterval(FOCUS.id);FOCUS.end=0;$("#focustxt").textContent="Focus 25:00";$("#focusbtn").classList.remove("pri");toast("Focus session stopped");return;}FOCUS.end=Date.now()+25*60000;FOCUS.id=setInterval(focusTick,1000);$("#focusbtn").classList.add("pri");focusTick();toast("Focus on: 25 minutes, phone away");},
@@ -1335,6 +1824,7 @@ function startMic(btn){const SR=window.SpeechRecognition||window.webkitSpeechRec
   catch(e){REC=null;note.textContent="The microphone is not available here. Type your question instead.";}
 }
 document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;const f=ACT[el.dataset.act];if(f){if(el.tagName!=="A")e.preventDefault();f(el,e);}});
+document.addEventListener("click",e=>{if(e.target.id==="sheet")e.target.hidden=true;});
 document.addEventListener("click",e=>{const x=e.target.closest(".recall .fbox, .recall .fcol");if(x)x.classList.add("shown");});
 document.addEventListener("change",e=>{const el=e.target;const a=el.dataset.actChange;
   if(a==="lang"){S.lang=el.value;save();$$("#langSel").forEach(s=>s.value=S.lang);toast(S.lang==="hinglish"?"AI answers in Hinglish":"AI answers in English");}
@@ -1354,6 +1844,77 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&e.target.id==="drq"){e.preventDefault();ACT["dr-go"]();}if(e.key==="Enter"&&!e.shiftKey&&e.target.id==="tq"){e.preventDefault();tutorSend();}if(e.key==="Enter"&&e.target.id==="labask"){e.preventDefault();ACT["lab-ask"]();}});
 
 function applyFS(){document.documentElement.style.fontSize=S.fs+"%";}
+
+/* ============ Flowcharts library ============ */
+const FLOWMAP={};FLOWS.forEach(f=>FLOWMAP[f.id]=f);
+ALLCH.forEach(c=>{FLOWMAP["ch-"+c.id]={id:"ch-"+c.id,s:c.s,ch:c.id,t:c.flow.t,sum:`Chapter revision flowchart for ${c.t}.`,n:c.flow.n,terms:[],exam:"",chapterFlow:true};});
+let FL_S="all", FL_KIND="topic", FL_Q="", FL_SEL=0, FL_NODES=[];
+/* flatten nodes in reading order; each item {label, exp} */
+function flatFlow(nodes){const out=[];const add=x=>{if(typeof x==="string")out.push({label:x,exp:""});else if(Array.isArray(x))out.push({label:x[0],exp:x[1]||""});};
+  const walk=n=>{if(typeof n==="string"||Array.isArray(n))add(n);else if(n.k)add(n.k);else if(n.b)n.b.forEach(col=>col.forEach(walk));};nodes.forEach(walk);return out;}
+function flowXHTML(nodes){let i=0;
+  const lab=x=>typeof x==="string"?x:Array.isArray(x)?x[0]:x;
+  const btn=(x,cls)=>{const k=i++;return `<button class="${cls} fnode" data-act="fsel" data-ni="${k}"><span class="fnum">${k+1}</span><span>${esc(lab(x))}</span></button>`;};
+  const node=n=>{if(typeof n==="string"||Array.isArray(n))return btn(n,"fbox");if(n.k)return btn(n.k,"fbox key");
+    if(n.b)return `<div class="fbranch">${n.b.map(col=>`<div class="fcol">${col.map((x,j)=>(typeof x==="string"||Array.isArray(x))?btn(x,j===0?"fh":"fl"):x.k?btn(x.k,"fl key"):node(x)).join("")}</div>`).join("")}</div>`;return "";};
+  return `<div class="flow xflow">${nodes.map(node).join('<div class="arrow" aria-hidden="true"></div>')}</div>`;}
+
+function vFlowcharts(){
+  POST=()=>drawFlowList();
+  const topicN=FLOWS.length,chN=ALLCH.length;
+  return `<header class="stack"><span class="eyebrow">Visual revision</span><h1>Flowcharts</h1><p class="muted">${topicN} topic flowcharts where every step is explained, plus ${chN} chapter revision flowcharts. Tap any step to read what it means; use Walk-through to go step by step.</p></header>
+  <section class="card stack"><div class="row"><div class="search" style="max-width:420px">${ico("search",18)}<input id="flq" type="search" placeholder="Search flowcharts: DIC, HIV, RAAS, hanging…" value="${esc(FL_Q)}" aria-label="Search flowcharts"></div>
+  <div class="row" role="group" aria-label="Type"><button class="btn sm ${FL_KIND==="topic"?"pri":""}" data-act="fl-kind" data-k="topic">Explained topic flowcharts (${topicN})</button><button class="btn sm ${FL_KIND==="chapter"?"pri":""}" data-act="fl-kind" data-k="chapter">Chapter flowcharts (${chN})</button></div></div>
+  <div class="row" role="group" aria-label="Subject"><button class="btn sm ${FL_S==="all"?"pri":""}" data-act="fl-s" data-s="all">All subjects</button>${SUBJECTS.map(s=>`<button class="btn sm ${FL_S===s.id?"pri":""}" data-act="fl-s" data-s="${s.id}" data-s2="${s.id}">${esc(s.name)}</button>`).join("")}</div></section>
+  <div id="fllist" class="stack"></div>`;
+}
+function drawFlowList(){const box=$("#fllist");if(!box)return;const q=FL_Q.toLowerCase();
+  const pool=Object.values(FLOWMAP).filter(f=>(FL_KIND==="chapter")===!!f.chapterFlow).filter(f=>FL_S==="all"||f.s===FL_S)
+    .filter(f=>!q||(f.t+" "+f.sum+" "+CH[f.ch].t+" "+flatFlow(f.n).map(x=>x.label).join(" ")+" "+(f.terms||[]).map(t=>t[0]).join(" ")).toLowerCase().includes(q));
+  if(!pool.length){box.innerHTML=`<p class="note">No flowcharts match "${esc(FL_Q)}". Try another word, or ask Atlas.</p>`;return;}
+  box.innerHTML=SUBJECTS.filter(s=>pool.some(f=>f.s===s.id)).map(s=>`<section class="stack" data-s="${s.id}"><div class="row between"><h2 style="color:var(--sc)">${esc(s.name)}</h2><span class="note">${pool.filter(f=>f.s===s.id).length} flowcharts</span></div><div class="grid g3">${pool.filter(f=>f.s===s.id).map(f=>{const c=CH[f.ch];const steps=flatFlow(f.n).length;return `<a class="flcard" href="#fc-${f.id}"><span class="eyebrow" style="color:var(--sc)">${esc(s.short)} ${c.n} · ${esc(c.t)}</span><b>${esc(f.t)}</b><span class="note">${esc(f.sum)}</span><span class="row" style="gap:6px"><span class="chip">${steps} steps</span>${f.chapterFlow?"":'<span class="chip">Every step explained</span>'}${S.flowDone&&S.flowDone[f.id]?'<span class="chip" style="color:var(--good)">✓ Revised</span>':""}</span></a>`;}).join("")}</div></section>`).join("");
+}
+
+function vFlow(id){const f=FLOWMAP[id];const c=CH[f.ch],s=SUB[f.s];FL_NODES=flatFlow(f.n);FL_SEL=0;
+  const siblings=Object.values(FLOWMAP).filter(x=>x.ch===f.ch&&x.id!==id);
+  POST=()=>flSelect(0,false);
+  return `<header class="ch-head" data-s="${f.s}"><div class="crumbs"><a href="#flowcharts">Flowcharts</a> / <a href="#s-${f.s}">${esc(s.name)}</a> / <a href="#c-${c.id}">${esc(c.t)}</a></div><h1>${esc(f.t)}</h1><p>${esc(f.sum)}</p>
+  <div class="row"><button class="btn sm pri" data-act="fl-walk">▶ Walk-through</button><button class="btn sm" data-act="fl-recall">Recall mode</button><button class="btn sm" data-act="fl-done" data-id="${id}">${S.flowDone&&S.flowDone[id]?"✓ Revised":"Mark as revised (+5 XP)"}</button><a class="btn sm" href="#c-${c.id}">Open chapter</a></div></header>
+  <div class="flview" data-s="${f.s}">
+    <section class="card stack" style="min-width:0"><div class="row between"><span class="eyebrow">Tap any step</span><span class="note">${FL_NODES.length} steps</span></div><div id="flowbox" class="tablewrap">${flowXHTML(f.n)}</div></section>
+    <aside class="card stack flpanel" aria-live="polite"><div class="row between"><span class="eyebrow" id="flstepno"></span><div class="row" style="gap:6px"><button class="btn sm" data-act="fl-prev" aria-label="Previous step">←</button><button class="btn sm" data-act="fl-next" aria-label="Next step">→</button></div></div>
+      <h3 id="fllabel"></h3><p id="flexp"></p>
+      <div class="row"><button class="btn sm" data-act="fl-ai">Explain this step deeper with AI</button>${stopBtn("flai")}</div><div class="ai-out" id="flai"></div>
+      <p class="note kbd-hint">Keys: ← → move between steps</p></aside>
+  </div>
+  ${(f.terms&&f.terms.length)?`<section class="card stack" data-s="${f.s}"><h2>Key terms</h2><dl class="terms">${f.terms.map(t=>`<div><dt>${esc(t[0])}</dt><dd>${esc(t[1])}</dd></div>`).join("")}</dl></section>`:""}
+  ${f.exam?`<section class="card stack"><h2>Exam tip</h2><p>${esc(f.exam)}</p><div class="row"><button class="btn sm" data-act="fl-answer">Write a model answer using this flowchart</button>${stopBtn("flans")}</div><div class="ai-out" id="flans"></div></section>`:""}
+  ${siblings.length?`<section class="stack" data-s="${f.s}"><h2>More flowcharts in this chapter</h2><div class="row">${siblings.map(x=>`<a class="chip" href="#fc-${x.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(x.t)}</a>`).join("")}</div></section>`:""}`;
+}
+function flSelect(i,scroll=true){const id=location.hash.slice(4);const f=FLOWMAP[id];if(!f||!FL_NODES.length)return;FL_SEL=(i+FL_NODES.length)%FL_NODES.length;const n=FL_NODES[FL_SEL];
+  $$(".fnode").forEach(b=>{const on=+b.dataset.ni===FL_SEL;b.classList.toggle("sel",on);if(on){b.classList.add("shown");b.setAttribute("aria-current","step");}else b.removeAttribute("aria-current");});
+  $("#flstepno").textContent=`Step ${FL_SEL+1} of ${FL_NODES.length}`;$("#fllabel").textContent=n.label;
+  $("#flexp").innerHTML=n.exp?esc(n.exp):`<span class="note">This is a chapter revision flowchart. Tap <b>Explain this step deeper with AI</b> for a full explanation, or open the chapter's Learn tab for the notes.</span>`;
+  $("#flai").innerHTML="";
+  if(scroll){const b=$(`.fnode[data-ni="${FL_SEL}"]`);b&&b.scrollIntoView({block:"nearest",inline:"center",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}}
+let FL_WALK=null;
+Object.assign(ACT,{
+ "fl-s":el=>{FL_S=el.dataset.s;route();},
+ "fl-kind":el=>{FL_KIND=el.dataset.k;route();},
+ fsel:el=>flSelect(+el.dataset.ni),
+ "fl-next":()=>flSelect(FL_SEL+1),
+ "fl-prev":()=>flSelect(FL_SEL-1),
+ "fl-recall":el=>{const f=$("#flowbox .flow");const on=f.classList.toggle("recall");$$(".fnode").forEach(x=>x.classList.remove("shown"));el.textContent=on?"Show all":"Recall mode";if(on)toast("Say each step aloud, then tap it to reveal");},
+ "fl-walk":el=>{if(FL_WALK){clearInterval(FL_WALK);FL_WALK=null;el.textContent="▶ Walk-through";return;}el.textContent="⏸ Pause";flSelect(0);FL_WALK=setInterval(()=>{if(!$("#flowbox")||FL_SEL>=FL_NODES.length-1){clearInterval(FL_WALK);FL_WALK=null;const b=$('[data-act="fl-walk"]');if(b)b.textContent="▶ Walk-through";return;}flSelect(FL_SEL+1);},6000);},
+ "fl-done":el=>{const id=el.dataset.id;S.flowDone=S.flowDone||{};if(S.flowDone[id])return;S.flowDone[id]=today();save();addXP(5,"flowchart revised");el.textContent="✓ Revised";},
+ "fl-ai":()=>{const f=FLOWMAP[location.hash.slice(4)],n=FL_NODES[FL_SEL];const seq=FL_NODES.map((x,i)=>`${i+1}. ${x.label}`).join("\n");
+   aiStream($("#flai"),`${RULES()}${ctx(CH[f.ch])}\n\nThe student is studying the flowchart "${f.t}". Steps:\n${seq}\n\nExplain step ${FL_SEL+1} ("${n.label}") in depth: what it means, the mechanism, why it follows the previous step and leads to the next, one clinical or exam example, and one memory hook. Under 220 words.`,{key:"flai"});},
+ "fl-answer":()=>{const f=FLOWMAP[location.hash.slice(4)];const seq=FL_NODES.map((x,i)=>`${i+1}. ${x.label}${x.exp?" — "+x.exp:""}`).join("\n");
+   aiStream($("#flans"),`${RULES()}${ctx(CH[f.ch])}\n\nWrite a model university exam answer on "${f.t}" built around this flowchart. Steps:\n${seq}\nInclude: definition/introduction, the flowchart reproduced in text with arrows, explanation of each step, key terms, and a conclusion. Exam tip from the teacher: ${f.exam}`,{key:"flans"});}
+});
+document.addEventListener("input",e=>{if(e.target.id==="flq"){FL_Q=e.target.value;drawFlowList();}});
+document.addEventListener("keydown",e=>{if(!location.hash.startsWith("#fc-")||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;if(e.key==="ArrowRight"){e.preventDefault();flSelect(FL_SEL+1);}if(e.key==="ArrowLeft"){e.preventDefault();flSelect(FL_SEL-1);}});
+
 applyFS();mountDrawer();renderSide();route();
 
 </script>

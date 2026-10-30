@@ -309,7 +309,7 @@ dl.terms dd{margin:2px 0 0}
 .sheet-in{background:var(--surface); width:100%; border-radius:18px 18px 0 0; padding:16px max(16px, env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px)); display:flex; flex-direction:column; gap:12px; max-height:80vh; overflow:auto}
 .sheet-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
 .sheet-grid a{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:10px; text-decoration:none; font-weight:700}
-@media (max-width:900px){.flview{grid-template-columns:minmax(0,1fr)} .flpanel{position:static; order:-1}}
+
 
 /* ---- notes & books ---- */
 .sr{position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none}
@@ -374,6 +374,47 @@ button.term:hover{background:var(--ss,var(--accent-soft))}
 .termbox{grid-column:1/-1; margin-top:8px; background:var(--ss,var(--accent-soft)); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; align-items:flex-start}
 .termbox p{margin:0}
 .termbox .more{background:var(--surface); border-radius:8px; padding:8px 10px}
+
+/* ---- flowchart redesign ---- */
+.flview .card:first-child{background:linear-gradient(180deg,var(--ss) 0,var(--surface) 140px)}
+.xflow{gap:0; padding:10px 0 4px}
+.xflow .fbox.fnode{border-radius:14px; padding:12px 16px; box-shadow:0 2px 0 var(--ss), 0 4px 14px rgba(15,18,34,.06); background:var(--surface)}
+.xflow .fbranch{position:relative; padding-top:14px}
+.xflow .fbranch::before{content:""; position:absolute; top:0; left:12%; right:12%; height:2px; background:var(--sc,var(--accent)); border-radius:2px}
+.xflow .fbranch > .fcol{position:relative; border:1px solid color-mix(in srgb, var(--sc) 25%, transparent)}
+.xflow .fbranch > .fcol::before{content:""; position:absolute; top:-14px; left:50%; width:2px; height:14px; background:var(--sc,var(--accent))}
+.fnode.seen:not(.sel) .fnum{background:var(--good)}
+.fnode.sel{animation:selpulse 1.6s ease-in-out 1}
+@keyframes selpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--sc) 45%, transparent)}100%{box-shadow:0 0 0 10px transparent}}
+.fldots{display:flex; flex-wrap:wrap; gap:5px}
+.fldot{width:12px; height:12px; border-radius:50%; border:2px solid var(--sc); background:var(--surface); padding:0; cursor:pointer}
+.fldot.seen{background:color-mix(in srgb, var(--sc) 35%, var(--surface))}
+.fldot.on{background:var(--sc); transform:scale(1.25)}
+.flprog{display:flex; align-items:center; gap:10px; max-width:420px}
+.flprog .bar{flex:1}
+.bar.thin{height:5px}
+.flpanel #flexp{line-height:1.7}
+.expack{border-top:4px solid var(--sc)}
+.tipbox{background:var(--ss); border-radius:12px; padding:12px 14px}
+.tipbox p{margin:4px 0 0}
+.rqlist{display:flex; flex-direction:column; gap:8px}
+.rq{border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.rqq{display:flex; gap:10px; align-items:flex-start; width:100%; text-align:left; background:var(--surface); border:none; padding:12px 14px; font:inherit; font-weight:700; color:var(--ink)}
+.rqq:hover{background:var(--sunk)}
+.rqq .chev{margin-left:auto; transition:transform .2s; color:var(--muted)}
+.rqq.open .chev{transform:rotate(180deg)}
+.rqa{padding:0 14px 12px 14px; border-top:1px dashed var(--line); background:var(--ss)}
+.rqa p{margin:10px 0 0}
+ol.walk{padding-left:22px; margin:6px 0}
+ol.walk li{margin:6px 0; padding-left:4px}
+ol.walk li::marker{color:var(--sc); font-weight:800}
+@media (max-width:900px){
+  .flview{grid-template-columns:minmax(0,1fr)}
+  .flpanel{position:sticky; bottom:calc(66px + env(safe-area-inset-bottom,0px)); top:auto; max-height:42vh; overflow:auto; z-index:5; box-shadow:0 -8px 24px rgba(15,18,34,.12)}
+  .xflow .fbranch::before{left:6%; right:6%}
+}
+.xflow .fbox.key.fnode{background:var(--sc,var(--accent)); color:#fff; border-color:var(--sc,var(--accent))}
+.xflow .fbox.key.fnode.sel{box-shadow:0 0 0 4px var(--ss)}
 
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
@@ -2197,6 +2238,397 @@ q:[
 [4,"(NEET-PG pattern) Type of necrosis in syphilitic gumma:",["Caseous","Coagulative (rubbery)","Liquefactive","Fat"],1,"Gummatous coagulative necrosis."],
 [4,"(NEET-PG pattern) Delayed separation of umbilical cord + recurrent infections without pus:",["CGD","LAD-1","Chédiak-Higashi","Job syndrome"],1,"Neutrophils cannot leave vessels."]]};
 
+/* Flowchart exam packs (offline). FA[id] = {ans:"ch:k" (reuse topic model answer) | sh, m, li, lc; rq:[[type,question,answer]]}
+   type: L long, S short note, D difference, V viva. Long answers add a node-by-node walk-through built from the flowchart's own explanations. */
+const FA={};
+const R_MICRO="Ananthanarayan & Paniker Textbook of Microbiology; Apurba Sastry Essentials of Medical Microbiology";
+const R_PHARM="KD Tripathi Essentials of Medical Pharmacology; Padmaja Udaykumar";
+const R_CM="Park's Textbook of Preventive and Social Medicine";
+const R_FMT="Narayan Reddy Essentials of Forensic Medicine & Toxicology";
+
+/* ---- Pathology ---- */
+FA["p-injury"]={ans:"path1:0",rq:[
+["S","List the morphological features of reversible cell injury.","Light microscopy: cell swelling (hydropic change), fatty change. EM: plasma membrane blebs, loss of microvilli, swollen mitochondria with small densities, dilated ER with detached ribosomes, nucleolar disaggregation, myelin figures."],
+["S","Name two features that mark the point of no return.","Inability to restore mitochondrial function (no ATP) and profound disturbance of membrane function; morphologically, nuclear changes (pyknosis, karyorrhexis, karyolysis)."],
+["V","Why does Ca²⁺ influx damage cells?","Raised cytosolic Ca²⁺ activates phospholipases (membranes), proteases (cytoskeleton), endonucleases (DNA) and ATPases (more ATP loss) and opens the mitochondrial permeability transition pore."],
+["L","Describe the mechanisms of cell injury with a suitable diagram.","Answer with the long model answer: ATP depletion, mitochondrial damage, Ca²⁺ influx, ROS, membrane and DNA damage, ending in necrosis or apoptosis — draw this flowchart."]]};
+FA["p-apoptosis"]={ans:"path1:3",rq:[
+["D","Differentiate apoptosis and necrosis.","Apoptosis: single cells, shrinkage, intact membrane, apoptotic bodies, no inflammation, needs ATP, DNA ladder. Necrosis: groups, swelling, ruptured membrane, inflammation, smear on gel, always pathological."],
+["S","Name the anti- and pro-apoptotic members of the BCL-2 family.","Anti-apoptotic: BCL-2, BCL-XL, MCL-1. Pro-apoptotic effectors: BAX, BAK. Sensors (BH3-only): BIM, BID, BAD, PUMA, NOXA."],
+["V","What is the apoptosome?","A complex of cytochrome c, APAF-1 and procaspase-9 that activates caspase-9 in the intrinsic pathway."],
+["S","Give physiological and pathological examples of apoptosis.","Physiological: embryogenesis, menstrual endometrium, thymic deletion, involution after weaning. Pathological: DNA damage by radiation/drugs, viral hepatitis (Councilman bodies), cytotoxic T-cell killing, duct-obstruction atrophy."]]};
+FA["p-inflam"]={ans:"path2:0",rq:[
+["S","Describe the cellular events of acute inflammation.","Margination and rolling (selectins), firm adhesion (integrins–ICAM-1/VCAM-1), transmigration (PECAM-1) in post-capillary venules, chemotaxis (C5a, LTB4, IL-8), phagocytosis with killing by the MPO–H2O2–halide system."],
+["S","Name the mechanisms of increased vascular permeability.","Endothelial contraction (immediate transient), direct injury (immediate sustained), leukocyte-mediated injury (delayed prolonged), transcytosis (VEGF), leakage from new vessels."],
+["V","Which molecule is responsible for leukocyte rolling?","Selectins (E-, P- and L-selectin) binding sialyl-Lewis X."],
+["S","List the outcomes of acute inflammation.","Complete resolution, healing by fibrosis, abscess formation, progression to chronic inflammation."]]};
+FA["p-granuloma"]={ans:"path2:3",rq:[
+["L","Discuss the pathogenesis and morphology of tuberculosis.","Use the TB long answer: droplet infection, macrophage survival, TH1/IFN-γ response, caseating granuloma, primary (Ghon complex) and secondary TB, complications, lab diagnosis."],
+["S","Describe the structure of a tubercle.","Central caseous necrosis surrounded by epithelioid cells, Langhans giant cells, a rim of lymphocytes and fibroblasts; hard tubercle lacks caseation."],
+["V","Which cytokine is essential for granuloma formation?","IFN-γ from TH1 cells (with IL-12 from macrophages); TNF maintains it."],
+["S","List causes of granulomatous inflammation.","Infections: TB, leprosy, syphilis, fungi (histoplasmosis), cat-scratch disease. Non-infective: sarcoidosis, Crohn's disease, foreign bodies (sutures, talc)."]]};
+FA["p-healing"]={ans:"path2:6",rq:[
+["D","Healing by first vs second intention.","First: clean apposed wound, little granulation tissue, minimal contraction, thin scar, quick. Second: large/infected wound, abundant granulation tissue, marked contraction by myofibroblasts, larger scar, slow."],
+["S","List factors affecting wound healing.","Local: infection (most important), foreign body, poor blood supply, movement, size/site. Systemic: diabetes, malnutrition (protein, vitamin C, zinc), steroids, age, anaemia."],
+["V","What is granulation tissue made of?","New capillaries (angiogenesis), proliferating fibroblasts, macrophages and loose oedematous matrix."],
+["S","Complications of wound healing.","Deficient scar (dehiscence, ulcer), excessive scar (hypertrophic scar, keloid, proud flesh), contracture, implantation cyst, incisional hernia."]]};
+FA["p-thrombo"]={ans:"path3:3",rq:[
+["S","Describe the fate of a thrombus.","Propagation, embolisation, dissolution (fibrinolysis of recent thrombi) and organisation with recanalisation."],
+["D","Ante-mortem thrombus vs post-mortem clot.","Thrombus: attached, dry, granular, lines of Zahn. Clot: unattached, rubbery, gelatinous with 'chicken fat' and 'currant jelly' layers, no lines of Zahn."],
+["S","Define infarct and classify it.","Area of ischaemic necrosis due to occlusion of arterial supply or venous drainage. Pale (white) in solid organs with end arteries; red (haemorrhagic) in lung, intestine, venous occlusion, loose tissues."],
+["L","Define embolism. Describe types with special reference to pulmonary thromboembolism.","Use the embolism long answer: thrombo-, fat, air, amniotic fluid emboli; PE from DVT — silent, infarct, saddle embolus with sudden death, pulmonary hypertension."]]};
+FA["p-shock"]={ans:"path3:2",rq:[
+["S","Pathogenesis of septic shock.","PAMPs (LPS) bind TLRs → TNF, IL-1, IL-6 → vasodilatation (NO), increased permeability, procoagulant state/DIC, metabolic disturbances and later immunosuppression."],
+["S","Describe the stages of shock.","Non-progressive (compensated by sympathetic, RAAS, ADH), progressive (tissue hypoperfusion, lactic acidosis), irreversible (severe cell injury, organ failure)."],
+["V","What is 'shock lung'?","Diffuse alveolar damage (ARDS) with hyaline membranes in shock, especially septic shock."],
+["S","Morphological changes in organs in shock.","Brain: ischaemic encephalopathy; heart: subendocardial haemorrhage; lungs: ARDS; kidney: ATN; adrenals: lipid depletion; GIT: mucosal haemorrhage; liver: centrilobular necrosis."]]};
+FA["p-carcino"]={ans:"path5:3",rq:[
+["S","Write a note on chemical carcinogenesis.","Initiation (irreversible DNA mutation by carcinogen, often after P450 activation) → promotion (reversible proliferation by promoters like phorbol esters, hormones) → progression. Examples: benzpyrene, aflatoxin B1, β-naphthylamine, vinyl chloride."],
+["S","Mechanism of invasion and metastasis.","Loss of E-cadherin, ECM degradation by MMPs, attachment to laminin/fibronectin, migration, intravasation, survival with platelets, extravasation, colonisation and angiogenesis."],
+["V","Name the hallmarks of cancer.","Growth-signal self-sufficiency, insensitivity to inhibitors, evasion of apoptosis, limitless replication, angiogenesis, invasion/metastasis, altered metabolism, immune evasion."],
+["S","How are oncogenes activated?","Point mutation (RAS), chromosomal translocation (BCR-ABL, MYC), gene amplification (HER2, N-MYC)."]]};
+FA["p-ida"]={sh:"Iron deficiency anaemia is a microcytic hypochromic anaemia due to depleted body iron. It develops in stages: storage depletion (low ferritin), iron-deficient erythropoiesis (low serum iron, high TIBC, transferrin saturation < 16%) and frank anaemia. Commonest causes in India are nutritional deficiency, hookworm and menstrual or GI blood loss. Smear shows microcytic hypochromic cells and pencil cells; ferritin is the best single test.",
+m:[["Etiology",["Increased loss: hookworm, menorrhagia, GI bleeding (peptic ulcer, piles, cancer)","Increased demand: pregnancy, infancy, adolescence","Decreased intake: vegetarian diet poor in haem iron","Malabsorption: celiac disease, gastrectomy, achlorhydria"]],
+["Clinical features",["Fatigue, pallor, breathlessness, palpitations","Koilonychia, angular cheilitis, glossitis, pica","Plummer-Vinson syndrome: dysphagia with oesophageal webs"]],
+["Lab diagnosis",["Hb ↓, MCV < 80 fL, MCH ↓, MCHC ↓, RDW ↑","Smear: microcytic hypochromic RBCs, anisopoikilocytosis, pencil cells","Serum ferritin ↓ (< 15 µg/L), serum iron ↓, TIBC ↑, transferrin saturation ↓","Bone marrow: absent stainable iron (Perls stain)","Find the cause: stool for occult blood and ova"]]],
+li:"Iron deficiency is the commonest cause of anaemia worldwide and in India, particularly in women and children.",
+lc:"Iron deficiency anaemia develops in predictable stages; serum ferritin identifies it early and the underlying cause must always be sought.",r:R_PATH+" — Anaemias",
+rq:[["D","Iron deficiency anaemia vs β-thalassaemia trait.","IDA: ferritin ↓, TIBC ↑, RDW ↑, Mentzer index > 13, HbA2 normal/low. Thal trait: ferritin normal, RBC count high, RDW normal, Mentzer < 13, HbA2 > 3.5%."],
+["V","Best single test for iron deficiency?","Serum ferritin."],
+["S","Plummer-Vinson syndrome.","Triad of iron deficiency anaemia, dysphagia due to oesophageal webs and glossitis; premalignant for post-cricoid carcinoma; mostly middle-aged women."],
+["S","Response to oral iron therapy.","Reticulocytosis in 5–10 days, Hb rises ~1 g/dL per week; continue 3–6 months after Hb normalises to refill stores."]]};
+FA["p-b12"]={sh:"Megaloblastic anaemia results from impaired DNA synthesis due to vitamin B12 or folate deficiency, causing nuclear–cytoplasmic asynchrony. B12 needs intrinsic factor and the terminal ileum for absorption; causes include pernicious anaemia, gastrectomy, ileal disease, fish tapeworm and vegan diet. Blood shows macro-ovalocytes, hypersegmented neutrophils and pancytopenia; marrow shows megaloblasts. B12 (not folate) deficiency causes subacute combined degeneration of the cord.",
+m:[["Pathogenesis",["B12 is a cofactor converting methyl-THF to THF (methionine synthase) and methylmalonyl-CoA to succinyl-CoA","Without it, folate is trapped → ↓ thymidine → impaired DNA synthesis","Nuclear maturation lags behind cytoplasm → large cells (megaloblasts)","Ineffective erythropoiesis → intramedullary haemolysis (↑ LDH, ↑ indirect bilirubin)","↑ Methylmalonic acid → myelin damage (B12 only)"]],
+["Blood & marrow",["MCV > 100 fL, macro-ovalocytes, anisopoikilocytosis","Hypersegmented neutrophils (earliest sign)","Pancytopenia","Marrow: hypercellular, megaloblasts, giant metamyelocytes"]],
+["Diagnosis",["Serum B12 and red-cell folate","Raised homocysteine (both) and methylmalonic acid (B12)","Anti-intrinsic factor and anti-parietal cell antibodies (pernicious anaemia)"]]],
+li:"Megaloblastic anaemias are macrocytic anaemias caused by defective DNA synthesis, most often due to deficiency of vitamin B12 or folic acid.",
+lc:"Recognising B12 deficiency is important because its neurological damage may become permanent and giving folate alone can worsen it.",r:R_PATH+" — Megaloblastic anaemias",
+rq:[["D","B12 vs folate deficiency.","Both: megaloblastic anaemia, ↑ homocysteine. B12 only: neurological signs (SACD), ↑ methylmalonic acid, stores last years. Folate: no neuro signs, stores last months, common in pregnancy, alcohol."],
+["V","Earliest peripheral smear sign of megaloblastic anaemia?","Hypersegmented neutrophils (≥ 5% with 5 lobes or any with 6)."],
+["S","Pernicious anaemia.","Autoimmune atrophic gastritis of body/fundus with loss of parietal cells and intrinsic factor; anti-IF and anti-parietal antibodies; B12 deficiency; risk of gastric carcinoma."],
+["S","Why should folate not be given alone in B12 deficiency?","It may correct the anaemia but allow neurological damage (SACD) to progress."]]};
+FA["p-dic"]={sh:"Disseminated intravascular coagulation is an acquired thrombohaemorrhagic disorder in which widespread activation of coagulation forms microthrombi and consumes platelets and clotting factors, with secondary fibrinolysis causing bleeding. Triggers: obstetric complications, sepsis, APL, trauma, burns, snake bite, malignancy. Labs: ↓ platelets, ↑ PT, ↑ aPTT, ↓ fibrinogen, ↑ D-dimer, schistocytes.",
+m:[["Causes",["Release of tissue factor: abruptio placentae, retained dead fetus, amniotic fluid embolism, APL, mucin-secreting adenocarcinoma, trauma, burns","Endothelial injury: Gram-negative sepsis, meningococcaemia, heat stroke, snake bite, immune complexes"]],
+["Pathogenesis",["Excess thrombin → microthrombi → ischaemic organ damage","Consumption of platelets, fibrinogen, factors V, VIII → bleeding","Plasmin activation → FDPs/D-dimer with anticoagulant action","RBCs sheared → microangiopathic haemolytic anaemia"]],
+["Lab findings",["Thrombocytopenia","Prolonged PT, aPTT, thrombin time","Low fibrinogen","Raised D-dimer and FDP","Schistocytes on smear"]]],
+li:"DIC is not a disease in itself but a complication of many serious conditions.",
+lc:"DIC combines thrombosis and bleeding; treatment targets the trigger plus replacement of platelets and factors.",r:R_PATH+" — Bleeding disorders",
+rq:[["V","Most useful test for DIC?","D-dimer along with platelets, PT, aPTT and fibrinogen."],
+["S","Causes of DIC in obstetrics.","Abruptio placentae, amniotic fluid embolism, retained dead fetus, septic abortion, eclampsia."],
+["D","DIC vs TTP.","Both: thrombocytopenia, schistocytes. DIC: ↑ PT/aPTT, ↓ fibrinogen, ↑ D-dimer. TTP: normal PT/aPTT, ADAMTS13 deficiency, neurological and renal involvement."],
+["S","Morphology of DIC.","Microthrombi in kidneys (cortical necrosis), brain, lungs, adrenals (Waterhouse-Friderichsen), placenta; haemorrhages in skin and serosa."]]};
+FA["p-mi"]={sh:"Myocardial infarction is death of cardiac muscle from prolonged ischaemia, usually due to thrombosis on a disrupted atherosclerotic plaque. Irreversible injury begins after 20–40 minutes, starting subendocardially. Morphology evolves: coagulative necrosis (4–12 h), neutrophils (1–3 d), macrophages and softening (3–7 d), granulation tissue (1–2 wk), scar (2–8 wk). Markers: troponin I/T (most specific), CK-MB. Complications: arrhythmia, failure, rupture, aneurysm, thrombus, Dressler syndrome.",
+m:[["Pathogenesis",["Atherosclerotic plaque disruption → platelet aggregation → occlusive thrombus","Ischaemia → ATP loss → contractility stops in 60 s","Irreversible damage after 20–40 min; wavefront from subendocardium outward","Reperfusion (PCI, thrombolysis) salvages myocardium but can cause reperfusion injury"]],
+["Morphology by time",[["Time","Gross","Microscopy"],["0–12 h","None","Wavy fibres, early coagulative necrosis"],["12–24 h","Dark mottling","Contraction bands, early neutrophils"],["1–3 d","Mottled yellow-tan","Neutrophils, coagulative necrosis"],["3–7 d","Yellow, soft","Macrophages remove dead cells (rupture risk)"],["1–2 wk","Red-grey margins","Granulation tissue"],["2–8 wk","Grey-white scar","Collagen"]]],
+["Cardiac markers",["Troponin I/T: rise 3–4 h, peak 24–48 h, stay 7–10 days (most specific)","CK-MB: rise 3–4 h, peak 24 h, normal by 48–72 h (re-infarction)","Myoglobin: earliest but non-specific"]]],
+li:"Ischaemic heart disease is the leading cause of death worldwide; acute MI is its most important form.",
+lc:"The timeline of morphological change explains both the diagnosis and the complications of MI.",r:R_PATH+" — Heart",
+rq:[["V","Most specific marker of MI?","Cardiac troponin I/T."],
+["S","Complications of MI.","Arrhythmias, LV failure, cardiogenic shock, myocardial rupture (3–7 d), papillary muscle rupture, mural thrombus and embolism, ventricular aneurysm, pericarditis, Dressler syndrome."],
+["V","When is the infarct most likely to rupture?","3–7 days, when macrophages remove necrotic tissue and the wall is softest."],
+["L","Define atherosclerosis; describe its etiopathogenesis and complications.","Response-to-injury hypothesis: endothelial injury, lipid accumulation and oxidation, monocyte entry, foam cells, platelets, smooth muscle proliferation; complications rupture, thrombosis, aneurysm, embolism."]]};
+FA["p-rhd"]={sh:"Rheumatic fever is an acute immune-mediated multisystem disease occurring 2–3 weeks after group A streptococcal pharyngitis, due to cross-reactivity of anti-M protein antibodies and T cells with host tissues (molecular mimicry). Acute carditis shows Aschoff bodies with Anitschkow cells and verrucous vegetations; chronic RHD causes valvular fibrosis, most often mitral stenosis (fish-mouth valve). Diagnosis by Jones criteria.",
+m:[["Pathogenesis",["Group A β-haemolytic streptococcal pharyngitis","Antibodies and CD4 T cells against M protein cross-react with cardiac myosin and valve glycoproteins","Genetic susceptibility","Recurrent infections → progressive valve damage"]],
+["Acute rheumatic carditis (pancarditis)",["Myocardium: Aschoff bodies (fibrinoid necrosis, lymphocytes, Anitschkow caterpillar cells, Aschoff giant cells)","Endocardium: small warty vegetations along lines of closure; MacCallum plaques in left atrium","Pericardium: fibrinous 'bread-and-butter' pericarditis"]],
+["Chronic RHD",["Mitral (commonest) > aortic valve","Leaflet thickening, commissural fusion, chordae shortening → fish-mouth/button-hole stenosis","Complications: AF, left atrial thrombi, embolism, CHF, infective endocarditis"]],
+["Jones criteria (major)",["Carditis, migratory polyarthritis, Sydenham chorea, erythema marginatum, subcutaneous nodules (with evidence of preceding streptococcal infection)"]]],
+li:"Rheumatic heart disease remains a major cause of acquired heart disease in young Indians.",
+lc:"RHD is preventable: prompt treatment of strep throat and penicillin prophylaxis after an attack stop recurrences.",r:R_PATH+" — Heart",
+rq:[["V","Pathognomonic lesion of rheumatic carditis?","Aschoff body."],
+["S","Jones criteria.","Major: carditis, polyarthritis, chorea, erythema marginatum, subcutaneous nodules. Minor: fever, arthralgia, raised ESR/CRP, prolonged PR interval. Plus evidence of strep infection (ASO, throat culture)."],
+["S","Morphology of chronic RHD of mitral valve.","Thick fibrotic leaflets, fused commissures, short thick fused chordae, calcification → fish-mouth stenosis; dilated left atrium with thrombi."],
+["D","Vegetations in rheumatic fever vs infective endocarditis.","RF: small, warty, firm, along lines of closure, non-destructive. IE: large, friable, bulky, destructive, contain organisms, embolise."]]};
+FA["p-cirrhosis"]={sh:"Cirrhosis is a diffuse process of hepatic fibrosis with conversion of normal architecture into structurally abnormal regenerative nodules. Causes: alcohol, chronic HBV/HCV, NAFLD, biliary disease, haemochromatosis, Wilson disease. Activated stellate cells lay down collagen. Classified as micronodular (< 3 mm) or macronodular (> 3 mm). Complications: portal hypertension (varices, ascites, splenomegaly), liver failure, hepatic encephalopathy, hepatocellular carcinoma.",
+m:[["Pathogenesis",["Chronic hepatocyte injury and death","Kupffer cells and inflammatory cells release TGF-β, PDGF, TNF","Activated stellate (Ito) cells become myofibroblasts → collagen I and III in space of Disse","Capillarisation of sinusoids impairs exchange","Bridging fibrous septa + regenerative nodules; vascular shunts"]],
+["Classification",["Morphological: micronodular (alcohol), macronodular (post-viral), mixed","Etiological: alcoholic, post-hepatitic, biliary, metabolic (Wilson, haemochromatosis, α1-AT), cryptogenic"]],
+["Portal hypertension consequences",["Oesophageal varices (haematemesis)","Ascites","Congestive splenomegaly, hypersplenism","Caput medusae, haemorrhoids","Hepatic encephalopathy (portosystemic shunting)"]],
+["Lab diagnosis",["LFT: ↓ albumin, ↑ bilirubin, ↑ PT/INR, AST/ALT variable","Thrombocytopenia","Imaging (USG, elastography), liver biopsy (gold standard)","Etiology tests: HBsAg, anti-HCV, ceruloplasmin, ferritin"]]],
+li:"Cirrhosis is the end stage of many chronic liver diseases and among the top causes of death worldwide.",
+lc:"Cirrhosis results from fibrosis and regeneration; its complications stem from portal hypertension and failing liver function.",r:R_PATH+" — Liver",
+rq:[["V","Main cell producing collagen in cirrhosis?","Hepatic stellate (Ito) cell."],
+["S","Causes of portal hypertension.","Prehepatic: portal vein thrombosis. Intrahepatic: cirrhosis (commonest), schistosomiasis, non-cirrhotic portal fibrosis. Post-hepatic: Budd-Chiari, constrictive pericarditis, right heart failure."],
+["D","Micronodular vs macronodular cirrhosis.","Micro: nodules < 3 mm, uniform, alcohol, early. Macro: > 3 mm, variable, post-viral; alcoholic cirrhosis may become macronodular later."],
+["S","Mallory-Denk bodies.","Eosinophilic intracytoplasmic aggregates of damaged keratin filaments in hepatocytes; alcoholic hepatitis, NASH, Wilson disease."]]};
+FA["p-nephrotic"]={sh:"Nephrotic syndrome is massive proteinuria (> 3.5 g/day in adults), hypoalbuminaemia (< 3 g/dL), generalised oedema, hyperlipidaemia and lipiduria due to increased glomerular permeability. Primary causes: minimal change disease (commonest in children), membranous nephropathy, FSGS, MPGN. Secondary: diabetes, amyloidosis, SLE. Complications: infections, thrombosis (renal vein), protein malnutrition.",
+m:[["Pathophysiology",["Injury to podocytes/GBM → loss of size and charge barrier → proteinuria","Hypoalbuminaemia → ↓ oncotic pressure → oedema; RAAS activation → Na⁺ retention","Hepatic lipoprotein synthesis ↑ → hyperlipidaemia; lipiduria (oval fat bodies)","Loss of antithrombin III and immunoglobulins → thrombosis, infections"]],
+["Causes",[["Category","Examples"],["Children","Minimal change disease (85%)"],["Adults primary","Membranous nephropathy, FSGS, MPGN"],["Secondary","Diabetic nephropathy, amyloidosis, SLE, HBV/HCV, HIV, drugs (NSAIDs, gold)"]]],
+["Minimal change disease",["Normal glomeruli on light microscopy","Effacement of podocyte foot processes on EM","Selective proteinuria; excellent steroid response"]]],
+li:"Nephrotic syndrome is a clinical complex caused by glomerular diseases that increase permeability to plasma proteins.",
+lc:"Nephrotic syndrome is defined by heavy proteinuria; its consequences follow from loss of albumin and other plasma proteins.",r:R_PATH+" — Kidney",
+rq:[["D","Nephritic vs nephrotic syndrome.","Nephritic: haematuria with RBC casts, hypertension, oliguria, mild proteinuria (< 3.5 g), azotaemia. Nephrotic: proteinuria > 3.5 g, hypoalbuminaemia, oedema, hyperlipidaemia, lipiduria."],
+["V","Commonest cause of nephrotic syndrome in children?","Minimal change disease."],
+["S","Membranous nephropathy.","Commonest primary cause in adults; anti-PLA2R antibodies; subepithelial deposits with 'spikes' on silver stain; granular IgG and C3; may be secondary to SLE, HBV, drugs, tumours."],
+["V","Why does thrombosis occur in nephrotic syndrome?","Urinary loss of antithrombin III, increased fibrinogen and haemoconcentration."]]};
+FA["p-dm"]={ans:"path16:4",rq:[
+["S","Pathogenesis of type 2 diabetes.","Insulin resistance (obesity, visceral fat, FFAs, adipokines, inflammation) plus β-cell dysfunction (glucotoxicity, lipotoxicity, amyloid); genetic predisposition."],
+["S","Morphology of diabetic nephropathy.","GBM thickening, diffuse mesangial sclerosis, nodular glomerulosclerosis (Kimmelstiel-Wilson), hyaline arteriolosclerosis of afferent and efferent arterioles, pyelonephritis, papillary necrosis."],
+["V","Diagnostic criteria of diabetes?","FPG ≥ 126 mg/dL, 2-h OGTT ≥ 200 mg/dL, HbA1c ≥ 6.5%, or random ≥ 200 mg/dL with symptoms."],
+["D","Type 1 vs type 2 diabetes.","T1: autoimmune β-cell destruction, young, lean, absolute insulin deficiency, ketosis-prone, HLA-DR3/DR4. T2: insulin resistance + β-cell dysfunction, older, obese, relative deficiency, strong genetic link, HHS."]]};
+
+FA["p-dm"]={sh:"Diabetes mellitus is a group of metabolic disorders with chronic hyperglycaemia from defects in insulin secretion, action or both. Type 1: autoimmune β-cell destruction (absolute deficiency). Type 2: insulin resistance with β-cell dysfunction. Diagnosis: FPG ≥ 126, 2-h OGTT ≥ 200, HbA1c ≥ 6.5% or random ≥ 200 mg/dL with symptoms. Chronic hyperglycaemia damages vessels via AGEs, polyol pathway, PKC activation and oxidative stress, causing micro- (retinopathy, nephropathy, neuropathy) and macrovascular (atherosclerosis) complications.",
+m:[["Classification",["Type 1 (5–10%): autoimmune (anti-GAD, anti-islet), HLA-DR3/DR4","Type 2 (90%): insulin resistance + β-cell failure, obesity","Other: MODY, pancreatic disease, endocrinopathies (Cushing, acromegaly), drugs (steroids)","Gestational diabetes"]],
+["Pathogenesis of complications",["Advanced glycation end-products crosslink proteins, activate RAGE → inflammation","Polyol pathway: aldose reductase → sorbitol → osmotic injury (nerves, lens), ↓ NADPH","Protein kinase C activation → VEGF, TGF-β, PAI-1","Oxidative stress, hexosamine pathway"]],
+["Morphology",["Pancreas: insulitis (T1), amyloid in islets (T2)","Vessels: accelerated atherosclerosis, hyaline arteriolosclerosis","Kidney: GBM thickening, Kimmelstiel-Wilson nodules, papillary necrosis","Eye: retinopathy (non-proliferative → proliferative), cataract","Nerves: symmetric sensory polyneuropathy, autonomic neuropathy"]],
+["Clinical features & complications",["Polyuria, polydipsia, polyphagia, weight loss (T1)","Acute: DKA (T1), hyperosmolar hyperglycaemic state (T2), hypoglycaemia","Chronic: MI (commonest cause of death), stroke, renal failure, blindness, foot ulcers, infections"]]],
+li:"Diabetes affects over 100 million Indians; its burden lies mainly in long-term vascular complications.",
+lc:"Diabetes is a disease of glucose but its damage is vascular; glycaemic control reduces microvascular complications.",r:R_PATH+" — Endocrine pancreas",
+rq:[["S","Pathogenesis of type 2 diabetes.","Insulin resistance (obesity, visceral fat, FFAs, adipokines, inflammation) plus β-cell dysfunction (glucotoxicity, lipotoxicity, islet amyloid); strong genetic predisposition."],
+["S","Morphology of diabetic nephropathy.","GBM thickening, diffuse mesangial sclerosis, nodular glomerulosclerosis (Kimmelstiel-Wilson), hyaline arteriolosclerosis of afferent and efferent arterioles, pyelonephritis, papillary necrosis."],
+["V","Diagnostic criteria of diabetes?","FPG ≥ 126 mg/dL, 2-h OGTT ≥ 200 mg/dL, HbA1c ≥ 6.5%, or random ≥ 200 mg/dL with symptoms."],
+["D","Type 1 vs type 2 diabetes.","T1: autoimmune, young, lean, absolute insulin deficiency, ketosis-prone. T2: insulin resistance + β-cell dysfunction, older, obese, relative deficiency, HHS, strong genetics."]]};
+
+/* ---- Microbiology ---- */
+FA["m-pathogenesis"]={sh:"Bacterial pathogenesis is the process by which bacteria cause disease: transmission and entry, adhesion (pili, adhesins), colonisation and multiplication (siderophores), invasion (enzymes), evasion of host defences (capsule, IgA protease, protein A, antigenic variation, intracellular survival) and tissue damage by exotoxins, endotoxin and the host immune response. Outcome depends on infective dose, virulence and host immunity.",
+m:[["Virulence factors",["Adhesins: pili/fimbriae (E. coli, gonococcus), lipoteichoic acid (Strep)","Capsule: anti-phagocytic (pneumococcus, Klebsiella, Hib, meningococcus)","Enzymes: hyaluronidase, collagenase, coagulase, streptokinase, lecithinase","IgA protease: Neisseria, H. influenzae, pneumococcus","Toxins: exotoxins and endotoxin","Intracellular survival: M. tuberculosis, Salmonella, Listeria","Antigenic variation: gonococcal pili"]],
+["Exotoxin vs endotoxin",[["Feature","Exotoxin","Endotoxin"],["Source","Gram + and Gram −, secreted","Gram − outer membrane (LPS)"],["Nature","Protein","Lipopolysaccharide (lipid A)"],["Heat","Labile (mostly)","Stable"],["Toxoid","Yes","No"],["Action","Specific (neurotoxin, enterotoxin)","Fever, shock, DIC"],["Example","Diphtheria, tetanus, cholera","E. coli, Salmonella, meningococcus"]]]],
+li:"Pathogenicity is the ability to cause disease; virulence is its degree, determined by bacterial factors and host defences.",
+lc:"Understanding virulence factors explains disease patterns and is the basis of vaccines (toxoids, capsular vaccines).",r:R_MICRO+" — Bacterial pathogenicity",
+rq:[["D","Exotoxin vs endotoxin.","Exotoxin: protein, secreted, heat-labile, highly antigenic, toxoid possible, specific action. Endotoxin: LPS of Gram-negative wall, heat-stable, weakly antigenic, no toxoid, non-specific (fever, shock)."],
+["V","Toxins produced by lysogenic conversion?","Diphtheria toxin, cholera toxin, botulinum toxins C and D, streptococcal erythrogenic toxin, Shiga-like toxin."],
+["S","Superantigens.","Toxins (TSST-1, staph enterotoxins, SPE) that bind MHC-II and TCR Vβ outside the groove, activating up to 20% of T cells → cytokine storm, toxic shock."],
+["V","Koch's postulates — one limitation.","Some organisms cannot be cultured (M. leprae, T. pallidum); asymptomatic carriers exist."]]};
+FA["m-hiv"]={ans:"path4:1",rq:[
+["S","Laboratory diagnosis of HIV.","Screening by ELISA/rapid tests using NACO three-test strategy; p24 antigen and combined Ag-Ab assays for early infection; HIV RNA PCR (viral load) for infants and monitoring; CD4 count for staging; Western blot rarely now."],
+["S","Opportunistic infections in AIDS.","TB, Pneumocystis pneumonia, oral/oesophageal candidiasis, cryptococcal meningitis, cerebral toxoplasmosis, CMV retinitis, MAC, cryptosporidiosis, HSV, VZV."],
+["V","Co-receptors used by HIV?","CCR5 (macrophage-tropic, early) and CXCR4 (T-tropic, late)."],
+["S","Structure of HIV.","Spherical enveloped retrovirus, 100–120 nm; envelope with gp120 and gp41; cone-shaped core (p24) with two copies of ssRNA, reverse transcriptase, integrase and protease; matrix p17."]]};
+FA["m-hbv"]={sh:"Hepatitis B virus is a partially double-stranded DNA hepadnavirus (Dane particle, 42 nm) spread by blood, sexual and perinatal routes. Markers: HBsAg (first, current infection), HBeAg and HBV DNA (replication, infectivity), IgM anti-HBc (acute and window period), IgG anti-HBc (past/chronic), anti-HBs (immunity; alone after vaccination). Chronic infection (HBsAg > 6 months) risks cirrhosis and HCC; prevention is by vaccination and HBIG.",
+m:[["Virus & transmission",["Hepadnavirus; Dane particle with HBsAg envelope, HBcAg core, partially dsDNA, DNA polymerase with reverse transcriptase activity","Spread: blood/needles, sexual, perinatal (90% of infected neonates become chronic)"]],
+["Serological markers",[["Marker","Meaning"],["HBsAg","Current infection (acute or chronic)"],["HBeAg","High replication, infectivity"],["IgM anti-HBc","Acute infection; only marker in window period"],["IgG anti-HBc","Past or chronic infection"],["Anti-HBs","Immunity (recovery or vaccination)"],["HBV DNA","Viral load, replication"]]],
+["Outcomes",["Acute hepatitis → recovery (most adults)","Fulminant hepatitis (< 1%)","Chronic carrier → chronic hepatitis → cirrhosis → hepatocellular carcinoma"]],
+["Prevention",["Recombinant HBsAg vaccine: birth dose + 6, 10, 14 weeks (pentavalent)","HBIG + vaccine for newborns of HBsAg-positive mothers and after needle-stick"]]],
+li:"Hepatitis B is a major cause of chronic liver disease and liver cancer in India.",
+lc:"Reading the serological pattern tells whether infection is acute, chronic, resolved or vaccine-induced.",r:R_MICRO+" — Hepatitis viruses",
+rq:[["V","Only marker positive in the window period?","IgM anti-HBc."],
+["D","Hepatitis A vs hepatitis B.","HAV: RNA picornavirus, faeco-oral, short incubation (2–6 wk), no chronicity or carrier state. HBV: DNA hepadnavirus, parenteral/sexual/perinatal, long incubation (1–6 months), chronicity, cirrhosis, HCC."],
+["S","Interpret: HBsAg −, anti-HBc +, anti-HBs +.","Recovered from past HBV infection with natural immunity."],
+["V","Marker of high infectivity?","HBeAg (and high HBV DNA)."]]};
+FA["m-cholera"]={sh:"Cholera is an acute diarrhoeal disease caused by toxigenic Vibrio cholerae O1/O139, acquired from contaminated water. The organism is acid-sensitive (high infective dose), penetrates mucus by darting motility and mucinase, adheres via toxin co-regulated pilus and secretes cholera toxin. The B subunit binds GM1; the A subunit ADP-ribosylates Gs, raising cAMP, causing chloride secretion and copious rice-water stools. Treatment is rehydration (ORS, Ringer lactate).",
+m:[["Organism",["Gram-negative comma-shaped, darting motility, oxidase positive","Serogroups O1 (classical, El Tor) and O139","Transport: VR medium, Cary-Blair; enrichment: alkaline peptone water; selective: TCBS (yellow colonies)"]],
+["Pathogenesis",["Ingestion of 10⁸ organisms (fewer with achlorhydria)","Mucinase and motility help reach the epithelium","TCP-mediated adhesion; no invasion","Cholera toxin (1A + 5B) → GM1 binding → ADP-ribosylation of Gs → adenylate cyclase on → ↑ cAMP","CFTR chloride secretion, ↓ NaCl absorption → isotonic fluid loss"]],
+["Lab diagnosis",["Stool: hanging drop (darting motility, inhibited by specific antiserum)","Culture on TCBS; biochemical tests; slide agglutination","Rapid antigen tests"]]],
+li:"Cholera is the prototype of toxin-mediated secretory diarrhoea and remains endemic in parts of India.",
+lc:"Because glucose-coupled Na⁺ absorption remains intact, oral rehydration therapy saves most lives.",r:R_MICRO+" — Vibrio",
+rq:[["D","Classical vs El Tor vibrios.","El Tor: haemolytic, VP positive, agglutinates chick RBCs, polymyxin B resistant, resistant to Mukerjee group IV phage. Classical: the opposite."],
+["V","Selective medium for V. cholerae?","TCBS agar (yellow sucrose-fermenting colonies)."],
+["S","Why does ORS work in cholera?","Na⁺–glucose co-transport (SGLT1) is not affected by cholera toxin, so glucose carries sodium and water back into the cells."],
+["V","Receptor for cholera toxin?","GM1 ganglioside."]]};
+FA["m-rabies"]={sh:"Rabies is a fatal viral encephalitis caused by a bullet-shaped rhabdovirus transmitted mainly by dog bites. The virus multiplies in muscle at the wound, enters peripheral nerves via acetylcholine receptors and travels by retrograde axonal transport to the CNS, then centrifugally to salivary glands. Negri bodies are diagnostic. Clinical rabies (hydrophobia) is almost always fatal, so prevention by wound washing, vaccine and rabies immunoglobulin per WHO category is crucial.",
+m:[["Virus",["Rhabdovirus, Lyssavirus; bullet-shaped, enveloped, ssRNA; glycoprotein G spikes","Street virus (wild) vs fixed virus (adapted, used for vaccines)"]],
+["Pathogenesis",["Bite → local replication in muscle (incubation 1–3 months; shorter for head/face)","Binds nicotinic ACh receptors → enters nerves → retrograde transport to CNS","Encephalitis: brainstem, hippocampus, cerebellum; Negri bodies","Spread to salivary glands, skin, cornea"]],
+["Lab diagnosis",["Antemortem: corneal impression smear and nuchal skin biopsy (DFA), saliva RT-PCR, antibodies in CSF","Postmortem: Negri bodies (Seller's stain), FAT on brain (gold standard)"]],
+["Post-exposure prophylaxis",["Wash wound with soap and running water for 15 min; antiseptic","Cell-culture vaccine: IM Essen (0, 3, 7, 14, 28) or ID Thai Red Cross (0, 3, 7, 28)","RIG infiltrated into the wound for category III","Do not suture immediately"]]],
+li:"India accounts for about a third of global rabies deaths, almost all from dog bites.",
+lc:"Rabies is 100% preventable but almost 100% fatal once symptoms appear.",r:R_MICRO+" — Rabies virus",
+rq:[["V","Shape of rabies virus?","Bullet-shaped."],
+["S","Negri bodies.","Eosinophilic, round cytoplasmic inclusions with basophilic inner granules in neurons of hippocampus (Ammon's horn) and Purkinje cells; stained with Seller's stain."],
+["S","WHO categories of animal exposure.","I: touching, licks on intact skin — no PEP. II: nibbling, minor scratches without bleeding — wound care + vaccine. III: bites/scratches with bleeding, licks on broken skin or mucosa — wound care + vaccine + RIG."],
+["V","Gold standard postmortem test?","Direct fluorescent antibody test on brain tissue."]]};
+FA["m-typhoid"]={sh:"Enteric fever is a systemic infection by Salmonella Typhi/Paratyphi acquired from contaminated food or water. Bacilli invade M cells of Peyer's patches, multiply in macrophages of the reticuloendothelial system, cause primary and secondary bacteraemia, seed the gall bladder and re-infect Peyer's patches, causing longitudinal ulcers that may perforate in the third week. Diagnosis by week: blood culture (1st), Widal (2nd), stool (3rd), urine (4th); bone marrow culture is most sensitive.",
+m:[["Organism",["Gram-negative motile bacillus, non-lactose fermenter, H2S positive","Antigens: O (somatic), H (flagellar), Vi (capsular)"]],
+["Pathogenesis",["Ingestion → survives stomach acid → invades M cells → mesenteric nodes","Primary bacteraemia → liver, spleen, marrow (incubation 7–14 days)","Secondary bacteraemia → fever, rose spots, splenomegaly","Gall bladder seeding → re-infection of Peyer's patches → ulceration","Carrier state: gall bladder (especially with gallstones)"]],
+["Lab diagnosis",["Blood culture in first week (most useful)","Bone marrow culture: most sensitive, even after antibiotics","Widal: rising titre of O and H antibodies from second week","Stool and urine culture later; carriers by stool/bile culture, Vi antibodies"]]],
+li:"Typhoid remains common in India, increasingly with fluoroquinolone resistance.",
+lc:"The systemic and intracellular nature of typhoid explains its clinical course and the sequence of diagnostic tests.",r:R_MICRO+" — Salmonella",
+rq:[["S","Widal test.","Tube agglutination detecting antibodies to O and H antigens of S. Typhi and Paratyphi; significant if rising titre in paired sera or O ≥ 1:160 in endemic areas; false positives from vaccination, past infection, anamnestic reaction."],
+["V","Most sensitive specimen in enteric fever?","Bone marrow culture."],
+["D","Typhoid ulcer vs tubercular ulcer of intestine.","Typhoid: longitudinal, over Peyer's patches, may perforate, no fibrosis/stricture. TB: transverse (girdle), undermined edges, heals with fibrosis and stricture."],
+["S","Typhoid carrier.","Person excreting bacilli for > 1 year after infection, usually from gall bladder; source of outbreaks (Typhoid Mary); detected by stool/bile culture, Vi antibodies; treated with prolonged antibiotics or cholecystectomy."]]};
+FA["m-immune"]={sh:"On first exposure, antigen is captured by dendritic cells and presented on MHC-II to CD4 helper T cells (and on MHC-I to CD8 cells). Helper T cells activate B cells, which become plasma cells secreting first IgM then IgG after class switching. Memory B and T cells persist. A second exposure produces a faster, larger, longer-lasting, higher-affinity IgG response (secondary or anamnestic response), the basis of booster doses.",
+m:[["Primary vs secondary response",[["Feature","Primary","Secondary"],["Lag period","Long (1–2 weeks)","Short (2–3 days)"],["Main antibody","IgM","IgG"],["Titre","Low","High"],["Duration","Short","Long"],["Affinity","Low","High (affinity maturation)"],["Cells responding","Naive B cells","Memory B cells"]]],
+["Steps",["Antigen capture and processing by APCs","Presentation with MHC-II (extracellular antigens) or MHC-I (intracellular)","T-cell activation with co-stimulation (B7–CD28)","TH1 (IFN-γ: cell-mediated), TH2 (IL-4, IL-5: humoral), TH17 (IL-17)","B-cell activation, germinal centre, class switching, plasma cells","Memory cells"]]],
+li:"Adaptive immunity is specific and has memory; its two arms are humoral (B cells) and cell-mediated (T cells).",
+lc:"Memory cells are why vaccines and booster doses protect.",r:R_MICRO+" — Immune response",
+rq:[["D","Primary vs secondary immune response.","See table: lag, antibody class, titre, duration, affinity."],
+["D","T cells vs B cells.","T: thymus, TCR, recognise processed peptide with MHC, cell-mediated immunity, CD3. B: bone marrow, BCR (surface Ig), recognise native antigen, humoral immunity, CD19/20, become plasma cells."],
+["V","Which antibody appears first in a primary response?","IgM."],
+["S","Monoclonal antibodies.","Antibodies from a single clone produced by hybridoma technology (B cell + myeloma, HAT selection; Köhler & Milstein). Uses: diagnostics (ELISA, IHC, flow cytometry), therapy (rituximab, trastuzumab, infliximab)."]]};
+FA["m-dengue"]={sh:"Dengue is an arboviral disease caused by dengue virus serotypes 1–4 (Flavivirus) transmitted by Aedes aegypti. It has febrile, critical and recovery phases. Severe dengue (plasma leakage, shock, bleeding, organ damage) is more common in secondary infection with a different serotype due to antibody-dependent enhancement. Diagnosis: NS1 antigen or RT-PCR in the first 5 days; IgM ELISA after day 5. Management is supportive with careful fluids; avoid NSAIDs.",
+m:[["Virus & vector",["Flavivirus, ssRNA, four serotypes (DENV 1–4)","Aedes aegypti: day-biting, breeds in clean stored water, urban"]],
+["Pathogenesis of severe dengue",["Secondary infection with a different serotype","Non-neutralising antibodies enhance viral entry into Fc-receptor cells (ADE)","Cytokine storm, complement activation, NS1-mediated endothelial dysfunction","Plasma leakage (rising haematocrit), thrombocytopenia, coagulopathy"]],
+["WHO classification",["Dengue without warning signs","Dengue with warning signs: abdominal pain, persistent vomiting, fluid accumulation, mucosal bleed, lethargy, liver > 2 cm, rising HCT with falling platelets","Severe dengue: shock, severe bleeding, severe organ involvement"]],
+["Lab diagnosis",["NS1 antigen ELISA / rapid test (days 1–5)","RT-PCR (early)","IgM capture ELISA (after day 5); IgG high in secondary infection","CBC: leukopenia, thrombocytopenia, rising haematocrit"]]],
+li:"Dengue is the fastest-spreading mosquito-borne viral disease and is endemic throughout India.",
+lc:"Recognising warning signs during the critical phase and giving judicious fluids prevents dengue deaths.",r:R_MICRO+" — Arboviruses",
+rq:[["V","Test of choice on day 2 of fever?","NS1 antigen."],
+["S","Antibody-dependent enhancement.","Pre-existing non-neutralising antibodies from a previous serotype bind the new virus and help it enter monocytes via Fc receptors, increasing viral load and severity."],
+["S","Arboviruses of public health importance in India.","Dengue, chikungunya (Aedes), Japanese encephalitis (Culex), Kyasanur Forest disease (ticks), Zika (Aedes), West Nile."],
+["V","Why avoid NSAIDs in dengue?","They worsen bleeding and platelet dysfunction; use paracetamol."]]};
+
+/* ---- Pharmacology ---- */
+FA["ph-chol"]={sh:"Cholinergic transmission involves choline uptake, ACh synthesis by choline acetyltransferase, vesicular storage, Ca²⁺-dependent release, action on muscarinic (M1–M3) and nicotinic (NM, NN) receptors, and rapid hydrolysis by acetylcholinesterase. Drugs act at each step: hemicholinium (uptake), vesamicol (storage), botulinum toxin (release), muscarinic agonists/antagonists, neuromuscular blockers, and anticholinesterases (reversible: neostigmine, physostigmine; irreversible: organophosphates).",
+m:[["Classification of cholinergic drugs",["Choline esters: acetylcholine, methacholine, carbachol, bethanechol","Alkaloids: pilocarpine, muscarine, arecoline","Anticholinesterases — reversible: carbamates (physostigmine, neostigmine, pyridostigmine, rivastigmine), acridine (tacrine), others (edrophonium, donepezil, galantamine)","Irreversible: organophosphates (parathion, malathion, dyflos), carbamates (carbaryl, propoxur)"]],
+["Uses of anticholinesterases",["Myasthenia gravis: pyridostigmine, neostigmine; edrophonium for diagnosis","Reversal of non-depolarising blockade: neostigmine + glycopyrrolate","Glaucoma: physostigmine, echothiophate (rare)","Belladonna/atropine poisoning: physostigmine","Alzheimer's disease: donepezil, rivastigmine, galantamine","Postoperative urinary retention, paralytic ileus: neostigmine"]],
+["OP poisoning management",["Decontamination, airway, oxygen","Atropine 2–4 mg IV repeated until atropinisation","Pralidoxime early (before ageing)","Diazepam for convulsions; ventilatory support"]]],
+li:"Acetylcholine is the transmitter at all autonomic ganglia, parasympathetic postganglionic endings, sympathetic sweat glands and the neuromuscular junction.",
+lc:"Knowing each step of cholinergic transmission explains the actions and uses of a large group of drugs and the treatment of OP poisoning.",r:R_PHARM+" — Cholinergic system",
+rq:[["S","Treatment of organophosphorus poisoning.","Remove clothes, wash skin, gastric lavage; atropine until secretions dry and HR > 80; pralidoxime 1–2 g IV early; diazepam for seizures; ventilation; watch for intermediate syndrome."],
+["V","Why is physostigmine preferred in atropine poisoning?","It is a tertiary amine that crosses the blood–brain barrier and reverses central anticholinergic effects."],
+["S","Myasthenia gravis — drug treatment.","Pyridostigmine (longer acting) or neostigmine; steroids, azathioprine, mycophenolate; IVIG/plasmapheresis in crisis; thymectomy. Edrophonium test differentiates myasthenic from cholinergic crisis."],
+["V","What is 'ageing' of AChE?","Loss of an alkyl group from the phosphorylated enzyme, making inhibition irreversible so oximes no longer work."]]};
+FA["ph-adrenergic"]={sh:"Adrenergic receptors are G-protein coupled: α1 (Gq: vasoconstriction, mydriasis), α2 (Gi: ↓ NA release, central ↓ BP), β1 (Gs: ↑ heart rate and force, renin release), β2 (Gs: bronchodilatation, vasodilatation, uterine relaxation), β3 (lipolysis, bladder relaxation). Drugs: α1 agonist phenylephrine; α2 agonists clonidine, methyldopa; β1 agonist dobutamine; β2 agonists salbutamol; blockers prazosin (α1), atenolol (β1), propranolol (non-selective).",
+m:[["Receptor effects",[["Receptor","Mechanism","Main effects"],["α1","Gq → IP3/Ca²⁺","Vasoconstriction, mydriasis, sphincter contraction"],["α2","Gi → ↓ cAMP","↓ NA release, ↓ sympathetic outflow, ↓ insulin"],["β1","Gs → ↑ cAMP","↑ HR, contractility, AV conduction, renin"],["β2","Gs → ↑ cAMP","Bronchodilatation, vasodilatation, tocolysis, glycogenolysis, K⁺ into cells"],["β3","Gs","Lipolysis, detrusor relaxation"]]],
+["Clinical uses of adrenergic agonists",["Anaphylaxis: adrenaline 0.5 mg IM","Septic shock: noradrenaline","Cardiogenic shock: dobutamine","Asthma/COPD: salbutamol, formoterol","Nasal decongestion: oxymetazoline","Preterm labour: terbutaline/ritodrine","Hypertension: clonidine, methyldopa (pregnancy)"]]],
+li:"Catecholamines act through α and β receptors whose distribution determines the effect of each drug.",
+lc:"Receptor selectivity guides the choice of adrenergic agonists and blockers.",r:R_PHARM+" — Adrenergic system",
+rq:[["S","β-blockers: classification and uses.","Non-selective: propranolol, timolol; β1-selective: atenolol, metoprolol, bisoprolol, esmolol; with α-block: labetalol, carvedilol. Uses: hypertension, angina, MI, CHF, arrhythmias, thyrotoxicosis, migraine prophylaxis, glaucoma, anxiety, essential tremor."],
+["S","Adverse effects and contraindications of β-blockers.","Bradycardia, heart block, bronchospasm, cold extremities, fatigue, masking hypoglycaemia, rebound on withdrawal. Avoid in asthma, heart block, Prinzmetal angina, decompensated heart failure."],
+["V","Drug of choice in anaphylactic shock?","Adrenaline 0.5 mg (0.5 mL of 1:1000) IM."],
+["V","Why is dopamine used in low dose for renal perfusion?","At 1–2 µg/kg/min it acts on D1 receptors causing renal and mesenteric vasodilatation (benefit now doubtful)."]]};
+FA["ph-aa"]={sh:"Arachidonic acid released from membrane phospholipids by phospholipase A2 is converted by cyclo-oxygenase (COX-1, COX-2) to prostaglandins, prostacyclin and thromboxane, and by 5-lipoxygenase to leukotrienes. NSAIDs inhibit COX (aspirin irreversibly), reducing pain, fever and inflammation but causing gastric injury, renal effects and bleeding. Steroids indirectly inhibit PLA2; montelukast blocks leukotriene receptors.",
+m:[["Classification of NSAIDs",["Non-selective COX inhibitors: salicylates (aspirin), propionic acids (ibuprofen, naproxen), acetic acids (diclofenac, indomethacin), oxicams (piroxicam), fenamates (mefenamic acid), pyrazolones (metamizole)","Preferential COX-2: nimesulide, meloxicam, aceclofenac","Selective COX-2: celecoxib, etoricoxib","Analgesic-antipyretic with weak anti-inflammatory action: paracetamol"]],
+["Aspirin",["MOA: irreversible acetylation of COX","Doses: antiplatelet 75–150 mg; analgesic 300–600 mg; anti-inflammatory 3–5 g/day","Uses: MI, stroke prevention, rheumatic fever, pain, fever","ADR: gastritis, peptic ulcer, bleeding, Reye's syndrome, salicylism (tinnitus), bronchospasm, hypersensitivity","Poisoning: alkaline diuresis, haemodialysis"]]],
+li:"Eicosanoids are local mediators of inflammation, pain, fever, platelet function and bronchial tone.",
+lc:"The arachidonic acid pathway explains both the benefits and the adverse effects of NSAIDs.",r:R_PHARM+" — NSAIDs",
+rq:[["V","Why does low-dose aspirin prevent thrombosis?","Irreversible inhibition of platelet COX-1 blocks TXA2 for the 7–10 day life of the platelet, while endothelial PGI2 recovers."],
+["S","Reye's syndrome.","Acute encephalopathy with fatty liver in children given aspirin during viral illness (influenza, varicella); aspirin is avoided under 12–16 years."],
+["D","Non-selective NSAIDs vs selective COX-2 inhibitors.","Non-selective: GI ulcers, antiplatelet effect. COX-2: fewer GI effects, no antiplatelet effect, ↑ thrombotic CV risk."],
+["V","Drug of choice for fever in children?","Paracetamol."]]};
+FA["ph-insulin"]={sh:"Glucose enters β-cells via GLUT2, raises ATP, closes K-ATP channels, depolarises the cell, opens Ca²⁺ channels and releases insulin. Sulfonylureas close K-ATP channels directly; GLP-1 agonists and DPP-4 inhibitors enhance glucose-dependent release. Metformin reduces hepatic gluconeogenesis (AMPK), pioglitazone improves insulin sensitivity (PPAR-γ), SGLT2 inhibitors cause glycosuria, acarbose slows carbohydrate digestion. Metformin is first-line in type 2 diabetes.",
+m:[["Classification of oral antidiabetic drugs",["Insulin secretagogues: sulfonylureas (glimepiride, gliclazide, glipizide), meglitinides (repaglinide)","Biguanide: metformin","Thiazolidinedione: pioglitazone","α-glucosidase inhibitors: acarbose, voglibose","DPP-4 inhibitors: sitagliptin, vildagliptin, teneligliptin","SGLT2 inhibitors: dapagliflozin, empagliflozin","GLP-1 agonists (injectable/oral): liraglutide, semaglutide"]],
+["Sulfonylureas",["MOA: block K-ATP channel (SUR1) → insulin release","ADR: hypoglycaemia (glibenclamide worst), weight gain","Contraindicated in type 1 DM, pregnancy, severe renal/hepatic disease"]],
+["Metformin",["MOA: ↓ hepatic gluconeogenesis via AMPK; ↑ peripheral uptake; ↓ intestinal absorption","No hypoglycaemia, weight neutral/loss, improves lipids","ADR: GI upset, metallic taste, B12 deficiency, lactic acidosis (rare; avoid in eGFR < 30, hypoxia, contrast)","Uses: first-line T2DM, PCOS, prediabetes"]]],
+li:"Oral antidiabetic drugs target different steps in glucose homeostasis and are combined in type 2 diabetes.",
+lc:"Choice depends on efficacy, hypoglycaemia risk, weight effect, comorbidities and cost.",r:R_PHARM+" — Antidiabetic drugs",
+rq:[["S","Management of type 2 diabetes.","Lifestyle + metformin; add SGLT2/GLP-1 in ASCVD, CKD or HF; otherwise sulfonylurea, DPP-4 or pioglitazone; insulin if uncontrolled; monitor HbA1c every 3 months."],
+["V","Antidiabetic drug that causes weight loss?","GLP-1 agonists (also SGLT2 inhibitors, metformin modestly)."],
+["S","Diabetic ketoacidosis management.","IV normal saline, regular insulin infusion 0.1 U/kg/h, K⁺ replacement, add dextrose at glucose ~250 mg/dL, bicarbonate only if pH < 6.9, treat precipitating cause."],
+["V","Why is metformin stopped before contrast studies?","Contrast nephropathy can raise metformin levels and cause lactic acidosis."]]};
+FA["ph-raas"]={sh:"The renin–angiotensin–aldosterone system raises blood pressure: renin converts angiotensinogen to angiotensin I, ACE converts it to angiotensin II, which acts on AT1 receptors causing vasoconstriction, aldosterone release, ADH secretion and cardiac remodelling. Drugs: β-blockers ↓ renin, aliskiren blocks renin, ACE inhibitors block ACE (and raise bradykinin → cough), ARBs block AT1, spironolactone blocks aldosterone.",
+m:[["Classification of antihypertensives",["Diuretics: thiazides (hydrochlorothiazide, chlorthalidone), loop, K⁺-sparing","ACE inhibitors: enalapril, ramipril, lisinopril","ARBs: losartan, telmisartan; renin inhibitor: aliskiren","Calcium channel blockers: amlodipine, nifedipine, diltiazem, verapamil","β-blockers: atenolol, metoprolol; α+β: labetalol, carvedilol","α1-blockers: prazosin; central α2 agonists: clonidine, methyldopa","Vasodilators: hydralazine, minoxidil, sodium nitroprusside"]],
+["ACE inhibitors",["MOA: ↓ angiotensin II, ↓ aldosterone, ↑ bradykinin","Uses: hypertension, CHF, post-MI, diabetic nephropathy","ADR: dry cough, angioedema, hyperkalaemia, first-dose hypotension, foetopathy","Contraindications: pregnancy, bilateral renal artery stenosis"]],
+["Special situations",["Pregnancy: methyldopa, labetalol, nifedipine","Hypertensive emergency: IV labetalol, nitroprusside, nicardipine; lower BP ≤ 25% in first hour","Diabetes/CKD: ACEI or ARB"]]],
+li:"Hypertension is the commonest cardiovascular disorder; drug therapy targets cardiac output and peripheral resistance.",
+lc:"The RAAS is the target of several antihypertensive classes with organ-protective benefits.",r:R_PHARM+" — Antihypertensives",
+rq:[["V","Why do ACE inhibitors cause dry cough?","Accumulation of bradykinin and substance P (ACE also degrades kinins)."],
+["S","Treatment of hypertension in pregnancy.","Methyldopa, labetalol, nifedipine (oral); hydralazine/labetalol IV in severe cases; MgSO4 for eclampsia; avoid ACEI, ARB, diuretics."],
+["D","ACE inhibitors vs ARBs.","ACEI: block ACE, ↑ bradykinin → cough/angioedema. ARB: block AT1 receptor, no bradykinin rise, no cough; both teratogenic and cause hyperkalaemia."],
+["S","Hypertensive emergency.","Severe BP rise (> 180/120) with acute organ damage; IV labetalol, nicardipine, sodium nitroprusside, esmolol; reduce by ≤ 25% in first hour."]]};
+FA["ph-coag"]={sh:"Coagulation proceeds via intrinsic (aPTT) and extrinsic (PT) pathways to factor Xa, thrombin and fibrin. Heparin (via antithrombin III) inhibits IIa and Xa; LMWH and fondaparinux mainly Xa; rivaroxaban/apixaban directly inhibit Xa; dabigatran inhibits thrombin; warfarin blocks vitamin K epoxide reductase, reducing factors II, VII, IX, X. Fibrinolytics activate plasminogen. Antidotes: protamine (heparin), vitamin K/FFP/PCC (warfarin), idarucizumab (dabigatran), tranexamic acid (fibrinolytics).",
+m:[["Classification of anticoagulants",["Parenteral: unfractionated heparin, LMWH (enoxaparin), fondaparinux, direct thrombin inhibitors (bivalirudin, argatroban)","Oral: vitamin K antagonists (warfarin, acenocoumarol), direct Xa inhibitors (rivaroxaban, apixaban), direct thrombin inhibitor (dabigatran)"]],
+["Heparin vs warfarin",[["Feature","Heparin","Warfarin"],["Route","IV/SC","Oral"],["Onset","Immediate","3–5 days"],["Mechanism","Activates antithrombin III","Vitamin K antagonist"],["Monitoring","aPTT","PT/INR (2–3)"],["Antidote","Protamine sulphate","Vitamin K, FFP, PCC"],["Pregnancy","Safe","Teratogenic"],["ADR","Bleeding, HIT, osteoporosis","Bleeding, skin necrosis, teratogenicity"]]],
+["Uses",["DVT and PE treatment and prophylaxis","Atrial fibrillation (stroke prevention)","Acute coronary syndrome","Prosthetic valves (warfarin)"]]],
+li:"Anticoagulants prevent formation and extension of thrombi; they do not dissolve existing clots.",
+lc:"Matching the drug to its site in the cascade explains its monitoring test and antidote.",r:R_PHARM+" — Anticoagulants",
+rq:[["V","Antidote for heparin overdose?","Protamine sulphate (1 mg per 100 units heparin)."],
+["S","LMWH advantages over unfractionated heparin.","Predictable SC absorption, longer half-life, once/twice daily, no routine aPTT monitoring, less HIT and osteoporosis; mainly anti-Xa."],
+["S","Drug interactions of warfarin.","Increased effect: NSAIDs, aspirin, cotrimoxazole, metronidazole, fluconazole, amiodarone, cimetidine. Decreased: rifampicin, phenytoin, carbamazepine, barbiturates, vitamin K–rich foods."],
+["V","Why overlap heparin with warfarin?","Warfarin acts slowly and initially lowers protein C, causing a transient hypercoagulable state."]]};
+FA["ph-digoxin"]={sh:"Digoxin inhibits myocardial Na⁺/K⁺-ATPase, raising intracellular Na⁺, which slows Na⁺/Ca²⁺ exchange and increases intracellular Ca²⁺ stores, producing positive inotropy. It also increases vagal tone, slowing AV conduction. Uses: heart failure with AF, rate control in AF. It has a narrow therapeutic index; toxicity (nausea, xanthopsia, arrhythmias) is increased by hypokalaemia and treated by stopping the drug, correcting K⁺ and digoxin-specific Fab.",
+m:[["Pharmacological actions",["Heart: ↑ force of contraction, ↓ HR, ↓ AV conduction, ↑ ventricular automaticity (toxicity)","Kidney: diuresis in CHF (improved output)","CNS: CTZ stimulation → nausea, vomiting; visual disturbances"]],
+["Uses",["CHF with atrial fibrillation","Control of ventricular rate in AF/flutter","Symptomatic heart failure despite optimal therapy (no mortality benefit)"]],
+["Toxicity",["Early: anorexia, nausea, vomiting, diarrhoea","Visual: yellow vision (xanthopsia), blurred vision","Cardiac: ventricular bigeminy, VT, AV block, any arrhythmia","Predisposing: hypokalaemia, hypomagnesaemia, hypercalcaemia, renal failure, elderly, quinidine/verapamil/amiodarone","Treatment: stop digoxin, K⁺ supplement, lignocaine/phenytoin for ventricular arrhythmias, atropine for block, digoxin Fab antibodies"]]],
+li:"Cardiac glycosides from Digitalis have been used in heart failure for over 200 years.",
+lc:"Digoxin improves symptoms but not survival in heart failure; its narrow safety margin demands careful monitoring.",r:R_PHARM+" — Drugs for CHF",
+rq:[["S","Drugs used in CHF.","Diuretics; ACEI/ARB/ARNI (sacubitril-valsartan); β-blockers (carvedilol, bisoprolol, metoprolol); aldosterone antagonists; SGLT2 inhibitors; digoxin; hydralazine + nitrate; inotropes (dobutamine) in acute failure."],
+["V","Electrolyte that increases digoxin toxicity?","Hypokalaemia."],
+["V","Antidote for digoxin toxicity?","Digoxin-specific Fab antibody fragments."],
+["S","Why is digoxin useful in AF?","It slows AV nodal conduction through vagal stimulation, controlling ventricular rate."]]};
+FA["ph-levodopa"]={sh:"Parkinsonism results from loss of nigrostriatal dopaminergic neurons. Levodopa, a dopamine precursor, crosses the blood–brain barrier and is converted to dopamine in the brain. Carbidopa inhibits peripheral dopa decarboxylase, reducing dose and peripheral side effects; entacapone (COMT inhibitor) and selegiline/rasagiline (MAO-B inhibitors) prolong its action. Long-term problems include wearing-off, on-off phenomenon and dyskinesias.",
+m:[["Classification of antiparkinsonian drugs",["Dopamine precursor: levodopa (+ carbidopa/benserazide)","Dopamine agonists: pramipexole, ropinirole, bromocriptine, rotigotine","MAO-B inhibitors: selegiline, rasagiline","COMT inhibitors: entacapone, tolcapone","Dopamine releaser/NMDA antagonist: amantadine","Central anticholinergics: trihexyphenidyl, benztropine (drug-induced parkinsonism)"]],
+["Levodopa",["MOA: converted to dopamine in striatum","ADR early: nausea, vomiting, postural hypotension, arrhythmia","ADR late: dyskinesias, wearing-off, on-off, hallucinations, psychosis","Interactions: pyridoxine (↓ effect without carbidopa), MAO-A inhibitors (hypertensive crisis), antipsychotics (antagonism), dietary protein (↓ absorption)"]],
+["Why carbidopa",["Blocks peripheral decarboxylation → more levodopa reaches brain","Dose reduced by ~75%","Fewer GI and cardiovascular side effects","Pyridoxine interaction abolished"]]],
+li:"Parkinson's disease is a degenerative disorder with tremor, rigidity, bradykinesia and postural instability due to striatal dopamine deficiency.",
+lc:"Levodopa with carbidopa remains the most effective therapy; adjuncts smooth its response.",r:R_PHARM+" — Antiparkinsonian drugs",
+rq:[["V","Why can't dopamine be given for Parkinsonism?","It does not cross the blood–brain barrier."],
+["S","On-off phenomenon.","Sudden unpredictable fluctuations between mobility (on) and immobility (off) in long-term levodopa therapy, related to fluctuating plasma levels and receptor changes."],
+["V","Drug for drug-induced (antipsychotic) parkinsonism?","Central anticholinergic such as trihexyphenidyl (levodopa is ineffective)."],
+["S","Dopamine agonists — advantages.","Longer action, no conversion needed, fewer motor fluctuations, used early in young patients; ADR: nausea, hallucinations, impulse-control disorders, sleep attacks."]]};
+FA["ph-att"]={sh:"First-line antitubercular drugs are isoniazid (mycolic acid synthesis), rifampicin (RNA polymerase), pyrazinamide (sterilising in acid pH) and ethambutol (arabinosyl transferase). Under NTEP, drug-sensitive TB is treated with HRZE for 2 months (intensive) and HRE for 4 months (continuation) using daily weight-band FDCs. MDR-TB (resistant to H and R) needs bedaquiline, linezolid and fluoroquinolone–based regimens.",
+m:[["Classification",["First-line: isoniazid (H), rifampicin (R), pyrazinamide (Z), ethambutol (E), streptomycin (S)","Second-line: fluoroquinolones (levofloxacin, moxifloxacin), bedaquiline, linezolid, clofazimine, cycloserine, delamanid/pretomanid, injectables (amikacin)"]],
+["Isoniazid",["MOA: inhibits mycolic acid synthesis (via InhA after KatG activation)","Bactericidal for rapidly dividing bacilli","ADR: peripheral neuropathy (pyridoxine), hepatitis, SLE-like syndrome","Acetylator polymorphism"]],
+["Rifampicin",["MOA: inhibits DNA-dependent RNA polymerase (rpoB)","Kills all populations","ADR: orange-red secretions, hepatitis, flu-like syndrome, thrombocytopenia","Potent enzyme inducer (OCPs, warfarin, ART interactions)"]],
+["NTEP regimen",["Intensive phase: HRZE × 8 weeks","Continuation: HRE × 16 weeks","Daily FDCs by weight band; pyridoxine; DOT/99DOTS","Rifampicin resistance on CBNAAT → MDR/RR-TB regimen"]]],
+li:"Combination therapy kills different bacillary populations and prevents emergence of resistance.",
+lc:"Adherence to the full regimen is the key to cure and to preventing drug-resistant TB.",r:R_PHARM+" — Antitubercular drugs",
+rq:[["S","Adverse effects of first-line ATT.","H: neuropathy, hepatitis. R: hepatitis, orange urine, flu syndrome, interactions. Z: hepatotoxicity, hyperuricaemia, arthralgia. E: optic neuritis (red-green colour vision). S: ototoxicity, nephrotoxicity."],
+["V","Why give pyridoxine with isoniazid?","INH increases pyridoxine excretion, causing peripheral neuropathy."],
+["S","MDR-TB.","Resistance to at least isoniazid and rifampicin; diagnosed by CBNAAT/LPA/DST; treated with all-oral regimens (bedaquiline, pretomanid, linezolid, moxifloxacin — BPaLM) or longer regimens per national guidelines."],
+["V","ATT drug safe in renal failure without dose change?","Rifampicin (also isoniazid); ethambutol needs dose adjustment."]]};
+
+/* ---- Community Medicine ---- */
+FA["cm-natural"]={sh:"The natural history of disease is the course of a disease from pre-pathogenesis (agent–host–environment interaction) through pathogenesis (early, clinical, advanced disease) to recovery, disability or death. Levels of prevention fit along it: primordial (prevent risk factors), primary (health promotion, specific protection), secondary (early diagnosis and treatment) and tertiary (disability limitation and rehabilitation).",
+m:[["Levels of prevention with examples",[["Level","Mode of intervention","Example"],["Primordial","Prevent emergence of risk factors","Healthy lifestyle education, tobacco control laws"],["Primary","Health promotion; specific protection","Nutrition, sanitation; immunisation, iodised salt"],["Secondary","Early diagnosis and treatment","Screening (Pap smear, BP), case finding, contact tracing"],["Tertiary","Disability limitation; rehabilitation","Treating complications; physiotherapy, vocational training"]]],
+["Epidemiological triad",["Agent: biological, chemical, physical, nutritional","Host: age, sex, genetics, immunity, behaviour","Environment: physical, biological, social"]]],
+li:"Leavell and Clark described the natural history of disease and linked each phase to a level of prevention.",
+lc:"The earlier in the natural history we intervene, the greater the benefit.",r:R_CM+" — Concept of health and disease",
+rq:[["V","Immunisation is which level of prevention?","Primary (specific protection)."],
+["S","Iceberg phenomenon.","Clinically apparent cases are the tip; the submerged part includes subclinical, undiagnosed and carrier states; important in hypertension, diabetes, TB."],
+["V","Example of primordial prevention?","Preventing children from taking up smoking or junk-food habits through policy and education."],
+["S","Modes of intervention in tertiary prevention.","Disability limitation (stopping progression, preventing complications) and rehabilitation (medical, vocational, social, psychological)."]]};
+FA["cm-screen"]={sh:"A screening test is evaluated against a gold standard using a 2×2 table. Sensitivity = TP/(TP+FN) (ability to detect diseased), specificity = TN/(TN+FP) (ability to detect non-diseased), PPV = TP/(TP+FP) and NPV = TN/(TN+FN). PPV increases with prevalence. Screening needs high sensitivity; confirmatory tests need high specificity.",
+m:[["Definitions",["Screening: search for unrecognised disease in apparently healthy people by rapid tests","Sensitivity: true positive rate","Specificity: true negative rate","PPV/NPV: probability that a positive/negative result is correct","Yield: amount of previously unrecognised disease detected"]],
+["Criteria for screening (Wilson & Jungner)",["Disease is an important health problem","Natural history understood; recognisable latent stage","Suitable, acceptable, safe test","Effective treatment available","Cost-effective; continuing process"]],
+["Example calculation",["Of 100 diseased, test detects 90 → sensitivity 90%","Of 900 non-diseased, 810 test negative → specificity 90%","PPV = 90/(90+90) = 50% at prevalence 10%"]]],
+li:"Screening aims at secondary prevention by detecting disease early.",
+lc:"A good screening test is sensitive, specific, cheap and acceptable, and its predictive values depend on prevalence.",r:R_CM+" — Screening for disease",
+rq:[["V","Formula for sensitivity?","TP / (TP + FN)."],
+["V","Effect of prevalence on PPV?","PPV increases as prevalence increases."],
+["D","Screening vs diagnostic test.","Screening: apparently healthy, many people, cheap, high sensitivity, not a basis for treatment. Diagnostic: symptomatic individuals, more expensive, high specificity, basis for treatment."],
+["S","Types of screening.","Mass screening, high-risk (selective) screening, multiphasic screening, opportunistic (case finding)."]]};
+FA["cm-epidemic"]={sh:"Investigation of an epidemic follows ten steps: verify diagnosis, confirm existence of epidemic, define population at risk, rapid search for all cases (case definition, line list), analyse data by time, place and person (epidemic curve, spot map, attack rates), formulate hypothesis, test hypothesis (analytical study), evaluate ecological factors, further investigation of the population at risk, and write the report with control measures.",
+m:[["Objectives",["Define magnitude and involvement by time, place, person","Find the source and mode of transmission","Identify high-risk groups","Recommend control and prevention"]],
+["Key tools",["Case definition (clinical + lab + time/place/person)","Line listing","Epidemic curve: common-source (single sharp peak) vs propagated (multiple peaks)","Spot map","Attack rate = new cases / population at risk"]],
+["Control measures",["Eliminate source (water, food)","Interrupt transmission (chlorination, vector control)","Protect susceptibles (immunisation, chemoprophylaxis)","Health education and surveillance"]]],
+li:"An epidemic is the occurrence of cases in excess of normal expectancy in a community.",
+lc:"Systematic investigation leads to rapid control of the outbreak and prevention of future ones.",r:R_CM+" — Principles of epidemiology",
+rq:[["V","First step in epidemic investigation?","Verification of the diagnosis."],
+["D","Common-source vs propagated epidemic curve.","Common-source: single exposure, sharp rise and fall within one incubation period (food poisoning). Propagated: person-to-person, gradual rise, multiple waves (measles, hepatitis A)."],
+["S","Attack rate and secondary attack rate.","Attack rate: cases in population at risk during the epidemic. Secondary attack rate: cases among susceptible contacts within the incubation period after exposure to a primary case — measures infectiousness."],
+["V","What is a spot map?","A map marking the location of each case to show clustering and possible source."]]};
+FA["cm-water"]={sh:"Large-scale water purification consists of storage (natural sedimentation, reduction of bacteria), filtration (slow sand: biological, Schmutzdecke; rapid sand: coagulation with alum, mechanical, backwashing) and disinfection by chlorination. Break-point chlorination ensures free residual chlorine of 0.5 mg/L after one hour of contact, tested by the orthotoluidine test.",
+m:[["Slow vs rapid sand filter",[["Feature","Slow sand","Rapid sand"],["Rate of filtration","2–3 m³/m²/day","200 m³/m²/day"],["Area","Large","Small"],["Pre-treatment","Plain sedimentation","Coagulation (alum) + sedimentation"],["Cleaning","Scraping top layer","Backwashing"],["Purification","Biological (Schmutzdecke)","Mechanical/chemical"],["Bacterial removal","99.9%","98–99%"]]],
+["Chlorination",["Kills pathogens, oxidises iron/manganese, removes taste and odour","Chlorine demand satisfied first; break-point chlorination gives free residual","Free residual chlorine 0.5 mg/L after 1 h contact","Super-chlorination and dechlorination for heavily polluted water","Orthotoluidine test (free + combined chlorine) or OTA test"]]],
+li:"Safe drinking water prevents water-borne diseases such as cholera, typhoid, hepatitis A and E.",
+lc:"Storage, filtration and chlorination together make water microbiologically safe.",r:R_CM+" — Environment and health",
+rq:[["V","Vital layer of slow sand filter?","Schmutzdecke (biological slime layer)."],
+["S","Disinfection of a well.","Calculate water volume, estimate bleaching powder needed (2.5 g raises 1 m³ water by 1 mg/L available chlorine), make paste, add, wait 1 h, check residual 0.5 mg/L by orthotoluidine test; repeat weekly (double-pot method for households)."],
+["V","Available chlorine in bleaching powder?","About 33%."],
+["S","Household purification methods.","Boiling (rolling boil 5–10 min), chlorine tablets/bleaching powder solution, filtration (ceramic candle), SODIS (solar), alum."]]};
+
+/* ---- FMT ---- */
+FA["f-pm"]={sh:"Post-mortem changes help estimate time since death. Immediate: loss of circulation, respiration and reflexes; primary flaccidity. Early: algor mortis (cooling ~0.5–1 °F/h), livor mortis (appears 1–2 h, fixed 6–8 h), rigor mortis (starts 1–2 h, complete ~12 h, passes 18–36 h). Late: decomposition (greenish discoloration of right iliac fossa at 12–18 h, marbling, bloating, maggots), and modifications — adipocere (moist) or mummification (dry).",
+m:[["Signs of death",["Immediate: insensibility, cessation of respiration and circulation","Early: eye changes (loss of corneal reflex, tache noire, segmentation of retinal vessels), pallor, primary flaccidity, cooling, hypostasis, rigor","Late: decomposition, adipocere, mummification"]],
+["Rigor mortis",["Cause: ATP depletion → actin–myosin cross-bridges fixed","Order (Nysten's rule): heart first, then eyelids, face, neck, upper limbs, trunk, lower limbs; passes in same order","Duration in India: begins 1–2 h, complete by 12 h, passes off by 18–36 h (shorter in summer)","Conditions: heat stiffening, cold stiffening, gas stiffening; cadaveric spasm"]],
+["Estimating time since death",["Temperature (rectal), hypostasis, rigor, decomposition","Stomach contents, bladder","Vitreous potassium, entomology (larval stage)","Combine methods; give a range"]]],
+li:"Thanatology studies death and post-mortem changes; estimating the post-mortem interval is a routine medicolegal duty.",
+lc:"Each change has a variable timetable affected by climate and body build, so multiple methods are combined.",r:R_FMT+" — Thanatology",
+rq:[["D","Rigor mortis vs cadaveric spasm.","Rigor: all muscles, after 1–2 h, due to ATP loss, can be broken, no medicolegal significance of last act. Spasm: group of voluntary muscles, instantaneous at death, cannot be simulated or broken easily, shows last act (suicide weapon in hand)."],
+["D","Post-mortem hypostasis vs bruise.","Hypostasis: dependent parts, uniform, no swelling, blood within vessels, disappears on pressure early. Bruise: any site, swelling, blood in tissues, colour changes, does not shift."],
+["V","First external sign of decomposition?","Greenish discoloration of skin over right iliac fossa (caecum)."],
+["S","Adipocere.","Saponification of body fat in warm moist conditions into a soapy, waxy, rancid-smelling substance over weeks; preserves features and injuries — helps identification."]]};
+FA["f-hanging"]={sh:"Hanging is a form of asphyxial death caused by suspension of the body by a ligature around the neck, the constricting force being the body weight. Death may result from venous and arterial occlusion, airway obstruction, vagal inhibition or cervical fracture (judicial). The ligature mark is oblique, above the thyroid cartilage, non-continuous with a gap at the knot and has a parchment-like base. Dribbling of saliva is the surest sign of ante-mortem hanging. Most hangings are suicidal.",
+m:[["Types",["Typical (knot at occiput) vs atypical (knot elsewhere)","Complete vs partial (body partly supported)","Judicial hanging: drop causes C2 fracture (hangman's fracture)"]],
+["Mechanism of death",["Asphyxia from airway compression","Venous congestion (jugular occlusion at 2 kg)","Cerebral ischaemia (carotid occlusion at 5 kg, vertebral at 30 kg)","Vagal inhibition (reflex cardiac arrest)","Fracture-dislocation of cervical spine"]],
+["Hanging vs ligature strangulation",[["Feature","Hanging","Strangulation"],["Manner","Usually suicidal","Usually homicidal"],["Mark position","Above thyroid","At/below thyroid"],["Direction","Oblique","Horizontal"],["Continuity","Incomplete at knot","Complete, encircling"],["Base","Parchment, pale","Bruised, abraded"],["Saliva dribbling","Present","Absent"],["Hyoid fracture","Uncommon","Rare; thyroid cartilage common"],["Struggle marks","Absent","Present"]]]],
+li:"Hanging is one of the commonest methods of suicide in India; its findings must be distinguished from homicidal strangulation.",
+lc:"Careful examination of the ligature mark and associated signs distinguishes ante-mortem hanging from strangulation or post-mortem suspension.",r:R_FMT+" — Asphyxial deaths",
+rq:[["V","Surest sign of ante-mortem hanging?","Dribbling of saliva from the angle of the mouth opposite the knot."],
+["S","Mechanism of death in hanging.","Asphyxia, cerebral ischaemia from carotid/vertebral occlusion, venous congestion, vagal inhibition, cervical fracture in judicial hanging."],
+["D","Hanging vs strangulation.","See comparison table: manner, mark level, direction, continuity, base, saliva, fractures, struggle."],
+["V","Force needed to occlude carotid arteries?","About 5 kg (jugular veins 2 kg, trachea 15 kg, vertebral arteries 30 kg)."]]};
+FA["f-methanol"]={sh:"Methanol is oxidised by alcohol dehydrogenase to formaldehyde and by aldehyde dehydrogenase to formic acid, which causes high anion-gap metabolic acidosis and damages the optic nerve and basal ganglia. Features: headache, vomiting, abdominal pain, blurred 'snowfield' vision, blindness, Kussmaul breathing, coma. Treatment: fomepizole or ethanol to block alcohol dehydrogenase, sodium bicarbonate, folinic acid and haemodialysis.",
+m:[["Sources",["Spurious/illicit liquor (hooch tragedies)","Industrial solvents, varnish, antifreeze, methylated spirit"]],
+["Toxicity",["Fatal dose 60–240 mL; latent period 12–24 h (ethanol co-ingestion prolongs)","Formic acid inhibits cytochrome oxidase → retinal and optic nerve damage, putaminal necrosis","Metabolic acidosis with high anion gap and osmolar gap"]],
+["Management",["Gastric lavage within 1 h","Fomepizole (or ethanol 10% IV/oral) to block ADH","Sodium bicarbonate for acidosis","Folinic acid/folate to metabolise formate","Haemodialysis for severe acidosis, visual signs, high levels"]],
+["Post-mortem findings",["Cyanosis, congested organs, odour of formalin","Cerebral oedema, haemorrhagic necrosis of putamen","Preserve viscera, blood and vitreous"]]],
+li:"Methanol poisoning occurs in clusters after consumption of adulterated liquor and has high mortality.",
+lc:"Early blocking of alcohol dehydrogenase and dialysis save sight and life.",r:R_FMT+" — Toxicology (alcohols)",
+rq:[["V","Toxic metabolite of methanol?","Formic acid."],
+["V","Mechanism of ethanol as antidote?","Competes for alcohol dehydrogenase (higher affinity), preventing methanol conversion."],
+["D","Methanol vs ethanol poisoning.","Methanol: latent period, severe acidosis, visual loss, needs fomepizole/dialysis. Ethanol: CNS depression, hypoglycaemia, no blindness, supportive care."],
+["S","Hooch tragedy — medicolegal duties.","Inform police and health authorities, preserve samples (blood with fluoride, vitreous, viscera), document, treat cluster cases, issue MLC."]]};
+FA["f-firearm"]={sh:"The range of a firearm discharge is estimated from features at the entry wound. Contact shots show muzzle imprint, stellate tears over bone, burning and soot inside the wound, cherry-red tissue. Close shots (within flame range) show burning, singeing, blackening and tattooing. Near shots show tattooing ± blackening. Distant shots show only a round hole with abrasion and grease collars. Entry wounds are smaller with inverted margins; exit wounds are larger, irregular and everted.",
+m:[["Range of fire",[["Range","Features"],["Contact","Muzzle imprint, stellate tear over bone, soot in wound, CO (cherry-red)"],["Close (flame range)","Burning, singeing of hair, blackening, tattooing"],["Near (powder range)","Tattooing ± blackening, no burning"],["Distant","Only bullet: round hole, abrasion and grease collars"]]],
+["Entry vs exit wound",[["Feature","Entry","Exit"],["Size","Smaller than bullet calibre","Larger, irregular"],["Margins","Inverted","Everted"],["Abrasion/grease collar","Present","Absent"],["Burning, tattooing","May be present","Absent"],["Bleeding","Less","More"]]],
+["Medicolegal aspects",["Range helps distinguish suicide (contact/close, accessible sites) from homicide (distant, inaccessible)","Preserve clothing; gunshot residue tests; X-ray to locate projectile","Recover bullet without damaging rifling marks"]]],
+li:"Firearm injuries are produced by projectiles discharged by explosive propellants; the wound pattern reflects range and weapon.",
+lc:"Careful description of the entry wound and clothing is essential for reconstructing the shooting.",r:R_FMT+" — Firearm injuries",
+rq:[["D","Entry vs exit wound.","Entry: small, inverted, abrasion and grease collars, burning/tattooing at close range. Exit: large, everted, irregular, no collars."],
+["V","Tattooing is due to?","Embedded unburnt and partially burnt gunpowder particles; cannot be wiped off."],
+["S","Smooth-bore vs rifled weapons.","Smooth-bore (shotgun): multiple pellets, wad, spread increases with range. Rifled: single bullet with rifling marks, spinning, greater range and penetration."],
+["V","What is a 'key-hole' wound?","Tangential bullet strike on skull producing a combined entry-exit wound."]]};
+
 /* ============ core helpers ============ */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -2733,6 +3165,7 @@ function startMic(btn){const SR=window.SpeechRecognition||window.webkitSpeechRec
 }
 document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;const f=ACT[el.dataset.act];if(f){if(el.tagName!=="A")e.preventDefault();f(el,e);}});
 document.addEventListener("click",e=>{if(e.target.id==="sheet")e.target.hidden=true;});
+ACT["fl-jump"]=()=>{const x=$("#expack");x&&x.scrollIntoView({behavior:"smooth",block:"start"});};
 document.addEventListener("click",e=>{const x=e.target.closest(".recall .fbox, .recall .fcol");if(x)x.classList.add("shown");});
 document.addEventListener("change",e=>{const el=e.target;const a=el.dataset.actChange;
   if(a==="lang"){S.lang=el.value;save();$$("#langSel").forEach(s=>s.value=S.lang);toast(S.lang==="hinglish"?"AI answers in Hinglish":"AI answers in English");}
@@ -2780,27 +3213,30 @@ function drawFlowList(){const box=$("#fllist");if(!box)return;const q=FL_Q.toLow
   const pool=Object.values(FLOWMAP).filter(f=>(FL_KIND==="chapter")===!!f.chapterFlow).filter(f=>FL_S==="all"||f.s===FL_S)
     .filter(f=>!q||(f.t+" "+f.sum+" "+CH[f.ch].t+" "+flatFlow(f.n).map(x=>x.label).join(" ")+" "+(f.terms||[]).map(t=>t[0]).join(" ")).toLowerCase().includes(q));
   if(!pool.length){box.innerHTML=`<p class="note">No flowcharts match "${esc(FL_Q)}". Try another word, or ask Atlas.</p>`;return;}
-  box.innerHTML=SUBJECTS.filter(s=>pool.some(f=>f.s===s.id)).map(s=>`<section class="stack" data-s="${s.id}"><div class="row between"><h2 style="color:var(--sc)">${esc(s.name)}</h2><span class="note">${pool.filter(f=>f.s===s.id).length} flowcharts</span></div><div class="grid g3">${pool.filter(f=>f.s===s.id).map(f=>{const c=CH[f.ch];const steps=flatFlow(f.n).length;return `<a class="flcard" href="#fc-${f.id}"><span class="eyebrow" style="color:var(--sc)">${esc(s.short)} ${c.n} · ${esc(c.t)}</span><b>${esc(f.t)}</b><span class="note">${esc(f.sum)}</span><span class="row" style="gap:6px"><span class="chip">${steps} steps</span>${f.chapterFlow?"":'<span class="chip">Every step explained</span>'}${S.flowDone&&S.flowDone[f.id]?'<span class="chip" style="color:var(--good)">✓ Revised</span>':""}</span></a>`;}).join("")}</div></section>`).join("");
+  box.innerHTML=SUBJECTS.filter(s=>pool.some(f=>f.s===s.id)).map(s=>`<section class="stack" data-s="${s.id}"><div class="row between"><h2 style="color:var(--sc)">${esc(s.name)}</h2><span class="note">${pool.filter(f=>f.s===s.id).length} flowcharts</span></div><div class="grid g3">${pool.filter(f=>f.s===s.id).map(f=>{const c=CH[f.ch];const steps=flatFlow(f.n).length;return `<a class="flcard" href="#fc-${f.id}"><span class="eyebrow" style="color:var(--sc)">${esc(s.short)} ${c.n} · ${esc(c.t)}</span><b>${esc(f.t)}</b><span class="note">${esc(f.sum)}</span><span class="row" style="gap:6px"><span class="chip">${steps} steps</span>${f.chapterFlow?"":'<span class="chip">Every step explained</span>'}${FA[f.id]?'<span class="chip" style="color:var(--sc)">Exam pack</span>':""}${S.flowDone&&S.flowDone[f.id]?'<span class="chip" style="color:var(--good)">✓ Revised</span>':""}</span><div class="bar thin"><i style="width:${Math.round(flSeen(f.id).size/steps*100)}%;background:var(--sc)"></i></div></a>`;}).join("")}</div></section>`).join("");
 }
 
-function vFlow(id){const f=FLOWMAP[id];const c=CH[f.ch],s=SUB[f.s];FL_NODES=flatFlow(f.n);FL_SEL=0;
+function vFlow(id){const f=FLOWMAP[id];const c=CH[f.ch],s=SUB[f.s];FL_NODES=flatFlow(f.n);FL_SEL=0;FX_TAB="tip";
   const siblings=Object.values(FLOWMAP).filter(x=>x.ch===f.ch&&x.id!==id);
   POST=()=>flSelect(0,false);
-  return `<header class="ch-head" data-s="${f.s}"><div class="crumbs"><a href="#flowcharts">Flowcharts</a> / <a href="#s-${f.s}">${esc(s.name)}</a> / <a href="#c-${c.id}">${esc(c.t)}</a></div><h1>${esc(f.t)}</h1><p>${esc(f.sum)}</p>
-  <div class="row"><button class="btn sm pri" data-act="fl-walk">▶ Walk-through</button><button class="btn sm" data-act="fl-recall">Recall mode</button><button class="btn sm" data-act="fl-done" data-id="${id}">${S.flowDone&&S.flowDone[id]?"✓ Revised":"Mark as revised (+5 XP)"}</button><a class="btn sm" href="#c-${c.id}">Open chapter</a></div></header>
+  return `<header class="ch-head" data-s="${f.s}"><div class="crumbs"><a href="#flowcharts">Flowcharts</a> / <a href="#s-${f.s}">${esc(s.name)}</a> / <a href="#c-${c.id}">${esc(c.t)}</a></div><h1>${esc(f.t)}</h1><p>${esc(f.sum)}</p><div id="flprogwrap">${flProgressHTML(id,FL_NODES.length)}</div>
+  <div class="row"><button class="btn sm pri" data-act="fl-walk">▶ Walk-through</button><button class="btn sm" data-act="fl-recall">Recall mode</button><button class="btn sm" data-act="fl-done" data-id="${id}">${S.flowDone&&S.flowDone[id]?"✓ Revised":"Mark as revised (+5 XP)"}</button><a class="btn sm" href="#c-${c.id}">Open chapter</a>${FA[id]?'<button class="btn sm" data-act="fl-jump">Exam pack ↓</button>':""}</div></header>
   <div class="flview" data-s="${f.s}">
     <section class="card stack" style="min-width:0"><div class="row between"><span class="eyebrow">Tap any step</span><span class="note">${FL_NODES.length} steps</span></div><div id="flowbox" class="tablewrap">${flowXHTML(f.n)}</div></section>
     <aside class="card stack flpanel" aria-live="polite"><div class="row between"><span class="eyebrow" id="flstepno"></span><div class="row" style="gap:6px"><button class="btn sm" data-act="fl-prev" aria-label="Previous step">←</button><button class="btn sm" data-act="fl-next" aria-label="Next step">→</button></div></div>
-      <h3 id="fllabel"></h3><p id="flexp"></p>
+      <div class="fldots" id="fldots" role="group" aria-label="Steps">${FL_NODES.map((_,i)=>`<button class="fldot" data-act="fl-dot" data-ni="${i}" aria-label="Step ${i+1}"></button>`).join("")}</div><h3 id="fllabel"></h3><p id="flexp"></p>
       <div class="row"><button class="btn sm" data-act="fl-ai">Explain this step deeper with AI</button>${stopBtn("flai")}</div><div class="ai-out" id="flai"></div>
       <p class="note kbd-hint">Keys: ← → move between steps</p></aside>
   </div>
   ${(f.terms&&f.terms.length)?`<section class="card stack" data-s="${f.s}"><h2>Key terms</h2><dl class="terms">${f.terms.map(t=>`<div><dt>${esc(t[0])}</dt><dd>${esc(t[1])}</dd></div>`).join("")}</dl></section>`:""}
-  ${f.exam?`<section class="card stack"><h2>Exam tip</h2><p>${esc(f.exam)}</p><div class="row"><button class="btn sm" data-act="fl-answer">Write a model answer using this flowchart</button>${stopBtn("flans")}</div><div class="ai-out" id="flans"></div></section>`:""}
+  ${examPackHTML(f)}
   ${siblings.length?`<section class="stack" data-s="${f.s}"><h2>More flowcharts in this chapter</h2><div class="row">${siblings.map(x=>`<a class="chip" href="#fc-${x.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(x.t)}</a>`).join("")}</div></section>`:""}`;
 }
 function flSelect(i,scroll=true){const id=location.hash.slice(4);const f=FLOWMAP[id];if(!f||!FL_NODES.length)return;FL_SEL=(i+FL_NODES.length)%FL_NODES.length;const n=FL_NODES[FL_SEL];
   $$(".fnode").forEach(b=>{const on=+b.dataset.ni===FL_SEL;b.classList.toggle("sel",on);if(on){b.classList.add("shown");b.setAttribute("aria-current","step");}else b.removeAttribute("aria-current");});
+  const seen=flMark(id,FL_SEL);$$(".fnode").forEach(b=>b.classList.toggle("seen",seen.has(+b.dataset.ni)));
+  $$(".fldot").forEach(d=>{const k=+d.dataset.ni;d.classList.toggle("on",k===FL_SEL);d.classList.toggle("seen",seen.has(k));});
+  const pw=$("#flprogwrap");if(pw)pw.innerHTML=flProgressHTML(id,FL_NODES.length);
   $("#flstepno").textContent=`Step ${FL_SEL+1} of ${FL_NODES.length}`;$("#fllabel").textContent=n.label;
   $("#flexp").innerHTML=n.exp?esc(n.exp):`<span class="note">This is a chapter revision flowchart. Tap <b>Explain this step deeper with AI</b> for a full explanation, or open the chapter's Learn tab for the notes.</span>`;
   $("#flai").innerHTML="";
@@ -3082,6 +3518,37 @@ Object.assign(ACT,{
  "term-close":el=>el.closest(".termbox").remove()
 });
 document.addEventListener("keydown",e=>{if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||!$("#r1"))return;if(["1","2","3","4"].includes(e.key)){e.preventDefault();$(`[data-act="fc-rate"][data-r="${e.key}"]`).click();}},true);
+
+/* ============ Flowchart exam packs + viewer polish ============ */
+const RQ_T={L:["LAQ","L"],S:["Short note","S"],D:["Difference","D"],V:["Viva","N"]};
+function faResolve(f){const fa=FA[f.id];if(!fa)return null;const a=fa.ans&&ANS[fa.ans];
+  return {sh:fa.sh||(a&&a.sh)||"",m:fa.m||(a&&a.m)||[],x:(a&&a.l&&a.l.x)||[],li:fa.li||(a&&a.l&&a.l.i)||f.sum,lc:fa.lc||(a&&a.l&&a.l.c)||"",r:fa.r||(a&&a.r)||"",rq:fa.rq||[],fig:a&&a.l&&a.l.f};}
+function flowText(nodes){const out=[];const lab=x=>typeof x==="string"?x:Array.isArray(x)?x[0]:x;
+  nodes.forEach((n,i)=>{if(typeof n==="string"||Array.isArray(n))out.push(lab(n));else if(n.k)out.push("⇒ "+lab(n.k));else if(n.b)out.push(n.b.map(col=>"["+col.filter(x=>typeof x==="string"||Array.isArray(x)).map(lab).join(" → ")+"]").join("   |   "));});
+  return out.join("\n   ↓\n");}
+let FX_TAB="tip";
+function examPackHTML(f){const P=faResolve(f);
+  if(!P)return f.exam?`<section class="card stack expack"><h2>Exam tip</h2><p>${esc(f.exam)}</p></section>`:"";
+  return `<section class="card stack expack" data-s="${f.s}" id="expack"><div class="row between"><div><span class="eyebrow">Exam pack · works offline</span><h2>Questions & model answers</h2></div><span class="note">${P.rq.length} related questions · 3 answer lengths</span></div>
+  <div class="anstabs" role="tablist">${[["tip","Exam tip & questions"],["sh","Short · 2–3 marks"],["m","Medium · 5 marks"],["l","Long · 10 marks"]].map(t=>`<button role="tab" aria-selected="${FX_TAB===t[0]}" class="${FX_TAB===t[0]?"on":""}" data-act="fx-tab" data-t="${t[0]}">${t[1]}</button>`).join("")}</div>
+  <div class="ansbody" id="fxbody">${fxBody(f,P,FX_TAB)}</div>
+  <div class="ansfoot"><span class="note"><b>Read more in:</b> ${esc(P.r)}</span><div class="row"><button class="btn sm" data-act="fl-answer">Ask AI for another version</button>${stopBtn("flans")}</div><div class="ai-out" id="flans"></div></div></section>`;}
+function fxBody(f,P,tab){const nodes=flatFlow(f.n);
+  if(tab==="tip")return `<div class="tipbox"><b>Exam tip</b><p>${esc(f.exam)}</p></div><h4>Related exam questions</h4><p class="note">Try answering in your head first, then reveal the model answer.</p><div class="rqlist">${P.rq.map((q,i)=>`<div class="rq"><button class="rqq" data-act="rq-toggle" aria-expanded="false"><span class="tag ${RQ_T[q[0]][1]}">${RQ_T[q[0]][0]}</span><span>${esc(q[1])}</span><span class="chev" aria-hidden="true">▾</span></button><div class="rqa" hidden><p>${esc(q[2])}</p></div></div>`).join("")}</div>`;
+  if(tab==="sh")return `<p>${esc(P.sh)}</p>`;
+  if(tab==="m")return P.m.map(secHTML).join("");
+  return `<h4>Introduction</h4><p>${esc(P.li)}</p>${P.m.map(secHTML).join("")}${P.x.map(secHTML).join("")}
+   <h4>Step-by-step explanation of the flowchart</h4><ol class="walk">${nodes.map(n=>`<li><b>${esc(n.label)}</b>${n.exp?` — ${esc(n.exp)}`:""}</li>`).join("")}</ol>
+   ${(f.terms&&f.terms.length)?`<h4>Key terms</h4><ul>${f.terms.map(t=>`<li><b>${esc(t[0])}:</b> ${esc(t[1])}</li>`).join("")}</ul>`:""}
+   <h4>Diagram to draw</h4><pre class="diag">${esc(flowText(f.n))}</pre>${P.lc?`<h4>Conclusion</h4><p>${esc(P.lc)}</p>`:""}`;}
+function flSeen(id){S.flowSeen=S.flowSeen||{};return new Set(S.flowSeen[id]||[]);}
+function flMark(id,i){const s=flSeen(id);s.add(i);S.flowSeen[id]=[...s];save();return s;}
+function flProgressHTML(id,n){const s=flSeen(id).size;return `<div class="flprog"><div class="bar"><i style="width:${Math.round(s/n*100)}%;background:var(--sc)"></i></div><span class="note">${s}/${n} steps explored</span></div>`;}
+Object.assign(ACT,{
+ "fx-tab":el=>{FX_TAB=el.dataset.t;const f=FLOWMAP[location.hash.slice(4)];const P=faResolve(f);$("#fxbody").innerHTML=fxBody(f,P,FX_TAB);$$('#expack [data-act="fx-tab"]').forEach(b=>{const on=b.dataset.t===FX_TAB;b.classList.toggle("on",on);b.setAttribute("aria-selected",on);});},
+ "rq-toggle":el=>{const a=el.nextElementSibling;a.hidden=!a.hidden;el.setAttribute("aria-expanded",!a.hidden);el.classList.toggle("open",!a.hidden);},
+ "fl-dot":el=>flSelect(+el.dataset.ni)
+});
 
 applyFS();mountDrawer();renderSide();route();
 

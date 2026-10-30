@@ -296,7 +296,7 @@ dl.terms dd{margin:2px 0 0}
 .sheet-in{background:var(--surface); width:100%; border-radius:18px 18px 0 0; padding:16px max(16px, env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px)); display:flex; flex-direction:column; gap:12px; max-height:80vh; overflow:auto}
 .sheet-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
 .sheet-grid a{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:10px; text-decoration:none; font-weight:700}
-@media (max-width:900px){.flview{grid-template-columns:minmax(0,1fr)} .flpanel{position:static; order:-1}}
+
 
 /* ---- notes & books ---- */
 .sr{position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; pointer-events:none}
@@ -361,3 +361,44 @@ button.term:hover{background:var(--ss,var(--accent-soft))}
 .termbox{grid-column:1/-1; margin-top:8px; background:var(--ss,var(--accent-soft)); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; align-items:flex-start}
 .termbox p{margin:0}
 .termbox .more{background:var(--surface); border-radius:8px; padding:8px 10px}
+
+/* ---- flowchart redesign ---- */
+.flview .card:first-child{background:linear-gradient(180deg,var(--ss) 0,var(--surface) 140px)}
+.xflow{gap:0; padding:10px 0 4px}
+.xflow .fbox.fnode{border-radius:14px; padding:12px 16px; box-shadow:0 2px 0 var(--ss), 0 4px 14px rgba(15,18,34,.06); background:var(--surface)}
+.xflow .fbranch{position:relative; padding-top:14px}
+.xflow .fbranch::before{content:""; position:absolute; top:0; left:12%; right:12%; height:2px; background:var(--sc,var(--accent)); border-radius:2px}
+.xflow .fbranch > .fcol{position:relative; border:1px solid color-mix(in srgb, var(--sc) 25%, transparent)}
+.xflow .fbranch > .fcol::before{content:""; position:absolute; top:-14px; left:50%; width:2px; height:14px; background:var(--sc,var(--accent))}
+.fnode.seen:not(.sel) .fnum{background:var(--good)}
+.fnode.sel{animation:selpulse 1.6s ease-in-out 1}
+@keyframes selpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--sc) 45%, transparent)}100%{box-shadow:0 0 0 10px transparent}}
+.fldots{display:flex; flex-wrap:wrap; gap:5px}
+.fldot{width:12px; height:12px; border-radius:50%; border:2px solid var(--sc); background:var(--surface); padding:0; cursor:pointer}
+.fldot.seen{background:color-mix(in srgb, var(--sc) 35%, var(--surface))}
+.fldot.on{background:var(--sc); transform:scale(1.25)}
+.flprog{display:flex; align-items:center; gap:10px; max-width:420px}
+.flprog .bar{flex:1}
+.bar.thin{height:5px}
+.flpanel #flexp{line-height:1.7}
+.expack{border-top:4px solid var(--sc)}
+.tipbox{background:var(--ss); border-radius:12px; padding:12px 14px}
+.tipbox p{margin:4px 0 0}
+.rqlist{display:flex; flex-direction:column; gap:8px}
+.rq{border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.rqq{display:flex; gap:10px; align-items:flex-start; width:100%; text-align:left; background:var(--surface); border:none; padding:12px 14px; font:inherit; font-weight:700; color:var(--ink)}
+.rqq:hover{background:var(--sunk)}
+.rqq .chev{margin-left:auto; transition:transform .2s; color:var(--muted)}
+.rqq.open .chev{transform:rotate(180deg)}
+.rqa{padding:0 14px 12px 14px; border-top:1px dashed var(--line); background:var(--ss)}
+.rqa p{margin:10px 0 0}
+ol.walk{padding-left:22px; margin:6px 0}
+ol.walk li{margin:6px 0; padding-left:4px}
+ol.walk li::marker{color:var(--sc); font-weight:800}
+@media (max-width:900px){
+  .flview{grid-template-columns:minmax(0,1fr)}
+  .flpanel{position:sticky; bottom:calc(66px + env(safe-area-inset-bottom,0px)); top:auto; max-height:42vh; overflow:auto; z-index:5; box-shadow:0 -8px 24px rgba(15,18,34,.12)}
+  .xflow .fbranch::before{left:6%; right:6%}
+}
+.xflow .fbox.key.fnode{background:var(--sc,var(--accent)); color:#fff; border-color:var(--sc,var(--accent))}
+.xflow .fbox.key.fnode.sel{box-shadow:0 0 0 4px var(--ss)}

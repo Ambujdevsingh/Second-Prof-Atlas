@@ -1,7 +1,8 @@
 # Second Prof Atlas — MBBS Phase II learning platform
 
 Open-source study site for MBBS 2nd-year students: Pathology, Microbiology, Pharmacology,
-Community Medicine and Forensic Medicine & Toxicology. 66 chapters with concepts, 107 interactive flowcharts (41 with every step explained),
+Community Medicine and Forensic Medicine & Toxicology. 66 chapters with concepts, 107 interactive flowcharts (41 with every step explained and an offline exam pack:
+related questions + short/medium/long model answers),
 a Notes & Books PDF reader with subject- and page-wise bookmarks,
 offline model answers (Simplify / Short / Medium / Long) for exam topics — being added subject by subject,
 levelled question banks (100 flashcards + 100 MCQs per chapter, Basic → Exam-pattern) with spaced repetition,

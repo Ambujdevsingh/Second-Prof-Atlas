@@ -25,27 +25,30 @@ function drawFlowList(){const box=$("#fllist");if(!box)return;const q=FL_Q.toLow
   const pool=Object.values(FLOWMAP).filter(f=>(FL_KIND==="chapter")===!!f.chapterFlow).filter(f=>FL_S==="all"||f.s===FL_S)
     .filter(f=>!q||(f.t+" "+f.sum+" "+CH[f.ch].t+" "+flatFlow(f.n).map(x=>x.label).join(" ")+" "+(f.terms||[]).map(t=>t[0]).join(" ")).toLowerCase().includes(q));
   if(!pool.length){box.innerHTML=`<p class="note">No flowcharts match "${esc(FL_Q)}". Try another word, or ask Atlas.</p>`;return;}
-  box.innerHTML=SUBJECTS.filter(s=>pool.some(f=>f.s===s.id)).map(s=>`<section class="stack" data-s="${s.id}"><div class="row between"><h2 style="color:var(--sc)">${esc(s.name)}</h2><span class="note">${pool.filter(f=>f.s===s.id).length} flowcharts</span></div><div class="grid g3">${pool.filter(f=>f.s===s.id).map(f=>{const c=CH[f.ch];const steps=flatFlow(f.n).length;return `<a class="flcard" href="#fc-${f.id}"><span class="eyebrow" style="color:var(--sc)">${esc(s.short)} ${c.n} · ${esc(c.t)}</span><b>${esc(f.t)}</b><span class="note">${esc(f.sum)}</span><span class="row" style="gap:6px"><span class="chip">${steps} steps</span>${f.chapterFlow?"":'<span class="chip">Every step explained</span>'}${S.flowDone&&S.flowDone[f.id]?'<span class="chip" style="color:var(--good)">✓ Revised</span>':""}</span></a>`;}).join("")}</div></section>`).join("");
+  box.innerHTML=SUBJECTS.filter(s=>pool.some(f=>f.s===s.id)).map(s=>`<section class="stack" data-s="${s.id}"><div class="row between"><h2 style="color:var(--sc)">${esc(s.name)}</h2><span class="note">${pool.filter(f=>f.s===s.id).length} flowcharts</span></div><div class="grid g3">${pool.filter(f=>f.s===s.id).map(f=>{const c=CH[f.ch];const steps=flatFlow(f.n).length;return `<a class="flcard" href="#fc-${f.id}"><span class="eyebrow" style="color:var(--sc)">${esc(s.short)} ${c.n} · ${esc(c.t)}</span><b>${esc(f.t)}</b><span class="note">${esc(f.sum)}</span><span class="row" style="gap:6px"><span class="chip">${steps} steps</span>${f.chapterFlow?"":'<span class="chip">Every step explained</span>'}${FA[f.id]?'<span class="chip" style="color:var(--sc)">Exam pack</span>':""}${S.flowDone&&S.flowDone[f.id]?'<span class="chip" style="color:var(--good)">✓ Revised</span>':""}</span><div class="bar thin"><i style="width:${Math.round(flSeen(f.id).size/steps*100)}%;background:var(--sc)"></i></div></a>`;}).join("")}</div></section>`).join("");
 }
 
-function vFlow(id){const f=FLOWMAP[id];const c=CH[f.ch],s=SUB[f.s];FL_NODES=flatFlow(f.n);FL_SEL=0;
+function vFlow(id){const f=FLOWMAP[id];const c=CH[f.ch],s=SUB[f.s];FL_NODES=flatFlow(f.n);FL_SEL=0;FX_TAB="tip";
   const siblings=Object.values(FLOWMAP).filter(x=>x.ch===f.ch&&x.id!==id);
   POST=()=>flSelect(0,false);
-  return `<header class="ch-head" data-s="${f.s}"><div class="crumbs"><a href="#flowcharts">Flowcharts</a> / <a href="#s-${f.s}">${esc(s.name)}</a> / <a href="#c-${c.id}">${esc(c.t)}</a></div><h1>${esc(f.t)}</h1><p>${esc(f.sum)}</p>
-  <div class="row"><button class="btn sm pri" data-act="fl-walk">▶ Walk-through</button><button class="btn sm" data-act="fl-recall">Recall mode</button><button class="btn sm" data-act="fl-done" data-id="${id}">${S.flowDone&&S.flowDone[id]?"✓ Revised":"Mark as revised (+5 XP)"}</button><a class="btn sm" href="#c-${c.id}">Open chapter</a></div></header>
+  return `<header class="ch-head" data-s="${f.s}"><div class="crumbs"><a href="#flowcharts">Flowcharts</a> / <a href="#s-${f.s}">${esc(s.name)}</a> / <a href="#c-${c.id}">${esc(c.t)}</a></div><h1>${esc(f.t)}</h1><p>${esc(f.sum)}</p><div id="flprogwrap">${flProgressHTML(id,FL_NODES.length)}</div>
+  <div class="row"><button class="btn sm pri" data-act="fl-walk">▶ Walk-through</button><button class="btn sm" data-act="fl-recall">Recall mode</button><button class="btn sm" data-act="fl-done" data-id="${id}">${S.flowDone&&S.flowDone[id]?"✓ Revised":"Mark as revised (+5 XP)"}</button><a class="btn sm" href="#c-${c.id}">Open chapter</a>${FA[id]?'<button class="btn sm" data-act="fl-jump">Exam pack ↓</button>':""}</div></header>
   <div class="flview" data-s="${f.s}">
     <section class="card stack" style="min-width:0"><div class="row between"><span class="eyebrow">Tap any step</span><span class="note">${FL_NODES.length} steps</span></div><div id="flowbox" class="tablewrap">${flowXHTML(f.n)}</div></section>
     <aside class="card stack flpanel" aria-live="polite"><div class="row between"><span class="eyebrow" id="flstepno"></span><div class="row" style="gap:6px"><button class="btn sm" data-act="fl-prev" aria-label="Previous step">←</button><button class="btn sm" data-act="fl-next" aria-label="Next step">→</button></div></div>
-      <h3 id="fllabel"></h3><p id="flexp"></p>
+      <div class="fldots" id="fldots" role="group" aria-label="Steps">${FL_NODES.map((_,i)=>`<button class="fldot" data-act="fl-dot" data-ni="${i}" aria-label="Step ${i+1}"></button>`).join("")}</div><h3 id="fllabel"></h3><p id="flexp"></p>
       <div class="row"><button class="btn sm" data-act="fl-ai">Explain this step deeper with AI</button>${stopBtn("flai")}</div><div class="ai-out" id="flai"></div>
       <p class="note kbd-hint">Keys: ← → move between steps</p></aside>
   </div>
   ${(f.terms&&f.terms.length)?`<section class="card stack" data-s="${f.s}"><h2>Key terms</h2><dl class="terms">${f.terms.map(t=>`<div><dt>${esc(t[0])}</dt><dd>${esc(t[1])}</dd></div>`).join("")}</dl></section>`:""}
-  ${f.exam?`<section class="card stack"><h2>Exam tip</h2><p>${esc(f.exam)}</p><div class="row"><button class="btn sm" data-act="fl-answer">Write a model answer using this flowchart</button>${stopBtn("flans")}</div><div class="ai-out" id="flans"></div></section>`:""}
+  ${examPackHTML(f)}
   ${siblings.length?`<section class="stack" data-s="${f.s}"><h2>More flowcharts in this chapter</h2><div class="row">${siblings.map(x=>`<a class="chip" href="#fc-${x.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(x.t)}</a>`).join("")}</div></section>`:""}`;
 }
 function flSelect(i,scroll=true){const id=location.hash.slice(4);const f=FLOWMAP[id];if(!f||!FL_NODES.length)return;FL_SEL=(i+FL_NODES.length)%FL_NODES.length;const n=FL_NODES[FL_SEL];
   $$(".fnode").forEach(b=>{const on=+b.dataset.ni===FL_SEL;b.classList.toggle("sel",on);if(on){b.classList.add("shown");b.setAttribute("aria-current","step");}else b.removeAttribute("aria-current");});
+  const seen=flMark(id,FL_SEL);$$(".fnode").forEach(b=>b.classList.toggle("seen",seen.has(+b.dataset.ni)));
+  $$(".fldot").forEach(d=>{const k=+d.dataset.ni;d.classList.toggle("on",k===FL_SEL);d.classList.toggle("seen",seen.has(k));});
+  const pw=$("#flprogwrap");if(pw)pw.innerHTML=flProgressHTML(id,FL_NODES.length);
   $("#flstepno").textContent=`Step ${FL_SEL+1} of ${FL_NODES.length}`;$("#fllabel").textContent=n.label;
   $("#flexp").innerHTML=n.exp?esc(n.exp):`<span class="note">This is a chapter revision flowchart. Tap <b>Explain this step deeper with AI</b> for a full explanation, or open the chapter's Learn tab for the notes.</span>`;
   $("#flai").innerHTML="";

@@ -534,6 +534,7 @@ function startMic(btn){const SR=window.SpeechRecognition||window.webkitSpeechRec
 }
 document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;const f=ACT[el.dataset.act];if(f){if(el.tagName!=="A")e.preventDefault();f(el,e);}});
 document.addEventListener("click",e=>{if(e.target.id==="sheet")e.target.hidden=true;});
+ACT["fl-jump"]=()=>{const x=$("#expack");x&&x.scrollIntoView({behavior:"smooth",block:"start"});};
 document.addEventListener("click",e=>{const x=e.target.closest(".recall .fbox, .recall .fcol");if(x)x.classList.add("shown");});
 document.addEventListener("change",e=>{const el=e.target;const a=el.dataset.actChange;
   if(a==="lang"){S.lang=el.value;save();$$("#langSel").forEach(s=>s.value=S.lang);toast(S.lang==="hinglish"?"AI answers in Hinglish":"AI answers in English");}

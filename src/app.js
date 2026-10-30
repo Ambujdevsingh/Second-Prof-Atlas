@@ -275,7 +275,7 @@ function vChapter(id){const c=CH[id],s=SUB[c.s];S.lastCh=id;save();
   return `<header class="ch-head" data-s="${c.s}"><div class="crumbs"><a href="#s-${c.s}">${esc(s.name)}</a> / Chapter ${c.n} · ${esc(c.paper)}</div><h1>${esc(c.t)}</h1>
   <div class="row chprog"><div class="bar" style="flex:1;min-width:160px" aria-label="Concepts understood"><i id="chbar" style="width:${readPct(id)}%;background:var(--sc)"></i></div><span class="note" id="chread">${(S.read[id]||[]).length}/${c.core.length} concepts understood</span></div>
   <div class="row"><span class="chip">${c.topics.length} exam topics</span><span class="chip">${cardPool(id).length} flashcards</span><span class="chip">${quizPool(id).length} MCQs</span>${QB[id]?'<span class="chip" style="color:var(--good)">✓ 100+100 levelled bank</span>':""}${S.quiz[id]?`<span class="chip">Quiz best ${S.quiz[id].best}%</span>`:""}<button class="btn sm ${chDone(id)?"":"pri"}" data-act="done" data-id="${id}">${chDone(id)?"✓ Completed":"Mark chapter complete (+25 XP)"}</button></div></header>
-  <div data-s="${c.s}" class="stack"><div class="tabs" role="tablist">${[["learn","Learn"],["flow","Flowchart"],["cards","Flashcards"],["quiz","Quiz"],["ai","AI Lab"]].map(t=>`<button role="tab" data-act="tab" data-t="${t[0]}" class="${CHTAB===t[0]?"on":""}" aria-selected="${CHTAB===t[0]}">${t[1]}</button>`).join("")}</div><div id="tabbody"></div>
+  <div data-s="${c.s}" class="stack"><div class="tabs" role="tablist">${[["learn","Learn"],["sum","Details & Summary"],["flow","Flowchart"],["cards","Flashcards"],["quiz","Quiz"],["ai","AI Lab"]].map(t=>`<button role="tab" data-act="tab" data-t="${t[0]}" class="${CHTAB===t[0]?"on":""}" aria-selected="${CHTAB===t[0]}">${t[1]}</button>`).join("")}</div><div id="tabbody"></div>
   <div class="row between">${prev?`<a class="btn" href="#c-${prev.id}">← ${esc(prev.t)}</a>`:"<span></span>"}${next?`<a class="btn" href="#c-${next.id}">${esc(next.t)} →</a>`:`<a class="btn" href="#s-${c.s}">Back to roadmap</a>`}</div></div>`;
 }
 function renderTab(id){const c=CH[id],b=$("#tabbody");if(!b)return;clearInterval(QUIZ_TIMER);
@@ -287,6 +287,8 @@ function renderTab(id){const c=CH[id],b=$("#tabbody");if(!b)return;clearInterval
     b.innerHTML=`<section class="card stack"><div class="row between"><div><span class="eyebrow">Revision flowchart</span><h2>${esc(c.flow.t)}</h2></div><div class="row"><button class="btn sm" data-act="recall">Recall mode</button><button class="btn sm" data-act="flow-ai">Explain with AI</button></div></div><p class="note" id="recallnote">Recall mode blurs each step. Say the step aloud, then tap to check.</p><div id="flowbox">${flowHTML(c.flow.n)}</div><div class="ai-out" id="flowai"></div>${FLOWS.filter(f=>f.ch===id).length?`<div class="stack"><b>Explained flowcharts for this chapter</b><p class="note">Every step has a written explanation; tap through them one by one.</p><div class="row">${FLOWS.filter(f=>f.ch===id).map(f=>`<a class="chip" href="#fc-${f.id}" style="text-decoration:none;background:var(--ss);color:var(--sc)">${esc(f.t)} →</a>`).join("")}</div></div>`:`<a class="btn sm" href="#fc-ch-${id}">Open in step-by-step viewer</a>`}</section>`;
   } else if(CHTAB==="cards"){
     mountCards(id);
+  } else if(CHTAB==="sum"){
+    b.innerHTML=summaryTabHTML(id);
   } else if(CHTAB==="quiz"){
     mountQuiz(id);
   } else {
@@ -466,7 +468,7 @@ const ACT={
  drawer:()=>{const d=$("#drawer");const open=d.hidden;d.hidden=!open;$("#fab").setAttribute("aria-expanded",open);if(open){const c=drawerCh();$("#drctx").textContent=c?`Answers use notes from: ${SUB[c.s].name} › ${c.t}`:"Ask about any 2nd-year topic.";$("#drq").focus();}},
  "dr-go":()=>{const q=$("#drq").value.trim();if(!q){$("#drq").focus();return;}const c=drawerCh();aiStream($("#drout"),`${RULES()}${ctx(c)}\n\nStudent question: ${q}\nKeep it under 200 words unless the question needs more.`,{key:"fab"});},
  done:el=>{const id=el.dataset.id;if(S.done[id]){delete S.done[id];save();route();return;}S.done[id]=today();save();addXP(25,"chapter complete");route();},
- tab:el=>{CHTAB=el.dataset.t;renderTab(location.hash.slice(3));},
+ tab:el=>{CHTAB=el.dataset.t;renderTab(location.hash.slice(3));if(!el.closest(".tabs")){const t=$(".tabs");if(t)window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-8});}},
  "radar-subj":el=>{RADAR_S=el.dataset.s;RADAR_T="all";location.hash="#radar";},
  "mock-subj":el=>{MOCK_S=el.dataset.s;location.hash="#mock";},
  "radar-s":el=>{RADAR_S=el.dataset.s;route();},

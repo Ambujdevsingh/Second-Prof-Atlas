@@ -402,3 +402,50 @@ ol.walk li::marker{color:var(--sc); font-weight:800}
 }
 .xflow .fbox.key.fnode{background:var(--sc,var(--accent)); color:#fff; border-color:var(--sc,var(--accent))}
 .xflow .fbox.key.fnode.sel{box-shadow:0 0 0 4px var(--ss)}
+
+/* ---- Details & Summary tab ---- */
+.smwrap{display:flex; flex-direction:column; gap:16px}
+.smtoc{display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; position:sticky; top:calc(54px + env(safe-area-inset-top,0px)); z-index:5; background:var(--bg); padding:6px 0}
+.smtoc::-webkit-scrollbar{display:none}
+.smtoc .chip{border:1px solid var(--line); background:var(--surface); cursor:pointer; font-weight:700}
+.smtoc .chip:hover{border-color:var(--sc); color:var(--sc)}
+.smhero{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:18px; padding:22px; border-radius:16px; background:linear-gradient(135deg,var(--ss),var(--surface) 70%); border:1px solid var(--line); border-left:6px solid var(--sc)}
+.smhero h2{font-size:clamp(1.4rem,2.6vw,1.9rem)}
+.smlead{font-size:1.06rem; line-height:1.75}
+.smfocus{background:var(--surface); border:1px dashed var(--sc); border-radius:10px; padding:10px 12px; color:var(--sc)}
+.smstats{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-content:start}
+.smstats > div{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px; display:flex; flex-direction:column}
+.smstats b{font-family:var(--f-display); font-size:1.35rem; color:var(--sc)}
+.smstats span{font-size:.8rem; color:var(--muted)}
+.smheat{grid-column:1/-1; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.smgroup{display:flex; flex-direction:column; gap:10px; border-radius:12px; padding:12px; border:1px solid var(--line)}
+.smgroup.must{background:color-mix(in srgb, var(--bad) 5%, var(--surface)); border-color:color-mix(in srgb, var(--bad) 30%, var(--line))}
+.smgroup.must h3{color:var(--bad)}
+.smgroup.imp{background:color-mix(in srgb, var(--warn) 6%, var(--surface))}
+.smgroup.imp h3{color:var(--warn)}
+.smgroup.also h3{color:var(--muted)}
+.smtopic{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:6px}
+.smt-head{display:flex; flex-direction:column; gap:2px}
+.smt-sh{margin:0; font-size:.94rem; color:var(--ink); border-left:3px solid var(--sc); padding-left:10px}
+ol.smcon{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+ol.smcon li{display:flex; flex-wrap:wrap; gap:12px; align-items:flex-start; padding:12px 14px; border-radius:12px; background:var(--sunk)}
+ol.smcon li > span:not(.n){flex:1; min-width:0; line-height:1.7}
+ol.smcon .n{flex:none; width:30px; height:30px; border-radius:50%; background:var(--sc); color:#fff; display:grid; place-items:center; font-weight:800; font-family:var(--f-display)}
+ol.smcon .termbox{flex-basis:100%}
+.smflow summary{cursor:pointer; list-style:none}
+.smflow summary::-webkit-details-marker{display:none}
+.smflow[open] summary{border-bottom:1px dashed var(--line); padding-bottom:10px}
+.smflow-in{display:flex; flex-direction:column; gap:12px; padding-top:12px}
+.sflow{display:flex; flex-direction:column; align-items:center; min-width:min(100%,520px)}
+.sfbox{display:flex; gap:8px; align-items:center; justify-content:center; text-align:center; border:2px solid var(--sc); border-radius:12px; padding:9px 14px; background:var(--surface); font-weight:700; width:100%; max-width:560px}
+.sfbox.key{background:var(--sc); color:#fff}
+.sfbox.key .fnum{background:#fff; color:var(--sc)}
+.sfarrow{width:2px; height:18px; background:var(--sc); position:relative}
+.sfarrow::after{content:""; position:absolute; bottom:-2px; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top:7px solid var(--sc); border-bottom:0}
+.sfbranch{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; width:100%; max-width:900px}
+.sfcol{background:var(--ss); border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:5px}
+.sfh{display:flex; gap:6px; align-items:flex-start; font-weight:800; color:var(--sc); font-family:var(--f-display)}
+.sfl{display:flex; gap:6px; align-items:flex-start; background:var(--surface); border-radius:8px; padding:5px 7px; font-size:.9rem}
+.sfcol .sfbranch{grid-template-columns:1fr}
+.hytbl td:first-child{width:55%}
+@media (max-width:900px){.smhero{grid-template-columns:minmax(0,1fr)} .smtoc{top:env(safe-area-inset-top,0px)}}

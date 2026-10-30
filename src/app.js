@@ -24,7 +24,8 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const LEVELS=[[0,"Fresher"],[100,"Ward Explorer"],[300,"Slide Reader"],[700,"Viva Ready"],[1200,"Prof Warrior"],[2000,"Topper Track"],[3500,"Gold Medal Mode"]];
 function level(){let i=0;LEVELS.forEach((l,k)=>{if(S.xp>=l[0])i=k;});const cur=LEVELS[i],nx=LEVELS[i+1];return {name:cur[1],idx:i,next:nx?nx[0]:null,pct:nx?Math.round((S.xp-cur[0])/(nx[0]-cur[0])*100):100};}
 function touchStreak(){const t=today();if(S.last===t)return;const y=new Date();y.setDate(y.getDate()-1);S.streak=(S.last===dstr(y))?S.streak+1:1;S.last=t;}
-function addXP(n,why){S.xp+=n;touchStreak();save();toast(`+${n} XP · ${why}`);renderSide();}
+function bumpDay(n){S.days=S.days||{};const t=today();S.days[t]=(S.days[t]||0)+n;}
+function addXP(n,why){S.xp+=n;bumpDay(n);touchStreak();save();toast(`+${n} XP · ${why}`);renderSide();}
 let toastT;function toast(m){let t=$(".toast");if(!t){t=document.createElement("div");t.className="toast";t.setAttribute("role","status");document.body.appendChild(t);}t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200);}
 
 /* ============ icons ============ */
@@ -431,13 +432,13 @@ function route(){clearInterval(QUIZ_TIMER);if(typeof FL_WALK!=="undefined"&&FL_W
   if(h.startsWith("s-")&&SUB[h.slice(2)])html=vSubject(h.slice(2));
   else if(h.startsWith("fc-")&&FLOWMAP[h.slice(3)])html=vFlow(h.slice(3));
   else if(h.startsWith("read-"))html=vRead(h.slice(5));
-  else if(h.startsWith("c-")&&CH[h.slice(2)]){if(LAST_ROUTE!==h)CHTAB="learn";html=vChapter(h.slice(2));}
-  else html=(ROUTES[h]||vHome)();
+  else if(h.startsWith("c-")&&CH[h.slice(2)]){if(LAST_ROUTE!==h)CHTAB=PENDING_TAB||"learn";PENDING_TAB=null;html=vChapter(h.slice(2));}
+  else html=(ROUTES[h]||ROUTES.home)();
   LAST_ROUTE=h;
   $("#main").innerHTML=`<div class="wrap">${topbar()}${html}</div>`;
   if(POST)POST();markNav();window.scrollTo(0,0);
 }
-let LAST_ROUTE=null;
+let LAST_ROUTE=null, PENDING_TAB=null;
 window.addEventListener("hashchange",route);
 
 /* ============ search ============ */

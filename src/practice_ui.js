@@ -41,7 +41,7 @@ function drawDeck(){const box=$("#deck");if(!box)return;
 function rateCard(r){ensureP();const c=FC.pool[FC.queue[FC.i]];const s=S.srs[c.key]||{b:0,n:0};let b=s.b;
   if(r===1){b=0;const cur=FC.queue.splice(FC.i,1)[0];FC.queue.splice(Math.min(FC.queue.length,FC.i+3),0,cur);FC.i--;}
   else if(r===2)b=Math.max(1,b);else if(r===3)b=Math.min(5,b+1);else b=Math.min(5,b+2);
-  S.srs[c.key]={b,due:addDays(r===1?0:r===2?1:SRS_DAYS[b]),n:(s.n||0)+1};save();if(r>=3){S.xp+=1;touchStreak();save();renderSide();}
+  S.srs[c.key]={b,due:addDays(r===1?0:r===2?1:SRS_DAYS[b]),n:(s.n||0)+1};save();if(r>=3){S.xp+=1;bumpDay(1);touchStreak();save();renderSide();}
   FC.i++;drawDeck();const st=srsStats(cardPool(FC.id));const bar=$(".srsbar");if(bar)bar.innerHTML=`<div><b>${st.nw}</b><span>New</span></div><div><b>${st.due}</b><span>Due today</span></div><div><b>${st.learn}</b><span>Learning</span></div><div><b>${st.mast}</b><span>Mastered</span></div>`;}
 function mountCards(id){FC.id=id;$("#tabbody").innerHTML=cardsTabHTML(id);buildQueue(id);drawDeck();}
 

@@ -3,6 +3,7 @@
 Open-source study site for MBBS 2nd-year students: Pathology, Microbiology, Pharmacology,
 Community Medicine and Forensic Medicine & Toxicology. 66 chapters with concepts, 107 interactive flowcharts (41 with every step explained),
 a Notes & Books PDF reader with subject- and page-wise bookmarks,
+offline model answers (Simplify / Short / Medium / Long) for exam topics — being added subject by subject,
 an exam radar from past-paper priorities, flashcards, an MCQ bank, mock tests, a study planner and
 ten AI tools (tutor, simplifier, question generator, summaries, flashcards, mock tests,
 personalised coaching, voice tutor, planner, doubt resolution).

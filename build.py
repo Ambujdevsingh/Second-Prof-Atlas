@@ -2,7 +2,7 @@ import pathlib
 root = pathlib.Path(__file__).parent
 src = root / "src"
 css = (src / "style.css").read_text()
-js = "const SUBJECTS=[];\n" + "\n".join((src / f).read_text() for f in ["c_path.js", "c_micro.js", "c_pharm.js", "c_cm.js", "c_fmt.js", "c_add.js", "c_flows1.js", "c_flows2.js", "c_flows3.js", "app.js", "flows_ui.js", "notes_ui.js", "init.js"])
+js = "const SUBJECTS=[];\n" + "\n".join((src / f).read_text() for f in ["c_path.js", "c_micro.js", "c_pharm.js", "c_cm.js", "c_fmt.js", "c_add.js", "c_flows1.js", "c_flows2.js", "c_flows3.js", "ans_path_a.js", "ans_path_b.js", "ans_path_ext.js", "app.js", "flows_ui.js", "notes_ui.js", "answers_ui.js", "init.js"])
 fonts = '''<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">'''

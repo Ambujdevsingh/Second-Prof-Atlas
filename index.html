@@ -670,6 +670,136 @@ body{background:radial-gradient(1200px 600px at 100% -10%,#FFE3EE 0%,transparent
 @media (max-width:1100px){.qgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.qgrid{grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:86%; overflow-x:auto; scroll-snap-type:x mandatory; padding:2px 2px 10px; scrollbar-width:none} .qgrid::-webkit-scrollbar{display:none} .qt{scroll-snap-align:start} .qt blockquote{font-size:1rem}}
 @media (prefers-reduced-motion: reduce){.qt,.qt-more,.nic{transition:none}.qt.flip{animation:none}.qt:hover{transform:none}}
+/* ===== Clinical Games Arcade ===== */
+[data-nc="games"]{--nc:#F03E3E}
+.ghero{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:20px; align-items:center; padding:26px 28px; border-radius:22px; border:1px solid var(--line); background:linear-gradient(120deg,#FFE3EC 0%,#F3E8FF 45%,#E3F2FF 100%); position:relative; overflow:hidden}
+.ghero h1{font-size:clamp(1.8rem,3.4vw,2.6rem); margin:4px 0 6px}
+.ghero p{color:var(--muted); max-width:56ch; margin:0}
+.gstats{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+.gstats div{background:#FFFFFFD9; border:1px solid var(--line); border-radius:14px; padding:12px; text-align:center}
+.gstats b{display:block; font-family:var(--f-display); font-size:1.5rem}
+.gstats span{font-size:.78rem; color:var(--muted)}
+.ggrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px}
+[data-g="er"]{--gc:#E03131;--gs:#FFE3E3}[data-g="spot"]{--gc:#7048E8;--gs:#ECE6FF}[data-g="deck"]{--gc:#2B8A3E;--gs:#E3F7E8}[data-g="triage"]{--gc:#E8590C;--gs:#FFE8D6}[data-g="flow"]{--gc:#1971C2;--gs:#E0EEFF}[data-g="proto"]{--gc:#C2255C;--gs:#FFE3EE}[data-g="bmw"]{--gc:#0C8599;--gs:#DDF4F7}
+.gcard{display:flex; flex-direction:column; gap:8px; text-decoration:none; color:var(--ink); padding:18px; border-radius:18px; border:1px solid color-mix(in srgb,var(--gc) 25%,#FFFFFF); border-top:5px solid var(--gc); background:linear-gradient(170deg,var(--gs) 0%,#FFFFFF 65%); transition:transform .15s, box-shadow .15s}
+.gcard:hover{transform:translateY(-4px); box-shadow:0 12px 28px color-mix(in srgb,var(--gc) 22%,transparent)}
+.gcard-emo{font-size:2.2rem; line-height:1}
+.gcard b{font-family:var(--f-display); font-size:1.2rem}
+.gtag{align-self:flex-start; font-family:var(--f-mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--gc); background:#FFFFFFCC; border:1px solid color-mix(in srgb,var(--gc) 30%,#FFFFFF); border-radius:999px; padding:2px 9px}
+.gcard-foot{margin-top:auto; display:flex; justify-content:space-between; align-items:center; font-size:.85rem; color:var(--muted)}
+.gtop{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:16px 18px; border-radius:18px; background:linear-gradient(120deg,var(--gs),#FFFFFF 70%); border:1px solid var(--line); border-left:6px solid var(--gc)}
+.gtitle{display:flex; gap:12px; align-items:center; flex:1; min-width:220px}
+.gtitle h1{font-size:1.5rem; margin:0}
+.gtitle p{margin:2px 0 0}
+.gemo{font-size:2rem}
+.gbest{font-size:.9rem; color:var(--muted); background:#FFFFFF; border:1px solid var(--line); border-radius:999px; padding:4px 12px}
+#gm{display:flex; flex-direction:column; gap:14px}
+.opt.no{border-color:var(--bad)!important; background:#FFF0F0}
+.opt.yes{border-color:var(--good)!important; background:#EBFBEE}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.gend{display:flex; flex-direction:column; gap:12px; align-items:flex-start}
+.gend-score b{display:block; font-family:var(--f-display); font-size:3rem; line-height:1; background:var(--love-grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+.glog{display:flex; flex-direction:column; gap:6px; font-size:.92rem}
+.er-teach{background:#FFF8E1; border:1px solid #FFE08A; border-radius:12px; padding:10px 12px; margin:0}
+.gbig{font-family:var(--f-display); font-size:1.5rem; font-weight:800}
+/* ER */
+.er{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:14px; align-items:start}
+.er-mon{background:linear-gradient(170deg,#1B1530,#2A1F45); color:#F8F0FF; border-color:#3B2D5E}
+.er-mon .eyebrow,.er-mon .note{color:#CDBFEA}
+.er-mon h2{color:#FFFFFF; margin:4px 0}
+.er-beat{color:#FF6B8B; font-size:1.4rem; animation:beat 1s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}}
+.er-vitals{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:10px 0}
+.er-vitals div{background:#ffffff12; border:1px solid #ffffff22; border-radius:10px; padding:8px}
+.er-vitals span{display:block; font-family:var(--f-mono); font-size:.68rem; color:#9EE6B8; letter-spacing:.06em}
+.er-vitals b{font-family:var(--f-mono); font-size:1.05rem; color:#FFFFFF}
+.er-stab{display:flex; flex-direction:column; gap:6px; margin-top:8px}
+.er-stab .bar{height:12px; background:#ffffff22}
+.er-stab .bar i.ok{background:#51CF66}.er-stab .bar i.warn{background:#FCC419}.er-stab .bar i.bad{background:#FF6B6B}
+.er-side{display:flex; flex-direction:column; gap:14px}
+.er-inv{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+.er-res{border-radius:10px; padding:8px 10px; font-size:.88rem; display:flex; flex-direction:column}
+.er-res.use{background:#EBFBEE; border:1px solid #B2F2BB}.er-res.waste{background:#F8F9FA; border:1px dashed #CED4DA; color:var(--muted)}
+.er-out.win{border-top:5px solid var(--good)}.er-out.lose{border-top:5px solid var(--bad)}
+.er-out{display:flex; flex-direction:column; gap:10px; align-items:flex-start}
+/* Clue ladder */
+.sp{border-top:5px solid var(--sc,var(--accent)); display:flex; flex-direction:column; gap:12px}
+.sp-pts{font-family:var(--f-mono); background:var(--ss,#FFE6EF); border-radius:999px; padding:3px 12px}
+.sp-clues{display:flex; flex-direction:column; gap:6px; padding-left:22px; margin:0}
+.sp-clues li{padding:8px 10px; border-radius:10px; background:var(--sunk); color:var(--muted)}
+.sp-clues li.on{background:var(--ss,#FFE6EF); color:var(--ink); font-weight:600; animation:qtIn .35s ease}
+.sp-opts,.pr-opts{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+/* Bug vs drug */
+.dk{display:flex; flex-direction:column; gap:12px}
+.dk-arena{display:grid; grid-template-columns:minmax(220px,300px) minmax(0,1fr); gap:18px; align-items:start}
+.bug{--bc:#2B8A3E; display:flex; flex-direction:column; gap:6px; padding:14px; border-radius:16px; border:2px solid var(--bc); background:linear-gradient(160deg,color-mix(in srgb,var(--bc) 14%,#FFFFFF),#FFFFFF 70%); position:relative}
+.bug.r2{--bc:#7048E8}.bug.r3{--bc:#E03131}
+.bug.big{min-height:220px; box-shadow:0 12px 28px color-mix(in srgb,var(--bc) 25%,transparent); animation:qtIn .4s ease}
+.bug.big b{font-size:1.3rem}
+.bug b{font-family:var(--f-display)}
+.bug-k{font-family:var(--f-mono); font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:var(--bc)}
+.bug-d{font-size:.88rem; color:var(--muted)}
+.bug-x{font-size:.82rem; font-weight:700; color:var(--good)}
+.bug-r{margin-top:auto; color:#E09600; font-size:.85rem}
+.bug.locked{filter:grayscale(1); opacity:.55}
+.dk-hand{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+.pill-card{text-align:left; padding:12px; border-radius:14px; border:2px solid #F2C6D8; background:linear-gradient(160deg,#FFF0F6,#FFFFFF); font:inherit; font-weight:700; cursor:pointer; transition:transform .12s, border-color .12s}
+.pill-card:hover:not(:disabled){transform:translateY(-3px); border-color:var(--love)}
+.pill-card.yes{border-color:var(--good); background:#EBFBEE}.pill-card.no{border-color:var(--bad); background:#FFF0F0}
+.dk-tip{background:#F3E8FF; border:1px solid #D0BFFF; border-radius:12px; padding:10px 12px; margin:0}
+.dk-coll{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px}
+.dk-lives{font-size:1.1rem}
+/* Triage */
+.tr,.bw{display:flex; flex-direction:column; gap:12px}
+.tr-hud{display:flex; gap:10px; flex-wrap:wrap}
+.tr-hud span{background:#FFFFFF; border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-family:var(--f-mono)}
+.tr-q{display:flex; gap:4px; font-size:1.4rem}
+.tr-dot{opacity:.5}.tr-dot.on{opacity:1; transform:scale(1.2)}
+.tr-p{border-left:6px solid var(--love); font-size:1.15rem; font-weight:600; animation:qtIn .3s ease}
+.tr-p p{margin:6px 0 0}
+.tr-tags{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px}
+.tagbtn{padding:16px 10px; border-radius:14px; border:none; font:inherit; font-weight:800; font-size:1rem; color:#fff; cursor:pointer; transition:transform .1s}
+.tagbtn:active{transform:scale(.96)}
+.tagbtn.red{background:#E03131}.tagbtn.yellow{background:#F59F00; color:#2B1D00}.tagbtn.green{background:#2F9E44}.tagbtn.black{background:#212529}
+.tr-algo{display:flex; flex-direction:column; gap:6px}
+.tg{padding:1px 8px; border-radius:6px; color:#fff}.tg.red{background:#E03131}.tg.yellow{background:#F59F00; color:#2B1D00}.tg.green{background:#2F9E44}.tg.black{background:#212529}
+/* Hospital 24 */
+.fl{display:flex; flex-direction:column; gap:14px}
+.fl-gs{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:10px}
+.fl-g{background:var(--sunk); border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:4px}
+.fl-g span{font-size:.78rem; color:var(--muted)}
+.fl-g b{font-family:var(--f-display); font-size:1.3rem}.fl-g b small{font-size:.75rem; color:var(--muted)}
+.fl-g.warn{background:#FFF0F0; outline:1px solid #FFC9C9}.fl-g.warn .bar>i{background:var(--bad)}
+.fl-acts{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px}
+.fl-act{display:flex; flex-direction:column; gap:2px; text-align:left; padding:10px 12px; border-radius:12px; border:1.5px solid var(--line); background:#FFFFFF; font:inherit; cursor:pointer}
+.fl-act span{font-size:.8rem; color:var(--muted)}
+.fl-act.on{border-color:#1971C2; background:#E7F1FF; box-shadow:0 0 0 3px #D0E4FF}
+/* Protocol */
+.pr{display:flex; flex-direction:column; gap:12px; border-top:5px solid var(--love)}
+.pr-seq{display:flex; flex-direction:column; gap:6px; padding-left:24px; margin:0}
+.pr-seq li{padding:7px 10px; border-radius:10px; background:var(--sunk); color:var(--muted)}
+.pr-seq li.on{background:#EBFBEE; color:var(--ink); font-weight:600}
+.pr-win{display:flex; flex-direction:column; gap:10px; align-items:flex-start}
+.pr-win b{font-size:1.6rem}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* Waste Warrior */
+.bw-item{text-align:center; padding:26px; animation:qtIn .25s ease}
+.bw-item b{display:block; font-family:var(--f-display); font-size:1.5rem; margin-top:6px}
+.bw-bins{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px}
+.bin{display:flex; flex-direction:column; align-items:center; gap:4px; padding:14px 8px; border-radius:16px; border:3px solid; font:inherit; background:#FFFFFF; cursor:pointer; text-align:center; transition:transform .1s}
+.bin span{font-size:1.6rem}.bin small{font-size:.72rem; color:var(--muted)}
+button.bin:hover{transform:translateY(-3px)}
+.bin.yellow{border-color:#FAB005; background:#FFF9DB}.bin.red{border-color:#E03131; background:#FFF0F0}.bin.white{border-color:#ADB5BD; background:#FFFFFF}.bin.blue{border-color:#1971C2; background:#E7F5FF}.bin.general{border-color:#495057; background:#F1F3F5}
+.bw-bins.static .bin{cursor:default}
+.hw-games{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:center; padding:20px 24px; border-radius:20px; text-decoration:none; color:var(--ink); border:1px solid var(--line); background:linear-gradient(120deg,#FFE3E3 0%,#FFE3EE 35%,#ECE6FF 70%,#DDF4F7 100%); transition:transform .15s, box-shadow .15s}
+.hw-games:hover{transform:translateY(-3px); box-shadow:0 12px 28px rgba(194,37,92,.15)}
+.hw-games h2{margin:2px 0 4px}
+.hw-games-emo{font-size:1.9rem; letter-spacing:4px}
+@media (max-width:900px){.ghero,.er,.dk-arena{grid-template-columns:minmax(0,1fr)} .fl-gs{grid-template-columns:repeat(2,minmax(0,1fr))} .bw-bins{grid-template-columns:repeat(3,minmax(0,1fr))} .tr-tags{grid-template-columns:repeat(2,minmax(0,1fr))} .hw-games{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.sp-opts,.pr-opts,.dk-hand,.er-inv{grid-template-columns:minmax(0,1fr)} .er-vitals{grid-template-columns:repeat(2,minmax(0,1fr))} .gstats b{font-size:1.2rem}}
+@media (prefers-reduced-motion: reduce){.er-beat,.bug.big,.tr-p,.bw-item,.sp-clues li.on{animation:none} .gcard,.bin,.pill-card,.hw-games{transition:none}}
+@media (max-width:560px){.gtop{display:grid; grid-template-columns:auto 1fr auto; gap:8px 10px; padding:12px 14px} .gtop .btn{grid-column:1} .gbest{grid-column:3; grid-row:1; justify-self:end} .gtitle{grid-column:1/-1; min-width:0} .gtitle h1{font-size:1.25rem} .gemo{font-size:1.6rem} .ghero{padding:20px 18px}}
 
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
@@ -7261,7 +7391,7 @@ home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 book:'<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>',
 radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/>',
 map:'<path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
-flame:'<path d="M12 3c.6 3 4 5.2 4 9.5a4 4 0 0 1-8 0c0-2.2 1.2-3.6 2.2-4.6.1 1.7.9 2.9 1.9 3.4C12.4 8.6 11.6 5.6 12 3z"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+joy:'<path d="M6 9h12a4 4 0 0 1 4 4v1.5a3.5 3.5 0 0 1-6.3 2.1L14.5 15h-5l-1.2 1.6A3.5 3.5 0 0 1 2 14.5V13a4 4 0 0 1 4-4zM8 11v4M6 13h4"/><circle cx="16" cy="12.5" r="1"/><circle cx="18" cy="14.5" r="1"/>',flame:'<path d="M12 3c.6 3 4 5.2 4 9.5a4 4 0 0 1-8 0c0-2.2 1.2-3.6 2.2-4.6.1 1.7.9 2.9 1.9 3.4C12.4 8.6 11.6 5.6 12 3z"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
 chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
 mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
 cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
@@ -7422,7 +7552,7 @@ function chCards(c){return [...c.hy,...(S.custom[c.id]||[])].map(hy);}
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);const x=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cs=getComputedStyle(document.documentElement);const cols=["--path","--micro","--pharm","--cm","--fmt","--star"].map(v=>cs.getPropertyValue(v).trim());const P=Array.from({length:140},()=>({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-2,c:cols[Math.floor(Math.random()*cols.length)],r:Math.random()*6+3,a:Math.random()*6}));let f=0;(function step(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});if(++f<120)requestAnimationFrame(step);else cv.remove();})();}
 
 /* ============ layout ============ */
-const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
+const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"],["games","Clinical Games","joy"]];
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
@@ -7434,7 +7564,7 @@ function renderSide(){
   $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go" data-nc="${n[0]}"><span class="nic">${ico(n[2],18)}</span><span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
-function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab=a=>!!a.closest("#tabbar");
+function markNav(){let h=(location.hash||"#home").slice(1)||"home";if(h.startsWith("g-"))h="games";const inTab=a=>!!a.closest("#tabbar");
   const chS=h.startsWith("c-")&&CH[h.slice(2)]?"s-"+CH[h.slice(2)].s:null;
   const isTool=TOOLS.some(t=>t[0]===h);
   $$("[data-nav]").forEach(a=>{const n=a.dataset.nav;let on=n===h;
@@ -8227,6 +8357,8 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
 
   ${quotesSection()}
 
+  <a class="hw-games" href="#games"><div><span class="eyebrow">New · Clinical Games Arcade</span><h2>Learn by playing 🎮</h2><p class="muted" style="margin:0">ER shifts, spot diagnosis, bug-vs-drug cards, triage rush, hospital flow, protocols and waste sorting.</p></div><div class="stack" style="align-items:center;gap:8px"><span class="hw-games-emo">🚑🔎🦠🏷️</span><span class="btn pri">Enter arcade →</span></div></a>
+
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
     ${last?`<span class="eyebrow" style="color:var(--sc)">Continue learning</span><div class="hw-cont-main"><div class="stack" style="gap:8px;min-width:0"><span class="note">${esc(SUB[last.s].name)} · Chapter ${last.n}</span><h2>${esc(last.t)}</h2>
@@ -8330,6 +8462,372 @@ function quoteCard(i){const [id,name,emo]=QUOTES[i];return `<figure class="qt" d
 function quotesSection(){const d=new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long"});
   return `<section class="stack qsec">${hwHead(`Fresh every day · ${d}`,"Daily inspiration 💫")}<div class="qgrid" id="qgrid">${QUOTES.map((_,i)=>quoteCard(i)).join("")}</div></section>`;}
 Object.assign(ACT,{qnext:el=>{const i=+el.dataset.i;QSHIFT[i]=(QSHIFT[i]||0)+1;const f=el.closest(".qt");f.outerHTML=quoteCard(i);const n=$(`#qgrid .qt[data-q="${QUOTES[i][0]}"]`);n&&n.classList.add("flip");}});
+
+/* ============ Clinical Games — scenario data (original content) ============ */
+const G_ER=[
+ {id:"dka",who:"19 M · known type 1 diabetic",c:"Vomiting and abdominal pain for a day; now drowsy. Missed insulin during a fever.",v:[["HR",124],["BP","96/60"],["RR","32 deep"],["SpO₂","98%"],["Temp","37.2°C"],["RBS","HI"]],e:"Dry tongue, sunken eyes, fruity smell on breath, diffuse abdominal tenderness.",
+  inv:[["ABG","pH 7.08 · HCO₃ 8 · anion gap 26",1],["Urine ketones","+++",1],["Serum K⁺","5.6 mmol/L (will fall with insulin)",1],["CT head","Normal — not needed",0],["Serum lipase","Mildly raised — common in DKA",0]],
+  dx:["Diabetic ketoacidosis","Hyperosmolar hyperglycaemic state","Alcoholic ketoacidosis","Acute pancreatitis"],
+  mx:["0.9% saline bolus, then fixed-rate IV insulin 0.1 U/kg/h once K⁺ ≥ 3.5, with K⁺ replacement","IV insulin bolus first, fluids later","Immediate IV sodium bicarbonate","Oral metformin and observe"],
+  t:"DKA = hyperglycaemia + ketonaemia + acidosis. Fluids first, then insulin; watch potassium closely because insulin drives K⁺ into cells."},
+ {id:"ana",who:"25 F · minutes after IM injection",c:"Itching, lip swelling and breathlessness 5 minutes after an injection in the OPD.",v:[["HR",132],["BP","70/40"],["RR",30],["SpO₂","88%"],["Temp","36.9°C"],["Skin","Urticaria"]],e:"Stridor, wheeze, widespread hives, swollen lips and tongue.",
+  inv:[["Serum tryptase","Raised — but don't wait for it",0],["Peak flow","Unable to perform",0],["ECG","Sinus tachycardia",0],["History check","Penicillin given 5 min ago",1],["Airway look","Oedematous tongue and lips",1]],
+  dx:["Anaphylaxis","Angioedema (ACE inhibitor)","Acute severe asthma","Vasovagal syncope"],
+  mx:["IM adrenaline 0.5 mg (1:1000) in the anterolateral thigh, repeat after 5 min if needed","IV adrenaline 1 mg of 1:1000 as a bolus","Oral antihistamine and observe","IV hydrocortisone first, adrenaline only if worse"],
+  t:"Adrenaline IM is the first and most important drug in anaphylaxis. Antihistamines and steroids are only adjuncts."},
+ {id:"op",who:"32 M · farmer",c:"Brought from the field after drinking a pesticide following a family quarrel.",v:[["HR",48],["BP","100/60"],["RR",28],["SpO₂","86%"],["Pupils","Pinpoint"],["Temp","37.0°C"]],e:"Frothing, bronchial secretions, sweating, muscle twitching, kerosene-like smell.",
+  inv:[["RBC cholinesterase","Severely reduced",1],["Chest auscultation","Bilateral crepitations",1],["ECG","Sinus bradycardia, QTc prolonged",1],["Serum lipase","Normal",0],["Paracetamol level","Undetectable",0]],
+  dx:["Organophosphate poisoning","Opioid overdose","Aluminium phosphide poisoning","Pontine haemorrhage"],
+  mx:["Atropine 1.8–3 mg IV, doubling every 5 min until the chest is clear, plus pralidoxime","Neostigmine IV","Induce vomiting with salt water","Naloxone 2 mg IV"],
+  t:"Titrate atropine to a dry chest, HR > 80 and SBP > 80 — not to pupil size. Watch for intermediate syndrome at 24–96 h."},
+ {id:"mi",who:"55 M · smoker, hypertensive",c:"Crushing central chest pain radiating to the jaw for 1 hour, with sweating.",v:[["HR",58],["BP","104/70"],["RR",22],["SpO₂","95%"],["Temp","36.8°C"],["Pain","9/10"]],e:"Pale, sweaty, anxious. Raised JVP, clear lungs.",
+  inv:[["12-lead ECG","ST elevation in II, III, aVF",1],["Troponin","Raised",1],["Right-sided ECG","ST elevation in V4R (RV infarct)",1],["Chest X-ray","Normal",0],["D-dimer","Not useful here",0]],
+  dx:["Inferior wall STEMI (with RV involvement)","Aortic dissection","Acute pericarditis","Pulmonary embolism"],
+  mx:["Aspirin 300 mg + P2Y12 loading, then primary PCI (or thrombolysis if PCI not available within time); avoid nitrates in RV infarct","Sublingual nitrate spray repeatedly","IV furosemide","Wait for repeat troponin in 6 h"],
+  t:"Time is muscle. In inferior MI check V4R — RV infarcts are preload dependent, so avoid nitrates and give fluids if hypotensive."},
+ {id:"tpx",who:"22 M · bike accident",c:"Hit chest-first on the handlebar; increasingly breathless.",v:[["HR",138],["BP","80/50"],["RR",36],["SpO₂","82%"],["Trachea","Shifted left"],["Temp","36.5°C"]],e:"Absent breath sounds and hyper-resonance on the right, distended neck veins.",
+  inv:[["Chest X-ray","Would delay life-saving treatment",0],["Bedside ultrasound","Absent lung sliding on right",1],["Clinical exam","Tracheal shift + hyper-resonance",1],["CT chest","Not for an unstable patient",0],["FAST scan","No free fluid",0]],
+  dx:["Right tension pneumothorax","Massive haemothorax","Cardiac tamponade","Flail chest"],
+  mx:["Immediate needle (or finger) decompression, then intercostal chest drain","Wait for the chest X-ray","Intubate and ventilate first","Pericardiocentesis"],
+  t:"Tension pneumothorax is a clinical diagnosis — decompress first, image later."},
+ {id:"sep",who:"68 F · diabetic",c:"Fever, burning micturition for 3 days, now confused.",v:[["HR",122],["BP","78/44"],["RR",26],["SpO₂","93%"],["Temp","39.4°C"],["Urine","Dark, scanty"]],e:"Drowsy, warm peripheries, suprapubic tenderness.",
+  inv:[["Serum lactate","5.1 mmol/L",1],["Blood cultures","Sent (before antibiotics)",1],["Urine dipstick","Nitrite +, leucocytes +++",1],["CT abdomen","Can wait",0],["Thyroid profile","Not relevant now",0]],
+  dx:["Urosepsis with septic shock","Hypovolaemic shock","Diabetic ketoacidosis","Cardiogenic shock"],
+  mx:["Cultures, IV broad-spectrum antibiotics within 1 h, 30 ml/kg crystalloid, then noradrenaline for MAP ≥ 65","Oral antibiotics and review tomorrow","Wait for culture report before antibiotics","Dopamine without fluids"],
+  t:"Every hour's delay in antibiotics in septic shock raises mortality. Fluids, antibiotics and vasopressors — fast."},
+ {id:"snk",who:"40 M · farmer",c:"Bitten on the foot while walking in a paddy field at dusk.",v:[["HR",110],["BP","100/64"],["RR",22],["SpO₂","97%"],["Temp","37.1°C"],["Bite","2 fang marks"]],e:"Painful swelling up to the knee, bleeding gums, oozing from the bite site.",
+  inv:[["20-min whole blood clotting test","Blood does not clot",1],["Urine","Haematuria",1],["Serum creatinine","1.8 mg/dL (rising)",1],["Neostigmine test","Not relevant (no ptosis)",0],["Identify the snake","Don't waste time catching it",0]],
+  dx:["Vasculotoxic (viper) envenomation","Neurotoxic (krait) envenomation","Cellulitis","Dry bite"],
+  mx:["Polyvalent ASV 10 vials IV over 1 h, immobilise the limb, repeat 20WBCT after 6 h","Tight tourniquet and incision","Wait for the snake to be identified","Neostigmine with atropine"],
+  t:"Non-clotting 20WBCT = systemic envenomation → ASV. Never use tourniquets or incisions."},
+ {id:"se",who:"30 M · known epileptic",c:"Continuous generalised seizure for 8 minutes; missed his tablets.",v:[["HR",128],["BP","150/90"],["RR",24],["SpO₂","90%"],["RBS","92 mg/dL"],["Temp","37.8°C"]],e:"Tonic-clonic movements, tongue bite, no recovery between jerks.",
+  inv:[["Capillary glucose","92 mg/dL — normal",1],["Serum sodium","136 mmol/L",0],["CT head","After seizures are controlled",0],["Drug levels","Low valproate level",0],["Airway check","Snoring respiration",1]],
+  dx:["Generalised convulsive status epilepticus","Psychogenic non-epileptic seizure","Syncope with myoclonus","Hypoglycaemic seizure"],
+  mx:["IV lorazepam 4 mg (repeat once), then load levetiracetam/valproate/phenytoin","Wait 30 minutes for it to stop","Oral phenytoin","IV haloperidol"],
+  t:"Seizure > 5 min = status epilepticus. Benzodiazepine first (IV, buccal or IM), then a second-line loading dose."},
+ {id:"hypo",who:"60 M · on glibenclamide",c:"Found confused and sweating; skipped lunch.",v:[["HR",108],["BP","140/86"],["RR",18],["SpO₂","98%"],["RBS","38 mg/dL"],["Temp","36.7°C"]],e:"Sweating, tremor, slurred speech, no focal deficit.",
+  inv:[["Capillary glucose","38 mg/dL",1],["Serum creatinine","2.1 mg/dL (slows drug clearance)",1],["CT head","Not needed once glucose corrects",0],["HbA1c","Not urgent",0],["ECG","Sinus tachycardia",0]],
+  dx:["Sulfonylurea-induced hypoglycaemia","Acute ischaemic stroke","Alcohol intoxication","Hepatic encephalopathy"],
+  mx:["IV 25% dextrose 50–100 ml, then a dextrose infusion and prolonged monitoring (consider octreotide)","Give oral sugar to an unconscious patient","Insulin infusion","Observe without treatment"],
+  t:"Sulfonylurea hypoglycaemia recurs for many hours — keep monitoring after the first correction."},
+ {id:"var",who:"45 M · chronic alcohol use",c:"Vomited fresh blood twice in the last hour.",v:[["HR",126],["BP","88/50"],["RR",24],["SpO₂","96%"],["Hb","7.2 g/dL"],["Temp","36.6°C"]],e:"Pallor, ascites, spider naevi, palmar erythema, splenomegaly.",
+  inv:[["Coagulation","INR 1.9",1],["Upper GI endoscopy","Bleeding oesophageal varices",1],["Blood group & cross-match","Sent",1],["Serum amylase","Normal",0],["Chest X-ray","Normal",0]],
+  dx:["Oesophageal variceal bleed (cirrhosis)","Bleeding peptic ulcer","Mallory–Weiss tear","Gastric carcinoma"],
+  mx:["Two large-bore IV lines, restrictive transfusion, IV terlipressin/octreotide + IV ceftriaxone, urgent endoscopic band ligation","Oral PPI and discharge","Liberal transfusion to Hb 12","Propranolol IV during active bleeding"],
+  t:"Variceal bleeding: vasoactive drug + antibiotic prophylaxis + endoscopic band ligation within 12 h."},
+ {id:"men",who:"18 F · hostel resident",c:"High fever, severe headache and vomiting since morning.",v:[["HR",130],["BP","92/58"],["RR",26],["SpO₂","96%"],["Temp","39.8°C"],["GCS","13"]],e:"Neck stiffness, photophobia, non-blanching petechial rash on legs.",
+  inv:[["Glass test","Rash does not blanch",1],["Blood cultures","Sent",1],["Lumbar puncture","Only after antibiotics and if safe",0],["CT head","Not required before antibiotics",0],["Throat swab","Not urgent",0]],
+  dx:["Meningococcal meningitis with septicaemia","Dengue fever","Viral encephalitis","Subarachnoid haemorrhage"],
+  mx:["Immediate IV ceftriaxone 2 g (do not delay for LP) + chemoprophylaxis for close contacts","Wait for CSF results","Oral amoxicillin","Paracetamol and review"],
+  t:"Fever + non-blanching rash = give antibiotics within minutes. Notify public health and protect contacts."},
+ {id:"pcm",who:"20 F · after an argument",c:"Swallowed 30 tablets of paracetamol 500 mg about 6 hours ago. Feels fine.",v:[["HR",92],["BP","118/76"],["RR",16],["SpO₂","99%"],["Temp","36.8°C"],["Weight","50 kg"]],e:"Mild nausea only, alert and oriented.",
+  inv:[["4-h+ paracetamol level","Above the treatment line",1],["Liver function","Normal at present",1],["INR","1.0",0],["Psychiatric assessment","Needed later",1],["ABG","Normal",0]],
+  dx:["Toxic paracetamol overdose (300 mg/kg)","Safe ingestion — no treatment","Salicylate poisoning","Viral hepatitis"],
+  mx:["IV N-acetylcysteine now (21-h or SNAP regimen)","Discharge because she feels well","Activated charcoal alone","Wait for liver enzymes to rise"],
+  t:"Paracetamol overdose looks harmless on day 1. NAC within 8 h is almost completely protective."},
+ {id:"co",who:"Family of 4 · winter night",c:"Found drowsy in a closed room with a coal brazier burning.",v:[["HR",112],["BP","110/70"],["RR",24],["SpO₂","99% (misleading)"],["Temp","36.9°C"],["GCS","12"]],e:"Headache, confusion, cherry-pink skin, one child vomiting.",
+  inv:[["CO-oximetry","COHb 35%",1],["ABG","Lactic acidosis, normal PaO₂",1],["ECG","ST depression",1],["CT head","Not first-line",0],["Pulse oximetry","Falsely normal",0]],
+  dx:["Carbon monoxide poisoning","Cyanide poisoning","Food poisoning","Viral encephalitis"],
+  mx:["100% oxygen by non-rebreather mask; hyperbaric oxygen if unconscious or COHb very high","Room air and observe","Methylene blue","Sodium nitrite"],
+  t:"Pulse oximeters read COHb as oxygen. Treat on history and CO-oximetry with 100% oxygen."},
+ {id:"ast",who:"16 M · known asthmatic",c:"Breathless for 6 hours after a dust exposure; cannot finish sentences.",v:[["HR",124],["BP","118/76"],["RR",34],["SpO₂","91%"],["PEF","35% predicted"],["Temp","37.0°C"]],e:"Widespread wheeze, accessory muscle use, sitting forward.",
+  inv:[["Peak flow","35% predicted",1],["ABG","PaCO₂ normal (warning sign)",1],["Chest X-ray","Hyperinflation, no pneumothorax",0],["Sputum culture","Not urgent",0],["Serum IgE","Not urgent",0]],
+  dx:["Acute severe asthma","COPD exacerbation","Anaphylaxis","Foreign body aspiration"],
+  mx:["Oxygen to 94–98%, nebulised salbutamol + ipratropium, oral/IV steroids, IV magnesium if poor response","Sedate the patient","Oral salbutamol only","Antibiotics first"],
+  t:"A normal or rising PaCO₂ in acute asthma means the patient is tiring — escalate early."}
+];
+const G_SPOT=[
+ {a:"Hodgkin lymphoma",s:"path",c:["Young adult with painless cervical lymph nodes","Pel–Ebstein fever and pruritus","Pain in nodes after alcohol","Owl-eye cells on biopsy","Reed–Sternberg cells, CD15+ CD30+"],d:["Burkitt lymphoma","Tuberculous lymphadenitis","Multiple myeloma"]},
+ {a:"Multiple myeloma",s:"path",c:["Elderly man with back pain","Raised ESR and hypercalcaemia","Renal impairment with Bence Jones proteinuria","Punched-out lytic lesions on skull X-ray","Monoclonal M-spike and >10% plasma cells in marrow"],d:["Metastatic prostate cancer","Hyperparathyroidism","Waldenström macroglobulinaemia"]},
+ {a:"Chronic myeloid leukaemia",s:"path",c:["Middle-aged man with dragging left-upper-quadrant pain","Massive splenomegaly","WBC 2,00,000/µL with all stages of granulocytes","Low LAP score, basophilia","t(9;22) BCR-ABL — Philadelphia chromosome"],d:["Myelofibrosis","Leukaemoid reaction","Hairy cell leukaemia"]},
+ {a:"Iron deficiency anaemia",s:"path",c:["Young woman with fatigue and heavy periods","Koilonychia and angular stomatitis","Microcytic hypochromic RBCs with pencil cells","Low ferritin","High TIBC, low transferrin saturation"],d:["β-thalassaemia trait","Anaemia of chronic disease","Sideroblastic anaemia"]},
+ {a:"Rheumatic heart disease",s:"path",c:["Sore throat 3 weeks earlier","Migratory polyarthritis","Erythema marginatum","Aschoff bodies with Anitschkow cells","Fish-mouth mitral stenosis later"],d:["Infective endocarditis","SLE (Libman–Sacks)","Viral myocarditis"]},
+ {a:"Tuberculosis",s:"micro",c:["Cough for 3 weeks with evening fever","Weight loss and night sweats","Caseating granuloma with Langhans giant cells","Acid-fast beading bacilli on ZN stain","Positive CBNAAT (GeneXpert)"],d:["Sarcoidosis","Nocardiosis","Histoplasmosis"]},
+ {a:"Typhoid fever",s:"micro",c:["Step-ladder fever for a week","Relative bradycardia","Rose spots on the abdomen","Blood culture positive in week 1","Gram-negative motile bacillus, H₂S producer"],d:["Brucellosis","Malaria","Leptospirosis"]},
+ {a:"Cholera",s:"micro",c:["Painless profuse watery diarrhoea","Rice-water stools with fishy odour","Severe dehydration within hours","Darting motility on hanging drop","Comma-shaped Gram-negative rod, TCBS yellow colonies"],d:["Shigellosis","ETEC diarrhoea","Rotavirus"]},
+ {a:"Falciparum malaria",s:"micro",c:["Fever with chills every 48 hours","Returned from a forest area","Altered sensorium and dark urine","Banana-shaped gametocytes","Multiple ring forms, appliqué forms in RBCs"],d:["Vivax malaria","Dengue","Scrub typhus"]},
+ {a:"Dengue",s:"micro",c:["High fever with severe body ache","Retro-orbital pain","Positive tourniquet test","Falling platelets with rising haematocrit","NS1 antigen positive"],d:["Chikungunya","Typhoid","Leptospirosis"]},
+ {a:"Scrub typhus",s:"micro",c:["Fever after working in fields","Generalised lymphadenopathy","Painless black eschar in the axilla","Transmitted by chigger (trombiculid mite)","Orientia tsutsugamushi — treat with doxycycline"],d:["Anthrax","Plague","Dengue"]},
+ {a:"Diphtheria",s:"micro",c:["Child with sore throat and low fever","Bull neck","Greyish adherent pseudomembrane that bleeds on removal","Club-shaped Gram-positive bacilli in Chinese-letter pattern","Metachromatic granules (Albert stain)"],d:["Streptococcal tonsillitis","Infectious mononucleosis","Vincent's angina"]},
+ {a:"Tetanus",s:"micro",c:["Rusty nail injury 10 days ago","Difficulty opening the mouth","Risus sardonicus","Opisthotonus with spasms on stimulation","Drumstick spores — tetanospasmin blocks inhibitory neurons"],d:["Strychnine poisoning","Rabies","Meningitis"]},
+ {a:"Isoniazid",s:"pharm",c:["Anti-tubercular drug","Bactericidal against rapidly dividing bacilli","Inhibits mycolic acid synthesis","Causes peripheral neuropathy — give pyridoxine","Slow acetylators are at greater toxicity risk"],d:["Rifampicin","Ethambutol","Pyrazinamide"]},
+ {a:"Digoxin",s:"pharm",c:["Used in heart failure with atrial fibrillation","Inhibits Na⁺/K⁺-ATPase","Narrow therapeutic index","Toxicity worsened by hypokalaemia","Yellow vision and bidirectional VT in toxicity"],d:["Amiodarone","Verapamil","Dobutamine"]},
+ {a:"Warfarin",s:"pharm",c:["Oral anticoagulant","Vitamin K antagonist","Monitored with INR","Teratogenic — fetal warfarin syndrome","Reversed by vitamin K and prothrombin complex"],d:["Heparin","Dabigatran","Aspirin"]},
+ {a:"Metformin",s:"pharm",c:["First-line drug for type 2 diabetes","Does not cause hypoglycaemia alone","Reduces hepatic gluconeogenesis","May cause vitamin B12 deficiency","Risk of lactic acidosis in renal failure"],d:["Glibenclamide","Pioglitazone","Insulin"]},
+ {a:"Lithium",s:"pharm",c:["Mood stabiliser for bipolar disorder","Narrow therapeutic range","Causes nephrogenic diabetes insipidus","Hypothyroidism and tremor","Toxicity raised by thiazides and NSAIDs"],d:["Valproate","Carbamazepine","Haloperidol"]},
+ {a:"Atropine",s:"pharm",c:["Alkaloid of Atropa belladonna","Muscarinic receptor antagonist","Causes mydriasis and dry mouth","Used as pre-anaesthetic medication","Antidote for organophosphate poisoning"],d:["Physostigmine","Pilocarpine","Neostigmine"]},
+ {a:"Hanging",s:"fmt",c:["Body found in a closed room","Ligature mark above the thyroid cartilage","Mark is oblique and non-continuous","Dribbling of saliva at the angle of mouth","Usually suicidal"],d:["Ligature strangulation","Throttling","Smothering"]},
+ {a:"Drowning",s:"fmt",c:["Body recovered from a pond","Fine white persistent froth at nostrils","Weeds clutched in the hands (cadaveric spasm)","Voluminous waterlogged lungs","Diatoms found in femoral bone marrow"],d:["Post-mortem immersion","Hanging","Traumatic asphyxia"]},
+ {a:"Carbon monoxide poisoning",s:"fmt",c:["Family found dead on a winter morning","Closed room with a coal brazier","Cherry-red post-mortem lividity","Blood remains bright red","COHb above 50%"],d:["Cyanide poisoning","Hypothermia","Methanol poisoning"]},
+ {a:"Rigor mortis",s:"fmt",c:["Post-mortem change","Starts in about 1–2 hours in India","Appears first in the myocardium and eyelids","Due to ATP depletion","Follows Nysten's rule"],d:["Cadaveric spasm","Heat stiffening","Cold stiffening"]},
+ {a:"Aluminium phosphide poisoning",s:"fmt",c:["Grain-storage tablet","Garlicky odour of breath","Refractory shock with clear sensorium","Silver nitrate paper turns black","Releases phosphine gas"],d:["Organophosphate poisoning","Arsenic poisoning","Zinc phosphide poisoning"]},
+ {a:"Datura poisoning",s:"fmt",c:["Traveller given sweets by a stranger","Dry mouth, flushed hot skin","Widely dilated pupils","Delirium, picking at clothes","Kidney-shaped seeds in the vomit"],d:["Cannabis intoxication","Alcohol intoxication","Opium poisoning"]},
+ {a:"Iodine deficiency disorders",s:"cm",c:["Hilly area endemic problem","Goitre in school children","Cretinism and deaf-mutism","Controlled through salt iodisation","Urinary iodine is the best indicator"],d:["Fluorosis","Lathyrism","Vitamin A deficiency"]},
+ {a:"Fluorosis",s:"cm",c:["Drinking water from deep bore wells","Mottled chalky white teeth","Knock-knees and stiff spine","Calcification of ligaments","Prevented by Nalgonda technique"],d:["Rickets","Lathyrism","Iodine deficiency"]},
+ {a:"Vitamin A deficiency",s:"cm",c:["Pre-school child with night blindness","Conjunctival xerosis","Bitot's spots","Keratomalacia","Prophylaxis with 1 lakh IU at 9 months"],d:["Riboflavin deficiency","Trachoma","Measles keratitis"]},
+ {a:"Epidemic dropsy",s:"cm",c:["Outbreak after eating fried food","Bilateral pitting oedema of the legs","Erythema and breathlessness","Linked to adulterated mustard oil","Caused by argemone oil (sanguinarine)"],d:["Lathyrism","Beriberi","Aflatoxicosis"]}
+];
+const G_DECK=[
+ {id:"trep",n:"Treponema pallidum",k:"Spirochaete",d:"Syphilis",x:"Benzathine penicillin G",tip:"Syphilis is still beaten by plain old penicillin — 'Treponema trembles at penicillin'.",r:3},
+ {id:"spy",n:"Streptococcus pyogenes",k:"Gram + coccus (chains)",d:"Pharyngitis, rheumatic fever",x:"Penicillin V / amoxicillin",tip:"Group A Strep has never developed penicillin resistance.",r:1},
+ {id:"mrsa",n:"MRSA",k:"Gram + coccus (clusters)",d:"Skin & bloodstream infection",x:"Vancomycin",tip:"'V for Very resistant Staph' — vancomycin or linezolid.",r:3},
+ {id:"pseu",n:"Pseudomonas aeruginosa",k:"Gram − bacillus",d:"Burn & ventilator infection",x:"Piperacillin–tazobactam",tip:"Pseudomonas needs anti-pseudomonal agents: pip-taz, ceftazidime, meropenem, amikacin.",r:2},
+ {id:"mtb",n:"Mycobacterium tuberculosis",k:"Acid-fast bacillus",d:"Tuberculosis",x:"HRZE (isoniazid, rifampicin, pyrazinamide, ethambutol)",tip:"2 months HRZE, then 4 months HRE (daily regimen, NTEP).",r:3},
+ {id:"lep",n:"Mycobacterium leprae",k:"Acid-fast bacillus",d:"Leprosy",x:"MDT: rifampicin + dapsone + clofazimine",tip:"Multibacillary leprosy = 12 months of 3-drug MDT.",r:2},
+ {id:"pf",n:"Plasmodium falciparum",k:"Protozoan",d:"Uncomplicated falciparum malaria",x:"Artemether–lumefantrine (ACT)",tip:"In India, ACT for falciparum; primaquine single dose as gametocidal.",r:2},
+ {id:"pfs",n:"P. falciparum (severe)",k:"Protozoan",d:"Cerebral malaria",x:"IV artesunate",tip:"Severe malaria = IV artesunate, never oral first.",r:3},
+ {id:"pv",n:"Plasmodium vivax",k:"Protozoan",d:"Vivax malaria",x:"Chloroquine + primaquine (14 days)",tip:"Primaquine kills hypnozoites — check G6PD first.",r:1},
+ {id:"ent",n:"Entamoeba histolytica",k:"Protozoan",d:"Amoebic liver abscess",x:"Metronidazole",tip:"Anchovy-sauce pus → metronidazole, then a luminal agent.",r:1},
+ {id:"cdi",n:"Clostridioides difficile",k:"Gram + spore-forming bacillus",d:"Pseudomembranous colitis",x:"Oral vancomycin / fidaxomicin",tip:"Oral, not IV, vancomycin — it must stay in the gut.",r:2},
+ {id:"typh",n:"Salmonella Typhi",k:"Gram − bacillus",d:"Typhoid fever",x:"Ceftriaxone (or azithromycin)",tip:"Fluoroquinolone resistance is common in India.",r:1},
+ {id:"vib",n:"Vibrio cholerae",k:"Gram − comma bacillus",d:"Cholera",x:"ORS + single-dose doxycycline",tip:"Rehydration saves lives; antibiotics shorten the illness.",r:1},
+ {id:"ori",n:"Orientia tsutsugamushi",k:"Rickettsia-like",d:"Scrub typhus",x:"Doxycycline",tip:"Eschar + fever → doxycycline (azithromycin in pregnancy).",r:2},
+ {id:"chl",n:"Chlamydia trachomatis",k:"Obligate intracellular",d:"Urethritis, trachoma",x:"Azithromycin",tip:"Single-dose azithromycin; also the SAFE strategy for trachoma.",r:1},
+ {id:"gon",n:"Neisseria gonorrhoeae",k:"Gram − diplococcus",d:"Gonorrhoea",x:"Ceftriaxone",tip:"Treat chlamydia too — they travel together.",r:1},
+ {id:"hsv",n:"Herpes simplex virus",k:"DNA virus",d:"Encephalitis, genital herpes",x:"Acyclovir",tip:"Suspected HSV encephalitis → IV acyclovir immediately.",r:2},
+ {id:"cmv",n:"Cytomegalovirus",k:"DNA virus",d:"CMV retinitis (HIV)",x:"Ganciclovir",tip:"Owl's-eye inclusions; ganciclovir causes neutropenia.",r:2},
+ {id:"flu",n:"Influenza A (H1N1)",k:"RNA virus",d:"Influenza",x:"Oseltamivir",tip:"Neuraminidase inhibitor — best within 48 h.",r:1},
+ {id:"hiv",n:"HIV-1",k:"Retrovirus",d:"HIV infection",x:"TLD (tenofovir + lamivudine + dolutegravir)",tip:"NACO first-line ART is TLD.",r:3},
+ {id:"cand",n:"Candida albicans",k:"Yeast",d:"Oral & oesophageal thrush",x:"Fluconazole",tip:"Germ tube test positive yeast.",r:1},
+ {id:"cry",n:"Cryptococcus neoformans",k:"Capsulated yeast",d:"Meningitis in HIV",x:"Amphotericin B + flucytosine",tip:"India-ink halo; induction with amphotericin + flucytosine.",r:3},
+ {id:"pcp",n:"Pneumocystis jirovecii",k:"Fungus",d:"Pneumonia in HIV",x:"Cotrimoxazole",tip:"Also the prophylaxis drug when CD4 < 200.",r:2},
+ {id:"asc",n:"Ascaris lumbricoides",k:"Nematode",d:"Intestinal ascariasis",x:"Albendazole",tip:"Single 400 mg dose; National Deworming Day.",r:1},
+ {id:"ncc",n:"Taenia solium (larva)",k:"Cestode",d:"Neurocysticercosis",x:"Albendazole + steroids",tip:"Steroids reduce inflammation as cysts die.",r:2},
+ {id:"ld",n:"Leishmania donovani",k:"Protozoan",d:"Kala-azar",x:"Single-dose liposomal amphotericin B",tip:"India's elimination programme uses single-dose L-AmB.",r:3},
+ {id:"hp",n:"Helicobacter pylori",k:"Gram − curved bacillus",d:"Peptic ulcer",x:"PPI + clarithromycin + amoxicillin",tip:"Urease positive; triple therapy for 14 days.",r:1},
+ {id:"ctet",n:"Clostridium tetani",k:"Gram + spore former",d:"Tetanus",x:"Human tetanus immunoglobulin + metronidazole",tip:"Neutralise toxin, kill the bug, control spasms.",r:2}
+];
+const G_TRIAGE=[
+ ["Walking around holding a bleeding forearm, asking for help","green","Can walk → Minor."],
+ ["Shouting for help, walks to the ambulance with a sprained ankle","green","Ambulatory patients are tagged Minor first."],
+ ["Not breathing; starts breathing after you reposition the airway","red","Breathing only after airway opening → Immediate."],
+ ["Not breathing even after the airway is opened","black","No breathing after airway repositioning → Expectant/Deceased."],
+ ["Lying down, RR 36/min, talking","red","RR > 30 → Immediate."],
+ ["Cannot walk, RR 20, radial pulse present, CRT 1 s, obeys commands — open leg fracture","yellow","Breathing, perfusion and mentation all OK → Delayed."],
+ ["Cannot walk, RR 24, radial pulse absent","red","No radial pulse → Immediate."],
+ ["Cannot walk, RR 18, capillary refill 4 s","red","CRT > 2 s → Immediate."],
+ ["Cannot walk, RR 22, pulse present, confused and cannot follow commands","red","Cannot follow simple commands → Immediate."],
+ ["Cannot walk, RR 16, CRT 1 s, follows commands — burns on both legs","yellow","All parameters within limits → Delayed."],
+ ["Massive head injury, not breathing after jaw thrust","black","Apnoeic after airway manoeuvre → Expectant."],
+ ["Sitting, RR 28, CRT 1.5 s, obeys commands, cannot stand due to back pain","yellow","RR ≤ 30, perfusion OK, obeys → Delayed."],
+ ["Walking, crying, superficial scalp cut","green","Walking wounded → Minor."],
+ ["Unconscious, RR 10, radial pulse present","red","Cannot obey commands → Immediate."],
+ ["Pregnant woman lying down, RR 26, radial pulse weak but present, CRT 3 s","red","CRT > 2 s → Immediate."],
+ ["Child who walks to the collection point with a bruised arm","green","Can walk → Minor."],
+ ["Cannot walk, RR 32, pale and sweaty","red","RR > 30 → Immediate."],
+ ["Cannot walk, RR 14, radial pulse present, CRT 1 s, answers questions correctly — crushed foot","yellow","Stable vitals, cannot walk → Delayed."],
+ ["Not breathing, no response; breathes after head-tilt chin-lift","red","Breathing after airway opening → Immediate."],
+ ["Cannot walk, RR 24, CRT 1 s, does not respond to commands, eyes open","red","Fails mental status → Immediate."],
+ ["Walking, complaining of chest tightness from smoke","green","START tags walkers Minor — reassess later!"],
+ ["Cannot walk, RR 20, radial pulse present, CRT 1 s, follows commands — dislocated hip","yellow","Delayed — but needs care within hours."],
+ ["Trapped under debris, RR 40","red","RR > 30 → Immediate."],
+ ["Decapitation injury","black","Injuries incompatible with life → Deceased."]
+];
+const G_PROTO=[
+ {n:"Sepsis Six (within 1 hour)",s:["Give high-flow oxygen","Take blood cultures","Give IV antibiotics","Give IV fluid bolus","Measure serum lactate","Monitor urine output"],w:"Cultures must be taken before antibiotics, but antibiotics must not wait for culture reports."},
+ {n:"Adult Basic Life Support",s:["Check the scene is safe","Check response and breathing (≤ 10 s)","Call for help and ask for an AED","Start 30 chest compressions (5–6 cm, 100–120/min)","Give 2 rescue breaths","Attach the AED and follow prompts"],w:"High-quality compressions with minimal interruptions are the core of BLS."},
+ {n:"Anaphylaxis",s:["Remove the trigger","Call for help; lie the patient flat with legs raised","IM adrenaline 0.5 mg (1:1000) in the thigh","High-flow oxygen and IV fluid bolus","Repeat adrenaline after 5 min if no improvement","Antihistamine and steroid as adjuncts","Observe for biphasic reaction"],w:"Adrenaline comes first; everything else is supportive."},
+ {n:"Donning PPE",s:["Perform hand hygiene","Put on the gown","Put on the mask or respirator","Put on goggles or face shield","Put on gloves (over gown cuffs)"],w:"Gloves go on last so they cover the gown cuffs."},
+ {n:"Doffing PPE",s:["Remove gloves","Remove goggles or face shield","Remove the gown","Remove the mask or respirator (outside the room)","Perform hand hygiene"],w:"The most contaminated items come off first; hand hygiene finishes the sequence."},
+ {n:"Recording a dying declaration",s:["Certify the patient is conscious and oriented","Call the magistrate (if no time, record it yourself)","Arrange two witnesses","Record in the patient's own words, preferably Q&A","Read it over to the declarant","Take signature or thumb impression","Re-certify fitness at the end","Seal and send to the magistrate"],w:"Fitness must be certified before and after — and treatment must never be delayed."},
+ {n:"Snake bite (hospital pathway)",s:["Reassure the patient","Immobilise the bitten limb","Transport quickly to hospital","Perform 20-min whole blood clotting test","Give ASV if systemic envenomation","Repeat 20WBCT after 6 hours"],w:"No tourniquet, no incision, no waiting to identify the snake."},
+ {n:"Organophosphate poisoning",s:["Remove clothes and wash the skin","Secure airway and suction secretions","Give atropine bolus, doubling every 5 min","Start pralidoxime","Atropine infusion and monitor for intermediate syndrome"],w:"Atropinisation end-point is a clear chest, not dilated pupils."},
+ {n:"Preserving viscera for chemical analysis",s:["Collect stomach and its contents","Collect 30 cm of small intestine","Collect 500 g liver and half of each kidney","Collect blood in sodium fluoride","Place viscera in saturated salt in clean glass jars","Label and seal with the doctor's seal","Send with a sample of the preservative through police"],w:"Never use formalin for toxicology samples."},
+ {n:"Cold chain: using a vaccine vial",s:["Take the vial from the ILR/vaccine carrier","Check the label and expiry date","Check the VVM (inner square lighter than circle)","Shake test if freezing suspected (DPT, TT, Hep B)","Write date and time of opening","Administer and record in the immunisation card"],w:"VVM beyond discard point or failed shake test → do not use."}
+];
+const G_BMW=[
+ ["Placenta after delivery","yellow","Human anatomical waste → yellow (incineration)."],
+ ["Amputated limb","yellow","Human anatomical waste → yellow."],
+ ["Blood-soaked cotton swab","yellow","Soiled waste → yellow."],
+ ["Used plaster cast","yellow","Soiled waste → yellow."],
+ ["Expired tablets","yellow","Discarded medicines → yellow."],
+ ["Microbiology culture plates (pre-treated)","yellow","Lab waste after pre-treatment → yellow."],
+ ["Discarded cytotoxic drug vial","yellow","Cytotoxic waste → yellow (not blue)."],
+ ["Used IV tubing","red","Contaminated recyclable plastic → red."],
+ ["Urine bag","red","Contaminated plastic → red."],
+ ["Used gloves","red","Contaminated plastic → red."],
+ ["Syringe without needle","red","Plastic syringe (needle removed) → red."],
+ ["Foley catheter","red","Contaminated recyclable → red."],
+ ["Vacutainer (needle removed)","red","Plastic → red."],
+ ["Used needle","white","Sharps → white translucent puncture-proof container."],
+ ["Scalpel blade","white","Sharps → white."],
+ ["Lancet","white","Sharps → white."],
+ ["Syringe with fixed needle","white","Fixed needles go whole into white."],
+ ["Broken glass ampoule","blue","Glassware → blue cardboard box."],
+ ["Empty glass medicine vial","blue","Glass → blue (unless cytotoxic)."],
+ ["Removed metallic implant","blue","Metallic body implants → blue."],
+ ["Broken glass slide","blue","Contaminated glass → blue."],
+ ["Food leftovers","general","Non-infectious general waste — not biomedical."],
+ ["Paper wrapper of a syringe","general","Clean packaging → general waste."],
+ ["Empty juice carton","general","General waste."]
+];
+const G_BINS=[["yellow","Yellow","🟨","Anatomical, soiled, medicines, lab"],["red","Red","🟥","Contaminated plastics"],["white","White","⬜","Sharps (puncture-proof)"],["blue","Blue","🟦","Glass & metal implants"],["general","General","⬛","Non-infectious waste"]];
+
+/* ============ Clinical Games Arcade ============ */
+let GT=null, GS=null;
+function gStop(){clearInterval(GT);GT=null;}
+window.addEventListener("hashchange",gStop);
+function gMem(){S.games=S.games||{best:{},plays:0,deck:[]};S.games.best=S.games.best||{};S.games.deck=S.games.deck||[];return S.games;}
+function gFinish(id,score,label){const m=gMem();m.plays=(m.plays||0)+1;const nb=!m.best[id]||score>m.best[id];if(nb)m.best[id]=score;save();const xp=Math.max(5,Math.min(60,Math.round(score/15)));addXP(xp,label);return nb;}
+function gPick(a,n){return shuffle(a.slice()).slice(0,n);}
+function gHead(id,title,sub){const g=GAMES.find(x=>x[0]===id);return `<div class="gtop" data-g="${id}"><a class="btn sm ghost" href="#games">← Arcade</a><div class="gtitle"><span class="gemo">${g?g[2]:"🎮"}</span><div><h1>${title}</h1><p class="note">${sub}</p></div></div><span class="gbest">Best: <b>${gMem().best[id]||0}</b></span></div>`;}
+function gEnd(id,title,score,lines,again){const nb=gFinish(id,score,title);return `<div class="gend card"><div class="gend-score"><span class="eyebrow">${nb?"New personal best 🎉":"Final score"}</span><b>${score}</b></div>${lines}<div class="row"><button class="btn pri" data-act="${again}">Play again</button><a class="btn" href="#games">Back to arcade</a></div></div>`;}
+
+const GAMES=[
+ ["er","Code Blue: ER Shift","🚑","Emergency simulator","Five patients, one shift. Investigate, diagnose and treat before the stability meter hits zero.","er"],
+ ["spot","Clue Ladder","🔎","Spot diagnosis","Clues appear one by one. Name the diagnosis, drug or finding early for more points.","spot"],
+ ["deck","Bug vs Drug","🦠","Collectible card battle","Defeat microbes with the drug of choice and build your pathogen card collection.","deck"],
+ ["triage","Triage Rush","🏷️","Mass-casualty triage","Casualties keep arriving. Tag each one with START colours before the queue overflows.","triage"],
+ ["flow","Hospital 24","🏥","Systems & bed-flow sim","Run a hospital for 24 hours: beds, staff, discharges and surges. Think like the whole system.","flow"],
+ ["proto","Protocol Builder","🧩","Sequencing puzzle","Put life-saving and medicolegal protocols in the right order: sepsis, BLS, PPE, dying declaration…","proto"],
+ ["bmw","Waste Warrior","♻️","Infection control sprint","Sort hospital waste into the right biomedical waste bin before time runs out.","bmw"]];
+
+function vGames(){const m=gMem();const tot=GAMES.reduce((a,g)=>a+(m.best[g[0]]||0),0);
+ return `<section class="ghero"><div><span class="eyebrow">Learn by playing</span><h1>Clinical Games Arcade 🎮</h1><p>Serious games built around real ward, emergency and medicolegal scenarios. Every game teaches as you play and earns XP.</p></div>
+  <div class="gstats"><div><b>${m.plays||0}</b><span>games played</span></div><div><b>${(m.deck||[]).length}/${G_DECK.length}</b><span>cards collected</span></div><div><b>${tot}</b><span>total best score</span></div></div></section>
+  <div class="ggrid">${GAMES.map(g=>`<a class="gcard" data-g="${g[0]}" href="#g-${g[0]}"><span class="gcard-emo">${g[2]}</span><span class="gtag">${g[3]}</span><b>${g[1]}</b><span class="note">${g[4]}</span><span class="gcard-foot"><span>Best ${m.best[g[0]]||0}</span><span class="btn sm pri">Play →</span></span></a>`).join("")}</div>
+  <p class="note">All scenarios are original teaching cases written for this app. Always follow your hospital's current protocols in real practice.</p>`;}
+
+/* ---------- 1. Code Blue: ER Shift ---------- */
+function vER(){POST=()=>erStart();return gHead("er","Code Blue: ER Shift","Every second costs stability. Investigations cost more. Wrong calls cost the most.")+`<div id="gm"></div>`;}
+function erStart(){GS={cases:gPick(G_ER,5),i:0,score:0,log:[]};erCase();}
+function erCase(){gStop();const c=GS.cases[GS.i];GS.c=c;GS.stab=100;GS.phase="dx";GS.rev=[];GS.wrong=0;GS.dx=shuffle(c.dx.slice());GS.mx=shuffle(c.mx.slice());erRender();
+ GT=setInterval(()=>{GS.stab-=1;if(GS.stab<=0){GS.stab=0;erOver(false);}else erMeter();},1000);}
+function erMeter(){const m=$("#ermeter");if(!m)return;m.style.width=GS.stab+"%";m.className=GS.stab>60?"ok":GS.stab>30?"warn":"bad";$("#erstab").textContent=GS.stab;}
+function erRender(){const c=GS.c;$("#gm").innerHTML=`<div class="er">
+ <div class="er-mon card"><div class="row between"><span class="eyebrow">Patient ${GS.i+1} of ${GS.cases.length} · Score ${GS.score}</span><span class="er-beat" aria-hidden="true">♥</span></div>
+  <h2>${esc(c.who)}</h2><p>${esc(c.c)}</p>
+  <div class="er-vitals">${c.v.map(v=>`<div><span>${v[0]}</span><b>${esc(String(v[1]))}</b></div>`).join("")}</div>
+  <p class="note"><b>Examination:</b> ${esc(c.e)}</p>
+  <div class="er-stab"><span>Stability <b id="erstab">${GS.stab}</b></span><div class="bar"><i id="ermeter" style="width:${GS.stab}%"></i></div></div></div>
+ <div class="er-side"><div class="card stack"><h3>Order investigations <span class="note">(−6 stability each)</span></h3><div class="er-inv">${c.inv.map((x,k)=>GS.rev.includes(k)?`<div class="er-res ${x[2]?"use":"waste"}"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div>`:`<button class="btn" data-act="er-inv" data-k="${k}">${esc(x[0])}</button>`).join("")}</div></div>
+ <div class="card stack"><h3>${GS.phase==="dx"?"Your diagnosis?":"First management step?"}</h3><div class="stack" style="gap:8px">${(GS.phase==="dx"?GS.dx:GS.mx).map(o=>`<button class="opt" data-act="er-pick" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>${GS.phase==="mx"?`<p class="note good">✓ Diagnosis: ${esc(c.dx[0])}</p>`:""}</div></div></div>`;erMeter();}
+Object.assign(ACT,{
+ "er-inv":el=>{const k=+el.dataset.k;if(GS.rev.includes(k))return;GS.rev.push(k);GS.stab=Math.max(1,GS.stab-6);erRender();},
+ "er-pick":el=>{const v=el.dataset.v,c=GS.c;const ok=GS.phase==="dx"?v===c.dx[0]:v===c.mx[0];
+  if(!ok){GS.wrong++;GS.stab=Math.max(0,GS.stab-(GS.phase==="dx"?15:12));el.classList.add("no");el.disabled=true;toast("Not quite — the patient deteriorates");if(GS.stab<=0)erOver(false);else erMeter();return;}
+  if(GS.phase==="dx"){GS.phase="mx";erRender();}else erOver(true);},
+ "er-next":()=>{GS.i++;if(GS.i<GS.cases.length)erCase();else{gStop();const saved=GS.log.filter(x=>x.ok).length;$("#gm").innerHTML=gEnd("er","ER Shift",GS.score,`<p>You stabilised <b>${saved}</b> of ${GS.cases.length} patients.</p><div class="glog">${GS.log.map(x=>`<div class="${x.ok?"good":"bad"}">${x.ok?"✓":"✕"} ${esc(x.d)} — ${x.pts} pts</div>`).join("")}</div>`,"er-again");}},
+ "er-again":()=>erStart()});
+function erOver(ok){gStop();const c=GS.c;const pts=ok?GS.stab+(GS.wrong?0:20):0;GS.score+=pts;GS.log.push({d:c.dx[0],ok,pts});
+ $("#gm").innerHTML=`<div class="card er-out ${ok?"win":"lose"}"><span class="gbig">${ok?"✅ Patient stabilised":"💔 Patient crashed"}</span><p><b>${esc(c.dx[0])}</b> — ${esc(c.mx[0])}</p><p class="er-teach">💡 ${esc(c.t)}</p><p class="note">+${pts} points ${ok&&!GS.wrong?"(includes +20 flawless bonus)":""}</p><button class="btn pri" data-act="er-next">${GS.i+1<GS.cases.length?"Next patient →":"End shift"}</button></div>`;}
+
+/* ---------- 2. Clue Ladder ---------- */
+function vSpot(){POST=()=>spStart();return gHead("spot","Clue Ladder","5 points if you get it on clue 1, down to 1 point on clue 5.")+`<div id="gm"></div>`;}
+function spStart(){GS={q:gPick(G_SPOT,8),i:0,score:0,right:0};spRound();}
+function spRound(){const q=GS.q[GS.i];GS.ci=1;GS.opts=shuffle([q.a,...q.d]);GS.done=false;spRender();}
+function spRender(){const q=GS.q[GS.i];$("#gm").innerHTML=`<div class="card sp" data-s="${q.s}"><div class="row between"><span class="eyebrow">Case ${GS.i+1} of ${GS.q.length} · Score ${GS.score}</span><span class="sp-pts">Worth <b>${GS.done?0:6-GS.ci}</b> pts</span></div>
+ <ol class="sp-clues">${q.c.map((x,k)=>`<li class="${k<GS.ci||GS.done?"on":""}">${k<GS.ci||GS.done?esc(x):"🔒 Hidden clue"}</li>`).join("")}</ol>
+ ${GS.done?"":`<div class="row"><button class="btn" data-act="sp-clue" ${GS.ci>=5?"disabled":""}>Reveal next clue</button></div>`}
+ <div class="sp-opts">${GS.opts.map(o=>`<button class="opt ${GS.done&&o===q.a?"yes":""}" data-act="sp-pick" data-v="${esc(o)}" ${GS.done?"disabled":""}>${esc(o)}</button>`).join("")}</div>
+ ${GS.done?`<div class="row"><button class="btn pri" data-act="sp-next">${GS.i+1<GS.q.length?"Next case →":"See results"}</button></div>`:""}</div>`;}
+Object.assign(ACT,{
+ "sp-clue":()=>{if(GS.ci<5){GS.ci++;spRender();}},
+ "sp-pick":el=>{const q=GS.q[GS.i];if(GS.done)return;const ok=el.dataset.v===q.a;if(ok){GS.score+=6-GS.ci;GS.right++;toast(`Correct! +${6-GS.ci}`);}else toast(`It was ${q.a}`);GS.done=true;spRender();if(!ok){const b=[...$$(".sp-opts .opt")].find(x=>x.dataset.v===el.dataset.v);b&&b.classList.add("no");}},
+ "sp-next":()=>{GS.i++;if(GS.i<GS.q.length)spRound();else $("#gm").innerHTML=gEnd("spot","Clue Ladder",GS.score*5,`<p>You solved <b>${GS.right}</b> of ${GS.q.length} cases (${GS.score} ladder points × 5).</p>`,"sp-again");},
+ "sp-again":()=>spStart()});
+
+/* ---------- 3. Bug vs Drug ---------- */
+function vDeck(){POST=()=>dkStart();return gHead("deck","Bug vs Drug","Pick the drug of choice to capture each microbe. Three lives. Hints cost the shiny bonus.")+`<div class="row" style="margin-bottom:10px"><button class="btn sm" data-act="dk-coll">📚 My collection</button><button class="btn sm" data-act="dk-again">🔄 New battle</button></div><div id="gm"></div>`;}
+function dkStart(){const own=gMem().deck;const fresh=G_DECK.filter(b=>!own.includes(b.id));GS={q:shuffle(fresh).concat(shuffle(G_DECK.filter(b=>own.includes(b.id)))).slice(0,10),i:0,lives:3,score:0,streak:0,caught:0};dkRound();}
+function dkRound(){const b=GS.q[GS.i];const others=shuffle([...new Set(G_DECK.filter(x=>x.x!==b.x).map(x=>x.x))]).slice(0,3);GS.hand=shuffle([b.x,...others]);GS.hint=false;GS.done=false;dkRender();}
+function dkCard(b,own){return `<div class="bug r${b.r} ${own?"":"locked"}"><span class="bug-k">${esc(b.k)}</span><b>${own?esc(b.n):"???"}</b><span class="bug-d">${own?esc(b.d):"Not captured yet"}</span>${own?`<span class="bug-x">💊 ${esc(b.x)}</span>`:""}<span class="bug-r">${"★".repeat(b.r)}</span></div>`;}
+function dkRender(){const b=GS.q[GS.i];$("#gm").innerHTML=`<div class="dk"><div class="row between"><span class="eyebrow">Battle ${GS.i+1}/${GS.q.length} · Score ${GS.score} · Streak ×${GS.streak}</span><span class="dk-lives">${"❤️".repeat(GS.lives)}${"🤍".repeat(3-GS.lives)}</span></div>
+ <div class="dk-arena"><div class="bug big r${b.r}"><span class="bug-k">${esc(b.k)}</span><b>${esc(b.n)}</b><span class="bug-d">Causes: ${esc(b.d)}</span><span class="bug-r">${"★".repeat(b.r)} ${["","Common","Tricky","Boss"][b.r]}</span></div>
+ <div class="stack"><span class="eyebrow">Your hand — play the drug of choice</span><div class="dk-hand">${GS.hand.map(h=>`<button class="pill-card" data-act="dk-play" data-v="${esc(h)}" ${GS.done?"disabled":""}>💊 ${esc(h)}</button>`).join("")}</div>
+ ${GS.hint||GS.done?`<p class="dk-tip">🧑‍⚕️ Dr. Atlas: ${esc(b.tip)}</p>`:`<button class="btn sm ghost" data-act="dk-hint">🧑‍⚕️ Ask Dr. Atlas for a hint</button>`}
+ ${GS.done?`<button class="btn pri" data-act="dk-next">${GS.lives>0&&GS.i+1<GS.q.length?"Next microbe →":"Finish battle"}</button>`:""}</div></div></div>`;}
+Object.assign(ACT,{
+ "dk-hint":()=>{GS.hint=true;dkRender();},
+ "dk-play":el=>{const b=GS.q[GS.i];if(GS.done)return;GS.done=true;const ok=el.dataset.v===b.x;
+  if(ok){GS.streak++;const pts=(10*b.r+(GS.hint?0:5))*Math.min(3,GS.streak);GS.score+=pts;GS.caught++;const m=gMem();if(!m.deck.includes(b.id)){m.deck.push(b.id);save();toast(`Captured ${b.n}! New card +${pts}`);}else toast(`Defeated! +${pts}`);}
+  else{GS.lives--;GS.streak=0;toast(`Resisted! Drug of choice: ${b.x}`);}
+  dkRender();$$(".pill-card").forEach(x=>{if(x.dataset.v===b.x)x.classList.add("yes");else if(x.dataset.v===el.dataset.v)x.classList.add("no");});},
+ "dk-next":()=>{GS.i++;if(GS.lives>0&&GS.i<GS.q.length)dkRound();else $("#gm").innerHTML=gEnd("deck","Bug vs Drug",GS.score,`<p>You defeated <b>${GS.caught}</b> microbes. Collection: ${gMem().deck.length}/${G_DECK.length} cards.</p>`,"dk-again");},
+ "dk-again":()=>{gStop();dkStart();},
+ "dk-coll":()=>{const own=gMem().deck;$("#gm").innerHTML=`<div class="stack"><div class="row between"><h2>Collection ${own.length}/${G_DECK.length}</h2><button class="btn sm pri" data-act="dk-again">Battle →</button></div><div class="dk-coll">${G_DECK.map(b=>dkCard(b,own.includes(b.id))).join("")}</div></div>`;}});
+
+/* ---------- 4. Triage Rush ---------- */
+const TAGS=[["red","Immediate","🔴"],["yellow","Delayed","🟡"],["green","Minor","🟢"],["black","Expectant","⚫"]];
+function vTriage(){POST=()=>trIntro();return gHead("triage","Triage Rush","START triage: Walk? → Breathing? → RR > 30? → Radial pulse / CRT > 2 s? → Obeys commands?")+`<div id="gm"></div>`;}
+function trIntro(){$("#gm").innerHTML=`<div class="card stack tr-intro"><h2>Mass casualty incident 🚨</h2><p>A bus has overturned. Casualties arrive every few seconds. Tag the patient at the front of the queue. More than 6 waiting means patients deteriorate.</p>
+ <div class="tr-algo"><span>🚶 Walks → <b class="tg green">Minor</b></span><span>❌ No breathing after airway opened → <b class="tg black">Expectant</b></span><span>RR > 30, no radial pulse / CRT > 2 s, or cannot obey commands → <b class="tg red">Immediate</b></span><span>Otherwise → <b class="tg yellow">Delayed</b></span></div>
+ <button class="btn pri" data-act="tr-go">Start 75-second shift</button></div>`;}
+function trStart(){gStop();GS={pool:shuffle(G_TRIAGE.slice()),q:[],t:75,score:0,right:0,seen:0,miss:[]};trSpawn();trSpawn();trRender();
+ GT=setInterval(()=>{GS.t--;let ch=false;if(GS.t%4===0){const was=GS.q.length;trSpawn();ch=!was;}if(GS.q.length>6){GS.score-=5;GS.q.shift();ch=true;toast("A waiting patient deteriorated −5");}if(GS.t<=0)return trEnd();ch?trRender():trHud();},1000);}
+function trHud(){const h=$(".tr-hud");if(!h)return trRender();h.innerHTML=`<span>⏱ <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span>`;const q=$(".tr-q");q&&(q.innerHTML=GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}">🧍</span>`).join(""));}
+function trSpawn(){if(!GS.pool.length)GS.pool=shuffle(G_TRIAGE.slice());GS.q.push(GS.pool.pop());}
+function trRender(){const p=GS.q[0];$("#gm").innerHTML=`<div class="tr"><div class="tr-hud"><span>⏱ <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span></div>
+ <div class="tr-q">${GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}">🧍</span>`).join("")}</div>
+ ${p?`<div class="card tr-p"><span class="eyebrow">Casualty #${GS.seen+1}</span><p>${esc(p[0])}</p></div><div class="tr-tags">${TAGS.map(t=>`<button class="tagbtn ${t[0]}" data-act="tr-tag" data-v="${t[0]}">${t[2]} ${t[1]}</button>`).join("")}</div>`:`<div class="card"><p>Queue clear — next casualty arriving…</p></div>`}</div>`;}
+function trEnd(){gStop();const acc=GS.seen?Math.round(GS.right/GS.seen*100):0;$("#gm").innerHTML=gEnd("triage","Triage Rush",Math.max(0,GS.score),`<p>Tagged <b>${GS.seen}</b> casualties · accuracy <b>${acc}%</b>.</p>${GS.miss.length?`<div class="glog">${GS.miss.slice(0,6).map(m=>`<div class="bad">✕ ${esc(m[0])}<br><span class="note">${esc(m[2])}</span></div>`).join("")}</div>`:""}`,"tr-go");}
+Object.assign(ACT,{
+ "tr-go":()=>trStart(),
+ "tr-tag":el=>{const p=GS.q.shift();if(!p)return;GS.seen++;if(el.dataset.v===p[1]){GS.right++;GS.score+=10;toast("✓ "+p[2]);}else{GS.score-=5;GS.miss.push(p);toast("✕ "+p[2]);}if(!GS.q.length)trSpawn();trRender();}});
+
+/* ---------- 5. Hospital 24 ---------- */
+const FL_BLOCK=["00–03","03–06","06–09","09–12","12–15","15–18","18–21","21–24"];
+const FL_BASE=[3,2,4,7,8,8,6,5];
+const FL_EVENTS=[["🚌 Road traffic accident: 4 extra casualties, one needs ICU",{arr:4,icu:1}],["🤧 Flu cluster from a hostel: 3 extra patients",{arr:3}],["🤒 Two nurses call in sick",{staff:-2}],["📋 Consultant ward round finished early: 4 patients ready for discharge",{ready:4}],["🧪 Lab analyser down — ED throughput reduced",{thru:-2}],["😌 Quiet spell — fewer arrivals",{arr:-2}],["⚠️ A ward patient deteriorates and needs ICU",{icu:1}],["",{}],["",{}]];
+const FL_ACTS=[["dis","🏠 Discharge round","Send home everyone ready for discharge (staff −1)"],["hud","🤝 Bed huddle","ED & ward coordinate: all admitted patients move to free beds"],["sur","🛏️ Open surge beds","+4 ward beds for the rest of the day (budget −2)"],["nur","👩‍⚕️ Call an extra nurse","Staff +3 (budget −2)"],["rst","☕ Staff rest break","Staff +2 but ED throughput −2 this block"],["div","🚑 Divert ambulances","Arrivals halved this block (safety −6: patients go elsewhere)"],["stp","⬇️ ICU step-down","Move up to 2 stable ICU patients to the ward"]];
+function vHosp(){POST=()=>flStart();return gHead("flow","Hospital 24","Each turn is 3 hours. Choose up to 2 actions, then run the clock. Keep the hospital safe, flowing and within budget.")+`<div id="gm"></div>`;}
+function flStart(){GS={b:0,ed:4,edCap:12,board:1,ward:26,wardCap:30,icu:5,icuCap:6,ready:3,budget:8,staff:8,safety:100,served:0,sel:[],ev:null,log:[]};flNextEvent();flRender();}
+function flNextEvent(){GS.ev=FL_EVENTS[Math.floor(Math.random()*FL_EVENTS.length)];}
+function gauge(l,v,max,warn){const p=Math.max(0,Math.min(100,v/max*100));return `<div class="fl-g ${warn?"warn":""}"><span>${l}</span><b>${v}${max?`<small>/${max}</small>`:""}</b><div class="bar"><i style="width:${p}%"></i></div></div>`;}
+function flRender(){const s=GS;$("#gm").innerHTML=`<div class="fl"><div class="card fl-dash"><div class="row between"><span class="eyebrow">Block ${s.b+1}/8 · ${FL_BLOCK[s.b]} h</span><span class="note">Patients placed or sent home: <b>${s.served}</b></span></div>
+ <div class="fl-gs">${gauge("ED waiting",s.ed,s.edCap,s.ed>s.edCap)}${gauge("Boarding in ED",s.board,10,s.board>3)}${gauge("Ward beds",s.ward,s.wardCap,s.ward>=s.wardCap)}${gauge("ICU beds",s.icu,s.icuCap,s.icu>=s.icuCap)}${gauge("Ready to go home",s.ready,15,false)}${gauge("Staff energy",s.staff,12,s.staff<=4)}${gauge("Budget",s.budget,10,s.budget<=2)}${gauge("Safety",s.safety,100,s.safety<70)}</div></div>
+ <div class="card stack"><h3>${s.ev[0]?s.ev[0]:"🕊️ No special event this block"}</h3><p class="note">Choose up to 2 actions (${s.sel.length}/2):</p><div class="fl-acts">${FL_ACTS.map(a=>`<button class="fl-act ${s.sel.includes(a[0])?"on":""}" data-act="fl-sel" data-v="${a[0]}"><b>${a[1]}</b><span>${a[2]}</span></button>`).join("")}</div>
+ <button class="btn pri" data-act="fl-run">▶ Run ${FL_BLOCK[s.b]} h</button></div>
+ ${s.log.length?`<div class="card glog">${s.log.slice(-4).reverse().map(l=>`<div>${l}</div>`).join("")}</div>`:""}</div>`;}
+function flRun(){const s=GS,e=s.ev[1],a=s.sel;let arr=FL_BASE[s.b]+(e.arr||0),thruAdj=e.thru||0,icuNeed=e.icu||0;s.staff+=e.staff||0;s.ready+=e.ready||0;let msg=[];
+ if(a.includes("dis")){s.ward-=s.ready;s.served+=s.ready;msg.push(`${s.ready} discharged`);s.ready=0;s.staff-=1;}
+ if(a.includes("sur")){s.wardCap+=4;s.budget-=2;}
+ if(a.includes("nur")){s.staff=Math.min(12,s.staff+3);s.budget-=2;}
+ if(a.includes("rst")){s.staff=Math.min(12,s.staff+2);thruAdj-=2;}
+ if(a.includes("div")){arr=Math.ceil(arr/2);s.safety-=6;}
+ if(a.includes("stp")){const m=Math.min(2,s.icu,s.wardCap-s.ward);s.icu-=m;s.ward+=m;}
+ arr=Math.max(0,arr);s.ed+=arr;
+ const T=Math.max(0,Math.min(s.ed,2+s.staff+thruAdj));const icuN=Math.round(T*0.1)+icuNeed,adm=Math.round(T*0.35),home=Math.max(0,T-icuN-adm);s.served+=home;s.ed-=T;
+ const icuFit=Math.min(icuN,s.icuCap-s.icu);s.icu+=icuFit;if(icuN>icuFit){s.safety-=8*(icuN-icuFit);s.board+=icuN-icuFit;msg.push("ICU full!");}s.board+=adm;
+ const free=Math.max(0,s.wardCap-s.ward);const mv=a.includes("hud")?Math.min(s.board,free):Math.min(s.board,Math.floor(free/2));s.ward+=mv;s.board-=mv;s.served+=mv;
+ s.ready+=Math.round(s.ward*0.12);if(!a.includes("dis")){const nat=Math.round(s.ready*0.3);s.ward-=nat;s.ready-=nat;s.served+=nat;}
+ if(s.icu>0&&s.ward<s.wardCap){s.icu--;s.ward++;}
+ if(s.ed>s.edCap)s.safety-=(s.ed-s.edCap)*2;s.safety-=s.board;s.staff=Math.max(1,s.staff-1);if(s.staff<=3)s.safety-=4;
+ s.safety=Math.max(0,Math.min(100,s.safety));s.budget=Math.max(-5,s.budget);
+ s.log.push(`<b>${FL_BLOCK[s.b]} h:</b> ${arr} arrivals, ${T} seen in ED, ${mv} moved to ward${msg.length?" · "+msg.join(" · "):""}${s.board>3?" · ⚠️ boarders crowding ED":""}`);
+ s.b++;s.sel=[];if(s.b>=8||s.safety<=0)return flEnd();flNextEvent();flRender();}
+function flEnd(){const s=GS;const score=Math.max(0,s.served*5+s.safety*2+s.budget*10);const tips=[];if(s.board>3)tips.push("Boarding admitted patients in ED was your bottleneck — bed huddles and early discharges free beds upstream.");if(s.staff<=4)tips.push("Exhausted staff slow everything down — rest breaks and extra staff protect safety.");if(s.budget<0)tips.push("You overspent — surge capacity is expensive; fix flow before adding beds.");if(!tips.length)tips.push("Great systems thinking — you balanced flow, staff and budget across the whole hospital.");
+ $("#gm").innerHTML=gEnd("flow","Hospital 24",score,`<p>Patients served <b>${s.served}</b> · safety <b>${s.safety}</b> · budget <b>${s.budget}</b>${s.safety<=0?" · the hospital was declared unsafe":""}.</p>${tips.map(t=>`<p class="er-teach">💡 ${t}</p>`).join("")}`,"fl-again");}
+Object.assign(ACT,{
+ "fl-sel":el=>{const v=el.dataset.v;const i=GS.sel.indexOf(v);if(i>=0)GS.sel.splice(i,1);else if(GS.sel.length<2)GS.sel.push(v);else toast("Only 2 actions per block");flRender();},
+ "fl-run":()=>flRun(),"fl-again":()=>flStart()});
+
+/* ---------- 6. Protocol Builder ---------- */
+function vProto(){POST=()=>prStart();return gHead("proto","Protocol Builder","Tap the steps in the correct order. Three protocols per round.")+`<div id="gm"></div>`;}
+function prStart(){GS={list:gPick(G_PROTO,3),i:0,score:0,stars:0};prRound();}
+function prRound(){const p=GS.list[GS.i];GS.p=p;GS.done=[];GS.miss=0;GS.opts=shuffle(p.s.slice());prRender();}
+function prRender(){const p=GS.p,fin=GS.done.length===p.s.length;$("#gm").innerHTML=`<div class="card pr"><div class="row between"><span class="eyebrow">Protocol ${GS.i+1} of ${GS.list.length} · Score ${GS.score}</span><span class="note">Mistakes: ${GS.miss}</span></div><h2>${esc(p.n)}</h2>
+ <ol class="pr-seq">${p.s.map((x,k)=>`<li class="${k<GS.done.length?"on":""}">${k<GS.done.length?esc(x):"…"}</li>`).join("")}</ol>
+ ${fin?`<div class="pr-win"><b>${"⭐".repeat(GS.miss===0?3:GS.miss<=2?2:1)}</b><p class="er-teach">💡 ${esc(p.w)}</p><button class="btn pri" data-act="pr-next">${GS.i+1<GS.list.length?"Next protocol →":"See results"}</button></div>`:`<div class="pr-opts">${GS.opts.filter(o=>!GS.done.includes(o)).map(o=>`<button class="opt" data-act="pr-step" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`}</div>`;}
+Object.assign(ACT,{
+ "pr-step":el=>{const want=GS.p.s[GS.done.length];if(el.dataset.v===want){GS.done.push(want);if(GS.done.length===GS.p.s.length){const st=GS.miss===0?3:GS.miss<=2?2:1;GS.stars+=st;GS.score+=st*40;}prRender();}else{GS.miss++;el.classList.add("shake","no");setTimeout(()=>el.classList.remove("shake","no"),500);const m=$(".pr .note");m&&(m.textContent="Mistakes: "+GS.miss);}},
+ "pr-next":()=>{GS.i++;if(GS.i<GS.list.length)prRound();else $("#gm").innerHTML=gEnd("proto","Protocol Builder",GS.score,`<p>You earned <b>${GS.stars}</b> of ${GS.list.length*3} stars.</p>`,"pr-again");},
+ "pr-again":()=>prStart()});
+
+/* ---------- 7. Waste Warrior ---------- */
+function vBMW(){POST=()=>bwIntro();return gHead("bmw","Waste Warrior","Bio-Medical Waste Management Rules, 2016 (amended). Keys 1–5 work too.")+`<div id="gm"></div>`;}
+function bwIntro(){$("#gm").innerHTML=`<div class="card stack"><h2>Segregate at source ♻️</h2><div class="bw-bins static">${G_BINS.map((b,i)=>`<div class="bin ${b[0]}"><span>${b[2]}</span><b>${b[1]}</b><small>${b[3]}</small></div>`).join("")}</div><button class="btn pri" data-act="bw-go">Start 45-second round</button></div>`;}
+function bwStart(){gStop();GS={pool:shuffle(G_BMW.slice()),t:45,score:0,combo:0,right:0,seen:0,miss:[]};GS.cur=GS.pool.pop();bwRender();GT=setInterval(()=>{GS.t--;if(GS.t<=0)return bwEnd();const h=$("#bwt");h&&(h.textContent=GS.t+"s");},1000);}
+function bwRender(){$("#gm").innerHTML=`<div class="bw"><div class="tr-hud"><span>⏱ <b id="bwt">${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Combo <b>×${1+Math.floor(GS.combo/3)}</b></span></div>
+ <div class="card bw-item"><span class="eyebrow">Which bin?</span><b>${esc(GS.cur[0])}</b></div>
+ <div class="bw-bins">${G_BINS.map((b,i)=>`<button class="bin ${b[0]}" data-act="bw-put" data-v="${b[0]}"><span>${b[2]}</span><b>${i+1}. ${b[1]}</b><small>${b[3]}</small></button>`).join("")}</div></div>`;}
+function bwEnd(){gStop();$("#gm").innerHTML=gEnd("bmw","Waste Warrior",Math.max(0,GS.score),`<p>Sorted <b>${GS.seen}</b> items · <b>${GS.right}</b> correct.</p>${GS.miss.length?`<div class="glog">${GS.miss.slice(0,6).map(m=>`<div class="bad">✕ ${esc(m[0])} — ${esc(m[2])}</div>`).join("")}</div>`:""}`,"bw-go");}
+Object.assign(ACT,{
+ "bw-go":()=>bwStart(),
+ "bw-put":el=>{if(!GS||!GS.cur||GS.t<=0)return;const it=GS.cur;GS.seen++;if(el.dataset.v===it[1]){GS.combo++;GS.right++;GS.score+=10*(1+Math.floor(GS.combo/3));toast("✓ "+it[2]);}else{GS.combo=0;GS.score-=5;GS.miss.push(it);toast("✕ "+it[2]);}if(!GS.pool.length)GS.pool=shuffle(G_BMW.slice());GS.cur=GS.pool.pop();bwRender();}});
+document.addEventListener("keydown",e=>{if(location.hash==="#g-bmw"&&GT&&/^[1-5]$/.test(e.key)){const b=$$(".bw-bins .bin")[+e.key-1];b&&b.click();}});
+
+Object.assign(ROUTES,{games:vGames,"g-er":vER,"g-spot":vSpot,"g-deck":vDeck,"g-triage":vTriage,"g-flow":vHosp,"g-proto":vProto,"g-bmw":vBMW});
 
 applyFS();mountDrawer();renderSide();route();
 

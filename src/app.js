@@ -34,7 +34,7 @@ home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 book:'<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>',
 radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/>',
 map:'<path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
-flame:'<path d="M12 3c.6 3 4 5.2 4 9.5a4 4 0 0 1-8 0c0-2.2 1.2-3.6 2.2-4.6.1 1.7.9 2.9 1.9 3.4C12.4 8.6 11.6 5.6 12 3z"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+joy:'<path d="M6 9h12a4 4 0 0 1 4 4v1.5a3.5 3.5 0 0 1-6.3 2.1L14.5 15h-5l-1.2 1.6A3.5 3.5 0 0 1 2 14.5V13a4 4 0 0 1 4-4zM8 11v4M6 13h4"/><circle cx="16" cy="12.5" r="1"/><circle cx="18" cy="14.5" r="1"/>',flame:'<path d="M12 3c.6 3 4 5.2 4 9.5a4 4 0 0 1-8 0c0-2.2 1.2-3.6 2.2-4.6.1 1.7.9 2.9 1.9 3.4C12.4 8.6 11.6 5.6 12 3z"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
 chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
 mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
 cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
@@ -195,7 +195,7 @@ function chCards(c){return [...c.hy,...(S.custom[c.id]||[])].map(hy);}
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);const x=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cs=getComputedStyle(document.documentElement);const cols=["--path","--micro","--pharm","--cm","--fmt","--star"].map(v=>cs.getPropertyValue(v).trim());const P=Array.from({length:140},()=>({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-2,c:cols[Math.floor(Math.random()*cols.length)],r:Math.random()*6+3,a:Math.random()*6}));let f=0;(function step(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});if(++f<120)requestAnimationFrame(step);else cv.remove();})();}
 
 /* ============ layout ============ */
-const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"]];
+const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"],["games","Clinical Games","joy"]];
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
@@ -207,7 +207,7 @@ function renderSide(){
   $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go" data-nc="${n[0]}"><span class="nic">${ico(n[2],18)}</span><span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
-function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab=a=>!!a.closest("#tabbar");
+function markNav(){let h=(location.hash||"#home").slice(1)||"home";if(h.startsWith("g-"))h="games";const inTab=a=>!!a.closest("#tabbar");
   const chS=h.startsWith("c-")&&CH[h.slice(2)]?"s-"+CH[h.slice(2)].s:null;
   const isTool=TOOLS.some(t=>t[0]===h);
   $$("[data-nav]").forEach(a=>{const n=a.dataset.nav;let on=n===h;

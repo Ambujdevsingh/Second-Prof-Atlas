@@ -42,6 +42,8 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
 
   ${quotesSection()}
 
+  <a class="hw-games" href="#games"><div><span class="eyebrow">New · Clinical Games Arcade</span><h2>Learn by playing 🎮</h2><p class="muted" style="margin:0">ER shifts, spot diagnosis, bug-vs-drug cards, triage rush, hospital flow, protocols and waste sorting.</p></div><div class="stack" style="align-items:center;gap:8px"><span class="hw-games-emo">🚑🔎🦠🏷️</span><span class="btn pri">Enter arcade →</span></div></a>
+
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
     ${last?`<span class="eyebrow" style="color:var(--sc)">Continue learning</span><div class="hw-cont-main"><div class="stack" style="gap:8px;min-width:0"><span class="note">${esc(SUB[last.s].name)} · Chapter ${last.n}</span><h2>${esc(last.t)}</h2>

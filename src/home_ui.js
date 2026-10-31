@@ -28,9 +28,9 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
     [`${done}<small>/${ALLCH.length}</small>`,"chapters done","book","#subjects",""],
     [totAns,"offline answers","doc","#radar",""]];
   return `<section class="hx-hero">
-   <div class="hx-blob b1" aria-hidden="true"></div><div class="hx-blob b2" aria-hidden="true"></div><div class="hx-blob b3" aria-hidden="true"></div>
+   <div class="hx-blob b1" aria-hidden="true"></div><div class="hx-blob b2" aria-hidden="true"></div><div class="hx-blob b3" aria-hidden="true"></div>${[[6,0,18],[18,3.2,12],[34,6.1,22],[52,1.6,14],[68,4.4,20],[82,2.4,13],[93,7,17]].map(h=>`<span class="hx-heart" aria-hidden="true" style="left:${h[0]}%;animation-delay:${h[1]}s;font-size:${h[2]}px">♥</span>`).join("")}
    <div class="hx-main">
-    <span class="hx-date">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</span>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><span class="hx-date">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</span><span class="hx-love">💗 Made with love, for you</span></div>
     <h1>${greet},<br><span class="hx-name">Dr. Shikha ☘️🩺</span></h1>
     <p class="hx-sub">${done?`You've completed <b>${done}</b> of ${ALLCH.length} chapters — keep the momentum going.`:"Your Second Prof, mapped chapter by chapter. One concept today is all it takes to start."}</p>
     <div class="hx-cta"><a class="btn pri lg" href="${resume}">${last?"Resume "+esc(SUB[last.s].short)+" "+last.n:"Start Pathology 1"} <span aria-hidden="true">→</span></a><button class="btn lg" data-act="drawer">${ico("spark",18)} Ask Atlas</button><a class="btn lg ghost" href="#radar">${ico("radar",18)} Exam radar</a></div>

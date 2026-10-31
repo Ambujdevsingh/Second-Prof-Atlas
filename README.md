@@ -4,7 +4,7 @@ Open-source study site for MBBS 2nd-year students: Pathology, Microbiology, Phar
 Community Medicine and Forensic Medicine & Toxicology. 66 chapters, each with a Details & Summary page, concepts, 107 interactive flowcharts (41 with every step explained and an offline exam pack:
 related questions + short/medium/long model answers),
 a Notes & Books PDF reader with subject- and page-wise bookmarks,
-offline model answers (Simplify / Short / Medium / Long) for exam topics — being added subject by subject,
+offline model answers (Simplify / Short / Medium / Long) for all 668 exam topics across Pathology, Microbiology, Pharmacology, Community Medicine and FMT,
 levelled question banks (100 flashcards + 100 MCQs per chapter, Basic → Exam-pattern) with spaced repetition,
 an adaptive quiz ladder and a mistakes bank, tap-to-explain key terms,
 an exam radar from past-paper priorities, flashcards, an MCQ bank, mock tests, a study planner and

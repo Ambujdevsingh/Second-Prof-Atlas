@@ -241,7 +241,7 @@ function vHome(){
   const todayPlan=planToday();
   POST=()=>{const bank=bankQs(ALLCH.map(c=>c.id));const q=bank[hashStr(today())%bank.length];runQuiz($("#daily"),[q],{title:"Daily dose"});};
   return `<section class="hero"><div class="hero-main"><svg class="cells" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2">${Array.from({length:14},(_,k)=>{const x=(k*67)%400,y=(k*41)%200,r=14+(k*7)%22;return `<circle cx="${x}" cy="${y}" r="${r}"/><circle cx="${x+3}" cy="${y-2}" r="${r/3}" fill="currentColor" opacity=".5"/>`;}).join("")}</g></svg>
-    <span class="mono">${greet}, Doctor</span><h1>Second Prof, mapped chapter by chapter.</h1>
+    <span class="mono">${greet}, Dr. Shikha ☘️🩺</span><h1>Second Prof, mapped chapter by chapter.</h1>
     <p>Pathology, Microbiology and Pharmacology for your Phase II university exam, plus Community Medicine and FMT foundations. Priorities come from your seniors' past-paper lists.</p>
     <div class="row">${last?`<a class="btn" href="#c-${last.id}">Continue: ${esc(SUB[last.s].short)} ${last.n}. ${esc(last.t)}</a>`:`<a class="btn" href="#s-path">Start with Pathology</a>`}<a class="btn ghost" href="#planner">Plan my study</a></div>
     <div class="row"><span class="chip" style="background:var(--surface);border:1px solid var(--line)">${done}/${ALLCH.length} chapters done</span><span class="chip" style="background:var(--surface);border:1px solid var(--line)">${esc(L.name)} · ${S.xp} XP</span><span class="chip" style="background:var(--surface);border:1px solid var(--line)">🔥 ${S.streak}-day streak</span></div></div>

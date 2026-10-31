@@ -21,7 +21,7 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
   const stepsDone=steps.filter(x=>x[1]).length;
   POST=()=>{const bank=bankQs(ALLCH.map(c=>c.id));const q=bank[hashStr(today())%bank.length];runQuiz($("#daily"),[q],{title:"Daily dose"});requestAnimationFrame(()=>$$(".ringarc").forEach(a=>a.classList.add("go")));};
   return `<section class="hw-top">
-   <div class="hw-greet"><span class="eyebrow">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</span><h1>${greet}, Doctor 👋</h1>
+   <div class="hw-greet"><span class="eyebrow">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</span><h1>${greet}, Dr. Shikha ☘️🩺</h1>
     <p class="muted">${done?`You've completed ${done} of ${ALLCH.length} chapters. Keep the streak alive.`:"Your MBBS Phase II prep, organised chapter by chapter. Start with one concept today."}</p></div>
    <div class="hw-pills"><div class="pill">${dl!=null?`<b>${dl>0?dl:0}</b><span>days to exam</span>`:`<a href="#planner"><b>📅</b><span>Set exam date</span></a>`}</div><div class="pill"><b>🔥 ${S.streak}</b><span>day streak</span></div><div class="pill"><b>${S.xp}</b><span>XP · ${esc(L.name)}</span></div></div></section>
 

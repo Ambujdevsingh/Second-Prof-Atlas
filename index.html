@@ -463,76 +463,124 @@ ol.smcon .termbox{flex-basis:100%}
 .hytbl td:first-child{width:55%}
 @media (max-width:900px){.smhero{grid-template-columns:minmax(0,1fr)} .smtoc{top:env(safe-area-inset-top,0px)}}
 
-/* ---- learner dashboard (home) ---- */
-.hw-top{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; padding:22px 24px; border-radius:18px; background:linear-gradient(120deg,var(--accent-soft),var(--surface) 65%); border:1px solid var(--line); position:relative; overflow:hidden}
-.hw-top::before{content:""; position:absolute; inset:0 0 auto 0; height:5px; background:linear-gradient(90deg,var(--path),var(--micro),var(--pharm),var(--cm),var(--fmt))}
-.hw-greet{display:flex; flex-direction:column; gap:6px; min-width:0; max-width:60ch}
-.hw-greet h1{font-size:clamp(1.6rem,3vw,2.2rem); color:var(--accent)}
-.hw-pills{display:flex; gap:10px; flex-wrap:wrap}
-.pill{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 14px; min-width:104px; display:flex; flex-direction:column; box-shadow:var(--shadow)}
-.pill a{text-decoration:none; display:flex; flex-direction:column}
-.pill b{font-family:var(--f-display); font-size:1.4rem; line-height:1.1}
-.pill span{font-size:.78rem; color:var(--muted)}
-.hw-grid{display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:16px}
-.hw-continue{display:flex; flex-direction:column; gap:12px; border-top:5px solid var(--sc)}
-.hw-continue h2{font-size:1.45rem}
-.hw-cont-main{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:center}
-.nextstep{display:flex; gap:12px; align-items:center; text-align:left; width:100%; border:1px solid var(--line); border-left:4px solid var(--sc); border-radius:12px; padding:10px 14px; background:var(--ss); font:inherit; color:var(--ink); cursor:pointer; margin-top:4px; transition:transform .12s, box-shadow .15s}
+/* ---- learner dashboard (home) — refined ---- */
+[hidden]{display:none !important}
+.view:has(.hx-hero){gap:28px}
+.btn.lg{padding:12px 20px; font-size:1rem; border-radius:12px}
+.btn.icon{width:34px; padding:5px 0}
+.hw-head{display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap}
+.hw-head h2{font-size:1.35rem; margin-top:2px}
+/* hero */
+.hx-hero{position:relative; overflow:hidden; isolation:isolate; display:grid; grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr); gap:20px 28px; padding:30px 32px 24px; border-radius:24px; border:1px solid var(--line); background:linear-gradient(135deg,#F5F8FF 0%,#FFFFFF 55%,#FFF8FB 100%); box-shadow:0 10px 40px rgba(31,79,209,.08)}
+.hx-hero::before{content:""; position:absolute; inset:0 0 auto 0; height:5px; background:linear-gradient(90deg,var(--path),var(--micro),var(--pharm),var(--cm),var(--fmt)); z-index:1}
+.hx-blob{position:absolute; border-radius:50%; filter:blur(48px); opacity:.45; z-index:-1; pointer-events:none}
+.hx-blob.b1{width:320px; height:320px; background:#CBD9FF; top:-120px; right:18%}
+.hx-blob.b2{width:260px; height:260px; background:#FBD3E4; bottom:-140px; right:-40px}
+.hx-blob.b3{width:200px; height:200px; background:#D9F2EC; bottom:-110px; left:-60px}
+.hx-main{display:flex; flex-direction:column; gap:12px; min-width:0}
+.hx-date{display:inline-flex; align-self:flex-start; align-items:center; gap:6px; font-family:var(--f-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); background:var(--accent-soft); border-radius:999px; padding:5px 12px}
+.hx-main h1{font-size:clamp(1.9rem,3.6vw,2.9rem); line-height:1.1; letter-spacing:-.02em; color:var(--ink); margin:0}
+.hx-name{background:linear-gradient(90deg,var(--accent),var(--micro) 55%,var(--path)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.hx-sub{font-size:1.06rem; color:var(--muted); max-width:52ch; margin:0}
+.hx-cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:4px}
+.hx-cta .btn.pri{box-shadow:0 6px 18px rgba(31,79,209,.28)}
+.hx-cta .btn.ghost{color:var(--accent)}
+.hx-today{background:rgba(255,255,255,.82); backdrop-filter:blur(6px); border:1px solid var(--line); border-radius:18px; padding:16px; align-self:center}
+.hx-stats{grid-column:1/-1; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; padding-top:18px; border-top:1px solid var(--line)}
+.hx-stat{display:flex; gap:10px; align-items:center; text-decoration:none; color:var(--ink); padding:8px 10px; border-radius:12px; transition:background .15s}
+.hx-stat:hover{background:rgba(255,255,255,.9)}
+.hx-stat .ic{width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background:var(--accent-soft); color:var(--accent); flex:none}
+.hx-stat:nth-child(2) .ic{background:#FFF0E0; color:#D9480F}
+.hx-stat:nth-child(3) .ic{background:var(--micro-soft); color:var(--micro)}
+.hx-stat:nth-child(4) .ic{background:var(--pharm-soft); color:var(--pharm)}
+.hx-stat:nth-child(5) .ic{background:var(--path-soft); color:var(--path)}
+.hx-stat > span:last-child{display:flex; flex-direction:column; min-width:0}
+.hx-stat b{font-family:var(--f-display); font-size:1.35rem; line-height:1.1}
+.hx-stat b small{font-size:.8rem; color:var(--muted); font-weight:600}
+.hx-stat > span:last-child > span{font-size:.78rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.hx-stat u{color:var(--accent); text-decoration:none; font-weight:700}
+/* continue + daily dose */
+.hw-grid{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:20px; align-items:start}
+.hw-continue{display:flex; flex-direction:column; gap:14px; padding:22px; border-radius:18px; background:linear-gradient(160deg,var(--ss) 0%,var(--surface) 45%); border-top:5px solid var(--sc)}
+.hw-continue h2{font-size:1.5rem; line-height:1.2}
+.hw-cont-main{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; align-items:center}
+.nextstep{display:flex; gap:12px; align-items:center; text-align:left; width:100%; border:1px solid var(--line); border-left:4px solid var(--sc); border-radius:12px; padding:10px 14px; background:var(--surface); font:inherit; color:var(--ink); cursor:pointer; margin-top:4px; transition:transform .15s, box-shadow .15s}
 .nextstep:hover{transform:translateX(3px); box-shadow:var(--shadow)}
 .nextstep > span:nth-child(2){flex:1}
-.nextstep .ic,.qa .ic,.hw-planpromo .ic,.hw-ai-tool .ic{width:38px; height:38px; border-radius:10px; display:grid; place-items:center; background:var(--surface); color:var(--sc,var(--accent)); flex:none}
+.nextstep .ic,.hw-planpromo .ic,.hw-ai-tool .ic{width:38px; height:38px; border-radius:10px; display:grid; place-items:center; background:var(--ss,var(--accent-soft)); color:var(--sc,var(--accent)); flex:none}
+.hw-dose #daily > *{border-radius:18px}
 .ringsvg{display:block}
 .ringarc{transition:stroke-dashoffset .9s ease}
 .ringtxt{font-family:var(--f-display); font-weight:800; font-size:20px; fill:var(--ink)}
 .ringsub{font-size:11px; fill:var(--muted)}
-.hw-subj-ring .ringtxt{font-size:14px}
-.hw-today{display:flex; flex-direction:column; gap:10px}
+.hw-subj-ring .ringtxt{font-size:13px}
+.hw-today{display:flex; flex-direction:column; gap:12px}
 .hw-today-in{display:grid; grid-template-columns:auto minmax(0,1fr); gap:14px; align-items:center}
 .goalpick{gap:4px}
 .goalpick button{border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:2px 10px; font-size:.78rem; font-weight:700; color:var(--muted); cursor:pointer}
 .goalpick button.on{background:var(--accent); color:#fff; border-color:var(--accent)}
-.weekstrip{display:grid; grid-template-columns:repeat(14,1fr); gap:3px; max-width:260px}
-.weekstrip .dd{aspect-ratio:1; border-radius:4px; background:var(--line)}
+.weekstrip{display:grid; grid-template-columns:repeat(14,1fr); gap:3px; max-width:240px}
+.weekstrip .dd{aspect-ratio:1; border-radius:4px; background:var(--sunk); border:1px solid var(--line)}
 .weekstrip .l1{background:color-mix(in srgb,var(--good) 30%,var(--surface))}
 .weekstrip .l2{background:color-mix(in srgb,var(--good) 55%,var(--surface))}
 .weekstrip .l3{background:color-mix(in srgb,var(--good) 80%,var(--surface))}
 .weekstrip .l4{background:var(--good)}
 .weekstrip .today{outline:2px solid var(--accent); outline-offset:1px}
-.hw-actions{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px}
-.qa{display:flex; flex-direction:column; gap:6px; text-decoration:none; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px; transition:transform .12s, border-color .15s, box-shadow .15s}
-.qa:hover{transform:translateY(-3px); border-color:var(--accent); box-shadow:var(--shadow)}
-.qa .ic{background:var(--accent-soft); color:var(--accent)}
-.hw-onb{display:flex; flex-direction:column; gap:12px; border:2px dashed var(--accent); background:linear-gradient(180deg,var(--accent-soft),var(--surface))}
-.onbsteps{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px}
-.onbstep{display:flex; gap:10px; align-items:center; text-decoration:none; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:10px 12px; font-weight:700}
-.onbstep .tick{width:28px; height:28px; border-radius:50%; border:2px solid var(--accent); display:grid; place-items:center; font-size:.85rem; color:var(--accent); flex:none}
-.onbstep.done{color:var(--muted); text-decoration:line-through}
-.onbstep.done .tick{background:var(--good); border-color:var(--good); color:#fff}
-.hw-two{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:16px; align-items:start}
-.hw-subjects{display:flex; flex-direction:column; gap:10px}
-.hw-subj{display:grid; grid-template-columns:64px minmax(0,1fr); gap:14px; align-items:center; background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--sc); border-radius:14px; padding:12px 14px; transition:box-shadow .15s}
-.hw-subj:hover{box-shadow:var(--shadow)}
-.hw-subj-next{color:var(--sc); font-weight:700; text-decoration:none; font-size:.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.hw-subj-next:hover{text-decoration:underline}
-.hw-planpromo{display:flex; gap:12px; align-items:center; text-decoration:none}
+/* quick actions */
+.hw-actions{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.qa{display:flex; gap:12px; align-items:center; text-decoration:none; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px; transition:transform .15s, border-color .15s, box-shadow .15s}
+.qa:hover{transform:translateY(-3px); border-color:var(--sc); box-shadow:0 8px 22px rgba(15,18,34,.08)}
+.qa .ic{width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:var(--ss); color:var(--sc); flex:none; transition:transform .15s}
+.qa:hover .ic{transform:scale(1.06)}
+/* subjects */
+.hw-subjects{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px}
+.hw-subj{display:flex; flex-direction:column; gap:12px; background:linear-gradient(180deg,var(--ss) 0%,var(--surface) 60%); border:1px solid var(--line); border-top:4px solid var(--sc); border-radius:16px; padding:16px; transition:transform .15s, box-shadow .15s}
+.hw-subj:hover{transform:translateY(-3px); box-shadow:0 8px 22px rgba(15,18,34,.08)}
+.hw-subj-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; min-height:3.4em}
+.hw-subj-top .hw-subj-ring{flex:none}
+.hw-subj-top b{font-family:var(--f-display); font-size:1.02rem; line-height:1.25}
+.hw-subj-meta{display:flex; gap:12px; flex-wrap:wrap; font-size:.82rem; color:var(--muted)}
+.hw-subj-meta b{color:var(--ink)}
+.hw-subj-next{margin-top:auto; display:flex; justify-content:space-between; gap:6px; align-items:center; color:var(--sc); font-weight:700; text-decoration:none; font-size:.86rem; background:var(--surface); border:1px solid color-mix(in srgb,var(--sc) 30%,var(--line)); border-radius:10px; padding:8px 10px}
+.hw-subj-next span:first-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.hw-subj-next:hover{background:var(--ss)}
+/* plan promo */
+.hw-planpromo{display:flex; gap:14px; align-items:center; text-decoration:none; color:var(--ink); border-radius:18px; padding:16px 20px; background:linear-gradient(90deg,var(--accent-soft),var(--surface) 70%)}
+.hw-planpromo > span:nth-child(2){flex:1}
 .hw-planpromo:hover{border-color:var(--accent)}
-.carousel{display:grid; grid-auto-flow:column; grid-auto-columns:minmax(240px,280px); gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:6px; scrollbar-width:thin}
-.carcard{scroll-snap-align:start; display:flex; flex-direction:column; gap:8px; background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--sc); border-radius:14px; padding:14px; min-height:190px; transition:transform .12s, box-shadow .15s}
-.carcard:hover{transform:translateY(-3px); box-shadow:var(--shadow)}
-.hw-ai{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:16px; align-items:center; background:linear-gradient(120deg,var(--accent-soft),var(--surface) 70%)}
+/* carousel */
+.carousel{display:grid; grid-auto-flow:column; grid-auto-columns:minmax(230px,260px); gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 2px 10px; scrollbar-width:thin}
+.carcard{scroll-snap-align:start; display:flex; flex-direction:column; gap:8px; background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--sc); border-radius:16px; padding:14px; min-height:0; transition:transform .15s, box-shadow .15s}
+.carcard:hover{transform:translateY(-3px); box-shadow:0 8px 22px rgba(15,18,34,.08)}
+.carcard > b{line-height:1.35}
+.carmeta{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--sc); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden}
+/* AI banner */
+.hw-ai{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:20px; align-items:center; padding:24px; border-radius:20px; border:1px solid var(--line); background:linear-gradient(120deg,#EEF2FF 0%,#F7F2FF 50%,#FFFFFF 100%)}
+.hw-ai h2{font-size:1.4rem}
 .hw-ai-tools{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
-.hw-ai-tool{display:flex; gap:8px; align-items:center; text-decoration:none; font-weight:700; font-size:.9rem; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:8px 10px}
-.hw-ai-tool:hover{border-color:var(--accent)}
-.hw-ai-tool .ic{width:30px; height:30px; background:var(--accent-soft); color:var(--accent)}
-@media (max-width:900px){
-  .hw-grid,.hw-two,.hw-ai{grid-template-columns:minmax(0,1fr)}
-  .hw-top{padding:18px}
-  .hw-pills{width:100%} .pill{flex:1; min-width:0}
-  .hw-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .hw-cont-main{grid-template-columns:minmax(0,1fr)}
-  .hw-cont-main .ringsvg{display:none}
+.hw-ai-tool{display:flex; gap:8px; align-items:center; text-decoration:none; color:var(--ink); font-weight:700; font-size:.9rem; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:8px 10px; transition:border-color .15s, transform .15s}
+.hw-ai-tool:hover{border-color:var(--accent); transform:translateY(-2px)}
+.hw-ai-tool .ic{width:30px; height:30px}
+@media (max-width:1180px){
+  .hw-subjects{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hx-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-@media (prefers-reduced-motion: reduce){.ringarc{transition:none}}
+@media (max-width:900px){
+  .hx-hero{grid-template-columns:minmax(0,1fr); padding:22px 18px 18px; border-radius:20px}
+  .hx-cta .btn{flex:1 1 0; min-width:0; padding:12px 10px} .hx-cta .btn.pri{flex-basis:100%}
+  .hw-grid,.hw-ai{grid-template-columns:minmax(0,1fr)}
+  .hw-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hw-subjects{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hx-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hw-cont-main{grid-template-columns:minmax(0,1fr)}
+  .hw-cont-main .hw-cont-ring{display:none}
+}
+@media (max-width:520px){
+  .hw-subjects{grid-template-columns:minmax(0,1fr)}
+  .qa{flex-direction:column; align-items:flex-start; gap:8px}
+  .hw-planpromo{flex-wrap:wrap} .hw-planpromo .btn{width:100%}
+}
+@media (prefers-reduced-motion: reduce){.ringarc{transition:none} .qa,.hw-subj,.carcard,.nextstep,.hw-ai-tool,.qa .ic{transition:none} .qa:hover,.hw-subj:hover,.carcard:hover,.hw-ai-tool:hover{transform:none}}
 
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
@@ -7124,7 +7172,7 @@ home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 book:'<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>',
 radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/>',
 map:'<path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
-spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+flame:'<path d="M12 3c.6 3 4 5.2 4 9.5a4 4 0 0 1-8 0c0-2.2 1.2-3.6 2.2-4.6.1 1.7.9 2.9 1.9 3.4C12.4 8.6 11.6 5.6 12 3z"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
 chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
 mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
 cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
@@ -8060,55 +8108,66 @@ function daysLeft(){if(!S.plan)return null;const d=Math.round((new Date(S.plan.e
 function ringSVG(p,size=120,stroke=12,label="",sub=""){const r=(size-stroke)/2,C=2*Math.PI*r,off=C*(1-Math.min(1,p));
   return `<svg class="ringsvg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${esc(label)} ${esc(sub)}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--line)" stroke-width="${stroke}"/><circle class="ringarc" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--sc,var(--accent))" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 ${size/2} ${size/2})"/><text x="50%" y="${sub?46:52}%" text-anchor="middle" dominant-baseline="middle" class="ringtxt">${esc(label)}</text>${sub?`<text x="50%" y="66%" text-anchor="middle" class="ringsub">${esc(sub)}</text>`:""}</svg>`;}
 function weekStrip(){S.days=S.days||{};const out=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=dstr(d);const v=S.days[k]||0;const lvl=v===0?0:v<20?1:v<50?2:v<100?3:4;out.push(`<i class="dd l${lvl} ${i===0?"today":""}" title="${d.toLocaleDateString("en-IN",{day:"numeric",month:"short"})}: ${v} XP"></i>`);}return out.join("");}
+function hwHead(eyebrow,title,right=""){return `<div class="hw-head"><div><span class="eyebrow">${eyebrow}</span><h2>${title}</h2></div>${right?`<div class="row">${right}</div>`:""}</div>`;}
 function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?"Burning the midnight oil":h<12?"Good morning":h<17?"Good afternoon":"Good evening";
   const last=S.lastCh&&CH[S.lastCh];const nx=last?nextStep(last.id):null;const upnext=nextChapter();
   const goal=S.goal||50;const todayXP=(S.days||{})[today()]||0;const dl=daysLeft();const due=dueCardsAll();ensureP();const mist=Object.keys(S.mist).length;
   const done=Object.keys(S.done).length;const saved=S.saved.length;
+  const totAns=SUBJECTS.reduce((a,s)=>a+s.chapters.reduce((b,c)=>b+ansCount(c.id),0),0);
   const top=EXAM_SUBJ.flatMap(sid=>SUB[sid].chapters.flatMap(c=>c.topics.map((t,k)=>({t,c,k})).filter(x=>x.t[1]>=5)));const pick=shuffle(top).slice(0,10);
-  const steps=[["Open your first chapter",!!S.lastCh,"#s-path"],["Tick a core concept",Object.values(S.read).some(a=>a.length),"#s-path"],["Rate a flashcard",Object.keys(S.srs).length>0,"#s-path"],["Finish a quiz",Object.keys(S.quiz).length>0,"#s-path"],["Build your study plan",!!S.plan,"#planner"]];
-  const stepsDone=steps.filter(x=>x[1]).length;
   POST=()=>{const bank=bankQs(ALLCH.map(c=>c.id));const q=bank[hashStr(today())%bank.length];runQuiz($("#daily"),[q],{title:"Daily dose"});requestAnimationFrame(()=>$$(".ringarc").forEach(a=>a.classList.add("go")));};
-  return `<section class="hw-top">
-   <div class="hw-greet"><span class="eyebrow">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</span><h1>${greet}, Dr. Shikha ☘️🩺</h1>
-    <p class="muted">${done?`You've completed ${done} of ${ALLCH.length} chapters. Keep the streak alive.`:"Your MBBS Phase II prep, organised chapter by chapter. Start with one concept today."}</p></div>
-   <div class="hw-pills"><div class="pill">${dl!=null?`<b>${dl>0?dl:0}</b><span>days to exam</span>`:`<a href="#planner"><b>📅</b><span>Set exam date</span></a>`}</div><div class="pill"><b>🔥 ${S.streak}</b><span>day streak</span></div><div class="pill"><b>${S.xp}</b><span>XP · ${esc(L.name)}</span></div></div></section>
+  const resume=last?`#c-${last.id}`:"#c-path1";
+  const stats=[
+    [dl!=null?(dl>0?dl:0):"—",dl!=null?"days to exam":"<u>Set exam date →</u>","cal","#planner",""],
+    [S.streak,"day streak","flame","#progress",""],
+    [S.xp,`XP · ${esc(L.name)}`,"spark","#progress",""],
+    [`${done}<small>/${ALLCH.length}</small>`,"chapters done","book","#subjects",""],
+    [totAns,"offline answers","doc","#radar",""]];
+  return `<section class="hx-hero">
+   <div class="hx-blob b1" aria-hidden="true"></div><div class="hx-blob b2" aria-hidden="true"></div><div class="hx-blob b3" aria-hidden="true"></div>
+   <div class="hx-main">
+    <span class="hx-date">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}</span>
+    <h1>${greet},<br><span class="hx-name">Dr. Shikha ☘️🩺</span></h1>
+    <p class="hx-sub">${done?`You've completed <b>${done}</b> of ${ALLCH.length} chapters — keep the momentum going.`:"Your Second Prof, mapped chapter by chapter. One concept today is all it takes to start."}</p>
+    <div class="hx-cta"><a class="btn pri lg" href="${resume}">${last?"Resume "+esc(SUB[last.s].short)+" "+last.n:"Start Pathology 1"} <span aria-hidden="true">→</span></a><button class="btn lg" data-act="drawer">${ico("spark",18)} Ask Atlas</button><a class="btn lg ghost" href="#radar">${ico("radar",18)} Exam radar</a></div>
+   </div>
+   <div class="hw-today hx-today"><div class="row between"><span class="eyebrow">Today's goal</span><span class="row goalpick" role="group" aria-label="Daily XP goal">${[30,50,100].map(g=>`<button class="${goal===g?"on":""}" data-act="goal" data-g="${g}">${g}</button>`).join("")}</span></div>
+    <div class="hw-today-in">${ringSVG(todayXP/goal,112,11,`${todayXP}/${goal}`,"XP")}<div class="stack" style="gap:6px;min-width:0"><b>${todayXP>=goal?"Goal reached 🎉":`${goal-todayXP} XP to go`}</b><span class="note">Correct answer +10 · card +1</span><div class="weekstrip" aria-label="Last 14 days activity">${weekStrip()}</div><span class="note">Last 14 days</span></div></div></div>
+   <div class="hx-stats">${stats.map(x=>`<a class="hx-stat" href="${x[3]}"><span class="ic">${ico(x[2],18)}</span><span><b>${x[0]}</b><span>${x[1]}${x[4]?` · <u>${x[4]}</u>`:""}</span></span></a>`).join("")}</div>
+  </section>
 
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
-    ${last?`<span class="eyebrow">Continue learning</span><div class="hw-cont-main"><div class="stack" style="gap:6px;min-width:0"><span class="note">${esc(SUB[last.s].name)} · Chapter ${last.n}</span><h2>${esc(last.t)}</h2>
+    ${last?`<span class="eyebrow" style="color:var(--sc)">Continue learning</span><div class="hw-cont-main"><div class="stack" style="gap:8px;min-width:0"><span class="note">${esc(SUB[last.s].name)} · Chapter ${last.n}</span><h2>${esc(last.t)}</h2>
       <div class="bar"><i style="width:${chProgress(last.id)}%;background:var(--sc)"></i></div><span class="note">${chProgress(last.id)}% · ${(S.read[last.id]||[]).length}/${last.core.length} concepts${S.quiz[last.id]?` · quiz best ${S.quiz[last.id].best}%`:""}</span>
       ${nx?`<button class="nextstep" data-act="go-tab" data-c="${last.id}" data-t="${nx.tab}"><span class="ic">${ico(nx.icon,20)}</span><span><b>Next step</b><br>${esc(nx.label)}</span><span aria-hidden="true">→</span></button>`:`<p class="note">✓ Chapter complete.</p>`}</div>
       <div class="hw-cont-ring">${ringSVG(chProgress(last.id)/100,110,11,chProgress(last.id)+"%","done")}</div></div>
       <div class="row"><a class="btn pri" href="#c-${last.id}">Resume chapter</a>${upnext&&upnext.id!==last.id?`<a class="btn" href="#c-${upnext.id}">Up next: ${esc(SUB[upnext.s].short)} ${upnext.n}</a>`:""}</div>`
-    :`<span class="eyebrow">Start here</span><h2>Begin with Cell Injury</h2><p class="muted">Pathology chapter 1 has offline model answers, 100 flashcards and 100 MCQs ready.</p><div class="row"><a class="btn pri" href="#c-path1">Start Pathology 1</a><a class="btn" href="#subjects">Browse subjects</a></div>`}
+    :`<span class="eyebrow" style="color:var(--sc)">Start here</span><div class="hw-cont-main"><div class="stack" style="gap:8px;min-width:0"><span class="note">Pathology · Chapter 1</span><h2>Cell Injury, Adaptation &amp; Death</h2><p class="muted">Offline model answers in four lengths, 100 flashcards and 100 levelled MCQs — ready to go.</p></div><div class="hw-cont-ring">${ringSVG(0,110,11,"0%","done")}</div></div><div class="row"><a class="btn pri" href="#c-path1">Start Pathology 1</a><a class="btn" href="#subjects">Browse subjects</a></div>`}
    </div>
-   <div class="hw-today card"><div class="row between"><span class="eyebrow">Today</span><span class="row goalpick" role="group" aria-label="Daily XP goal">${[30,50,100].map(g=>`<button class="${goal===g?"on":""}" data-act="goal" data-g="${g}">${g}</button>`).join("")}</span></div>
-    <div class="hw-today-in">${ringSVG(todayXP/goal,120,12,`${todayXP}/${goal}`,"XP goal")}<div class="stack" style="gap:6px;min-width:0"><b>${todayXP>=goal?"Goal reached 🎉":`${goal-todayXP} XP to today's goal`}</b><span class="note">Correct answers +10 · cards +1 · concepts & chapters more</span><div class="weekstrip" aria-label="Last 14 days activity">${weekStrip()}</div><span class="note">Last 14 days</span></div></div></div>
+   <div class="stack hw-dose">${hwHead("New question every day","Daily dose")}<div id="daily"></div></div>
   </section>
 
-  <section class="hw-actions">${[
-    ["#flowcharts","flow","Flowcharts","107 charts"],
-    [last?`#c-${last.id}`:"#c-path1","cards","Flashcards",due?`${due} due today`:"Start a deck",last?"cards":null],
-    [last?`#c-${last.id}`:"#c-path1","target","Adaptive quiz",mist?`${mist} in mistakes`:"Climb levels",last?"quiz":null],
-    ["#radar","radar","Exam radar","Past-paper ★"],
-    ["#notes","doc","Notes & Books","Read & bookmark"],
-    ["#saved","bookmark","Revision list",`${saved} saved`],
-    ["#planner","cal","Study planner",S.plan?"View today":"Create plan"],
-    ["#studio","spark","AI Studio","10 tools"]].map(a=>`<a class="qa" href="${a[0]}" ${a[4]?`data-act="go-tab" data-c="${(last||CH.path1).id}" data-t="${a[4]}"`:""}><span class="ic">${ico(a[1],22)}</span><b>${a[2]}</b><span class="note">${a[3]}</span></a>`).join("")}</section>
+  <section class="stack">${hwHead("Jump in","Quick actions")}
+  <div class="hw-actions">${[
+    ["#flowcharts","flow","Flowcharts","107 charts","micro"],
+    [resume,"cards","Flashcards",due?`${due} due today`:"Start a deck","path",last?"cards":null],
+    [resume,"target","Adaptive quiz",mist?`${mist} in mistakes`:"Climb levels","pharm",last?"quiz":null],
+    ["#radar","radar","Exam radar","Past-paper ★","fmt"],
+    ["#notes","doc","Notes & Books","Read & bookmark","cm"],
+    ["#saved","bookmark","Revision list",`${saved} saved`,"path"],
+    ["#planner","cal","Study planner",S.plan?"View today":"Create plan","micro"],
+    ["#studio","spark","AI Studio","10 tools","pharm"]].map(a=>`<a class="qa" data-s="${a[4]}" href="${a[0]}" ${a[5]?`data-act="go-tab" data-c="${(last||CH.path1).id}" data-t="${a[5]}"`:""}><span class="ic">${ico(a[1],22)}</span><span class="stack" style="gap:0;min-width:0"><b>${a[2]}</b><span class="note">${a[3]}</span></span></a>`).join("")}</div></section>
 
-  ${stepsDone<steps.length?`<section class="card hw-onb"><div class="row between"><div><span class="eyebrow">Getting started · ${stepsDone}/${steps.length}</span><h2>Your first-week checklist</h2></div><div class="bar" style="width:160px"><i style="width:${stepsDone/steps.length*100}%"></i></div></div><div class="onbsteps">${steps.map((x,i)=>`<a class="onbstep ${x[1]?"done":""}" href="${x[2]}"><span class="tick">${x[1]?"✓":i+1}</span><span>${x[0]}</span></a>`).join("")}</div></section>`:""}
+  <section class="stack">${hwHead("Your syllabus","Subjects",`<a class="btn sm ghost" href="#subjects">All subjects →</a>`)}
+   <div class="hw-subjects">${SUBJECTS.map(s=>{const p=subjPct(s.id);const nc=s.chapters.find(c=>!chDone(c.id))||s.chapters[0];const nans=s.chapters.reduce((a,c)=>a+ansCount(c.id),0);return `<div class="hw-subj" data-s="${s.id}"><div class="hw-subj-top"><div class="stack" style="gap:2px;min-width:0"><b>${esc(s.name)}</b><span class="note">${s.std?"Phase III exam":"Phase II exam"}</span></div><div class="hw-subj-ring">${ringSVG(p/100,58,6,p+"%")}</div></div><div class="hw-subj-meta"><span><b>${s.chapters.filter(c=>chDone(c.id)).length}/${s.chapters.length}</b> chapters</span><span><b>${nans}</b> answers</span></div><a class="hw-subj-next" href="#c-${nc.id}"><span>Ch ${nc.n} · ${esc(nc.t)}</span><span aria-hidden="true">→</span></a></div>`;}).join("")}</div></section>
 
-  <section class="hw-two">
-   <div class="stack"><div class="row between"><h2>Subjects</h2><a class="btn sm ghost" href="#subjects">All →</a></div>
-    <div class="hw-subjects">${SUBJECTS.map(s=>{const p=subjPct(s.id);const nc=s.chapters.find(c=>!chDone(c.id))||s.chapters[0];const nans=s.chapters.reduce((a,c)=>a+ansCount(c.id),0);return `<div class="hw-subj" data-s="${s.id}"><div class="hw-subj-ring">${ringSVG(p/100,64,7,p+"%")}</div><div class="stack" style="gap:2px;min-width:0"><b>${esc(s.name)}</b><span class="note">${s.chapters.filter(c=>chDone(c.id)).length}/${s.chapters.length} chapters${nans?` · ${nans} offline answers`:""}${s.std?" · Phase III exam":""}</span><a class="hw-subj-next" href="#c-${nc.id}">Continue: Ch ${nc.n} ${esc(nc.t)} →</a></div></div>`;}).join("")}</div></div>
-   <div class="stack"><div class="row between"><h2>Daily dose</h2><span class="note">New question every day</span></div><div id="daily"></div>
-    ${S.plan?`<div class="card stack"><div class="row between"><h3>Today's plan</h3><a class="btn sm" href="#planner">Open</a></div>${planToday()}</div>`:`<a class="card hw-planpromo" href="#planner"><span class="ic">${ico("cal",22)}</span><span><b>Plan to your exam date</b><br><span class="note">Get a day-by-day schedule weighted by exam priority.</span></span><span aria-hidden="true">→</span></a>`}</div>
-  </section>
+  ${S.plan?`<section class="card stack"><div class="row between"><h3>Today's plan</h3><a class="btn sm" href="#planner">Open planner</a></div>${planToday()}</section>`:`<a class="card hw-planpromo" href="#planner"><span class="ic">${ico("cal",22)}</span><span><b>Plan to your exam date</b><br><span class="note">Get a day-by-day schedule weighted by exam priority.</span></span><span class="btn sm pri">Create plan →</span></a>`}
 
-  <section class="stack"><div class="row between"><div><h2>Five-star exam topics</h2><p class="note">Most repeated in your seniors' past-paper lists. Swipe or use the arrows.</p></div><div class="row"><button class="btn sm" data-act="car" data-d="-1" aria-label="Scroll left">←</button><button class="btn sm" data-act="car" data-d="1" aria-label="Scroll right">→</button><a class="btn sm" href="#radar">Full radar</a></div></div>
-   <div class="carousel" id="car">${pick.map(({t,c,k})=>`<div class="carcard" data-s="${c.s}"><span class="eyebrow" style="color:var(--sc)">${esc(SUB[c.s].short)} ${c.n} · ${esc(c.t)}</span><span>${starsHTML(t[1])} ${tagHTML(t[2])}</span><b>${esc(t[0])}</b><div class="row" style="margin-top:auto"><a class="btn sm ${hasAns(c.id,k)?"pri":""}" href="#c-${c.id}">${hasAns(c.id,k)?"Read answer ✓":"Study"}</a><button class="btn sm star ${isSaved(c.id,k)?"on":""}" data-act="save" data-c="${c.id}" data-k="${k}" aria-pressed="${isSaved(c.id,k)}">${isSaved(c.id,k)?"★":"☆"}</button></div></div>`).join("")}</div></section>
+  <section class="stack">${hwHead("Most repeated in past papers","Five-star exam topics",`<button class="btn sm icon" data-act="car" data-d="-1" aria-label="Scroll left">←</button><button class="btn sm icon" data-act="car" data-d="1" aria-label="Scroll right">→</button><a class="btn sm" href="#radar">Full radar</a>`)}
+   <div class="carousel" id="car">${pick.map(({t,c,k})=>`<div class="carcard" data-s="${c.s}"><span class="carmeta">${esc(SUB[c.s].short)} ${c.n} · ${esc(c.t)}</span><span>${starsHTML(t[1])} ${tagHTML(t[2])}</span><b>${esc(t[0])}</b><div class="row" style="margin-top:auto"><a class="btn sm ${hasAns(c.id,k)?"pri":""}" href="#c-${c.id}">${hasAns(c.id,k)?"Read answer ✓":"Study"}</a><button class="btn sm star ${isSaved(c.id,k)?"on":""}" data-act="save" data-c="${c.id}" data-k="${k}" aria-pressed="${isSaved(c.id,k)}">${isSaved(c.id,k)?"★":"☆"}</button></div></div>`).join("")}</div></section>
 
-  <section class="hw-ai card"><div class="stack" style="gap:6px"><span class="eyebrow">AI Studio</span><h2>Stuck on a topic? Ask Atlas.</h2><p class="muted">Tutor, simplifier, question generator, mock tests, voice tutor and more — grounded in your chapter notes.</p><div class="row">${aiBadge()}<a class="btn pri" href="#studio">Open AI Studio</a><button class="btn" data-act="drawer">Quick question</button></div></div>
+  <section class="hw-ai"><div class="stack" style="gap:8px"><span class="eyebrow">AI Studio</span><h2>Stuck on a topic? Ask Atlas.</h2><p class="muted">Tutor, simplifier, question generator, mock tests, voice tutor and more — grounded in your chapter notes.</p><div class="row">${aiBadge()}<a class="btn pri" href="#studio">Open AI Studio</a><button class="btn" data-act="drawer">Quick question</button></div></div>
    <div class="hw-ai-tools">${TOOLS.slice(0,6).map(t=>`<a class="hw-ai-tool" href="#${t[0]}"><span class="ic">${ico(t[3],18)}</span>${t[1]}</a>`).join("")}</div></section>`;}
 ROUTES.home=vHome2;
 Object.assign(ACT,{

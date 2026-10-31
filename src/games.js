@@ -1,12 +1,35 @@
 /* ============ Clinical Games Arcade ============ */
-let GT=null, GS=null;
+let GT=null, GS=null, GFILT="all";
 function gStop(){clearInterval(GT);GT=null;}
 window.addEventListener("hashchange",gStop);
-function gMem(){S.games=S.games||{best:{},plays:0,deck:[]};S.games.best=S.games.best||{};S.games.deck=S.games.deck||[];return S.games;}
-function gFinish(id,score,label){const m=gMem();m.plays=(m.plays||0)+1;const nb=!m.best[id]||score>m.best[id];if(nb)m.best[id]=score;save();const xp=Math.max(5,Math.min(60,Math.round(score/15)));addXP(xp,label);return nb;}
+function gToday(){return new Date().toISOString().slice(0,10);}
+function gMem(){S.games=S.games||{best:{},plays:0,deck:[]};const m=S.games;m.best=m.best||{};m.deck=m.deck||[];m.runs=m.runs||{};m.daily=m.daily||"";return m;}
+function gDaily(){return GAMES[dayNo()%GAMES.length][0];}
+function gGrade(id,score){const p=GMETA[id].par;return score>=p*1.2?"S":score>=p?"A":score>=p*.6?"B":"C";}
+function gStars(id){const b=gMem().best[id];if(!b)return 0;const g=gGrade(id,b);return g==="C"?1:g==="B"?2:3;}
+function gRank(){const st=GAMES.reduce((a,g)=>a+gStars(g[0]),0);const R=[[0,"Intern","🩺"],[5,"Resident","🥼"],[11,"Registrar","📋"],[17,"Consultant","👑"]];let r=R[0];R.forEach(x=>{if(st>=x[0])r=x;});const nx=R[R.indexOf(r)+1];return {stars:st,name:r[1],emo:r[2],next:nx?nx[0]:21,nextName:nx?nx[1]:"Max rank"};}
+function gFinish(id,score,label){const m=gMem();m.plays=(m.plays||0)+1;m.runs[id]=(m.runs[id]||0)+1;m.last=id;const prev=m.best[id]||0;const nb=!prev||score>prev;if(nb)m.best[id]=score;
+ let xp=Math.max(5,Math.min(60,Math.round(score/15)));let daily=false;if(id===gDaily()&&m.daily!==gToday()){m.daily=gToday();xp+=25;daily=true;}save();addXP(xp,label);return {nb,prev,xp,daily};}
 function gPick(a,n){return shuffle(a.slice()).slice(0,n);}
-function gHead(id,title,sub){const g=GAMES.find(x=>x[0]===id);return `<div class="gtop" data-g="${id}"><a class="btn sm ghost" href="#games">← Arcade</a><div class="gtitle"><span class="gemo">${g?g[2]:"🎮"}</span><div><h1>${title}</h1><p class="note">${sub}</p></div></div><span class="gbest">Best: <b>${gMem().best[id]||0}</b></span></div>`;}
-function gEnd(id,title,score,lines,again){const nb=gFinish(id,score,title);return `<div class="gend card"><div class="gend-score"><span class="eyebrow">${nb?"New personal best 🎉":"Final score"}</span><b>${score}</b></div>${lines}<div class="row"><button class="btn pri" data-act="${again}">Play again</button><a class="btn" href="#games">Back to arcade</a></div></div>`;}
+function gDots(i,n,res){return `<div class="gdots" aria-label="Round ${i+1} of ${n}">${Array.from({length:n},(_,k)=>`<i class="${k<i?(res&&res[k]===false?"x":"d"):k===i?"on":""}"></i>`).join("")}</div>`;}
+function gHud(i,n,res,chips){return `<div class="ghud">${gDots(i,n,res)}<div class="ghud-c">${chips.map(c=>`<span>${c}</span>`).join("")}</div></div>`;}
+function gDiff(n){return `<span class="gdiff" title="${["","Easy","Medium","Hard"][n]}">${[1,2,3].map(k=>`<i class="${k<=n?"on":""}"></i>`).join("")}</span>`;}
+function gHead(id,title,sub){const g=GAMES.find(x=>x[0]===id),M=GMETA[id],b=gMem().best[id]||0;return `<div class="gtop" data-g="${id}"><a class="gback" href="#games" aria-label="Back to arcade">←</a><div class="gtitle"><span class="gemo">${g[2]}</span><div><span class="gtag">${g[3]}</span><h1>${title}</h1><p class="note">${sub}</p></div></div><div class="gtop-meta"><span>⏱ ${M.mins} min</span><span>${gDiff(M.diff)}</span><span>🏅 Best <b class="gbest-v">${b}</b></span><span>🎯 Par <b>${M.par}</b></span></div></div>`;}
+function gIntro(id,extra){const g=GAMES.find(x=>x[0]===id),M=GMETA[id],m=gMem(),b=m.best[id]||0,isD=gDaily()===id&&m.daily!==gToday();
+ $("#gm").innerHTML=`<div class="gbrief" data-g="${id}"><div class="gbrief-art"><span>${g[2]}</span>${isD?`<em class="gbadge">DAILY · +25 XP</em>`:""}</div><div class="gbrief-body"><span class="eyebrow">Mission briefing</span><h2>${M.hook}</h2>
+  <ol class="gsteps">${M.how.map(h=>`<li>${h}</li>`).join("")}</ol>
+  ${extra||""}
+  <div class="gskills">${M.skills.map(s=>`<span>${s}</span>`).join("")}</div>
+  <div class="gbrief-foot"><button class="btn pri lg" data-act="g-start" data-g="${id}">▶ ${M.cta}</button><span class="note">${b?`Your best: <b>${b}</b> · grade ${gGrade(id,b)} · beat par <b>${M.par}</b>`:`First run — par is <b>${M.par}</b>. Grade A at par, S at 1.2× par.`}</span></div></div></div>`;}
+function gEnd(id,title,score,lines,again){const r=gFinish(id,score,title);setTimeout(()=>{const e=$(".gbest-v");e&&(e.textContent=gMem().best[id]);},0);const gr=gGrade(id,score),M=GMETA[id],st=gr==="C"?1:gr==="B"?2:3;
+ const pct=Math.min(100,Math.round(score/(M.par*1.2)*100));const nxt=GAMES.filter(g=>g[0]!==id).sort((a,b)=>(gMem().runs[a[0]]||0)-(gMem().runs[b[0]]||0)).slice(0,2);
+ const msg={S:"Outstanding — consultant-level calls.",A:"Above par. Safe, sharp and quick.",B:"Solid shift. A few calls to tighten.",C:"Every expert started here. Review and go again."}[gr];
+ return `<div class="gend" data-g="${id}"><div class="gend-hero"><div class="ggrade g${gr}"><b>${gr}</b><span>grade</span></div><div class="gend-main"><span class="eyebrow">${r.nb&&r.prev?`New personal best 🎉 (was ${r.prev})`:r.nb?"First score on the board 🎉":`Best still ${gMem().best[id]}`}</span><div class="gend-score"><b>${score}</b><span>points</span></div><div class="gstars">${[1,2,3].map(k=>`<i class="${k<=st?"on":""}">★</i>`).join("")}</div><p class="gend-msg">${msg}</p></div>
+  <div class="gend-xp"><span>+${r.xp} XP</span>${r.daily?`<em>incl. ⚡ daily +25</em>`:""}</div></div>
+  <div class="gpar"><div class="bar"><i style="width:${pct}%"></i><s style="left:${Math.round(100/1.2)}%" title="Par"></s></div><span class="note">Par ${M.par} · S at ${Math.round(M.par*1.2)}</span></div>
+  <div class="gend-review"><h3>Round review</h3>${lines}</div>
+  <div class="gend-act"><button class="btn pri" data-act="${again}">↻ Play again</button><a class="btn" href="#games">Back to arcade</a></div>
+  <div class="gend-next"><span class="eyebrow">Try next</span><div>${nxt.map(g=>`<a class="gmini" data-g="${g[0]}" href="#g-${g[0]}"><span>${g[2]}</span><b>${g[1]}</b><small>${g[3]}</small></a>`).join("")}</div></div></div>`;}
 
 const GAMES=[
  ["er","Code Blue: ER Shift","🚑","Emergency simulator","Five patients, one shift. Investigate, diagnose and treat before the stability meter hits zero.","er"],
@@ -16,20 +39,53 @@ const GAMES=[
  ["flow","Hospital 24","🏥","Systems & bed-flow sim","Run a hospital for 24 hours: beds, staff, discharges and surges. Think like the whole system.","flow"],
  ["proto","Protocol Builder","🧩","Sequencing puzzle","Put life-saving and medicolegal protocols in the right order: sepsis, BLS, PPE, dying declaration…","proto"],
  ["bmw","Waste Warrior","♻️","Infection control sprint","Sort hospital waste into the right biomedical waste bin before time runs out.","bmw"]];
+const GCATS=[["all","All games"],["acute","Emergency"],["dx","Diagnosis"],["rx","Pharmacology"],["sys","Systems & safety"]];
+const GMETA={
+ er:{cat:"acute",mins:6,diff:3,mode:"Real-time",par:450,cta:"Start shift",hook:"Five patients. One shift. Keep them alive.",skills:["Clinical reasoning","Emergency Mx","Test selection"],how:["Read the history and vitals on the monitor.","Order only the investigations that help — each costs 6 stability.","Pick the diagnosis, then the first-line management.","Stability drains every second; wrong calls drain more."]},
+ spot:{cat:"dx",mins:4,diff:2,mode:"Turn-based",par:140,cta:"Start ladder",hook:"The fewer clues you need, the more you score.",skills:["Pattern recognition","Pathology","Microbiology"],how:["One clue is revealed at the start.","Answer now for 5 points, or reveal another clue.","Each extra clue lowers the prize by 1.","Eight cases per round across all subjects."]},
+ deck:{cat:"rx",mins:5,diff:2,mode:"Card battle",par:500,cta:"Start battle",hook:"Capture every microbe with its drug of choice.",skills:["Antimicrobials","Microbiology","Drug of choice"],how:["A microbe card appears — rarer cards are worth more.","Play the drug-of-choice card from your hand.","Streaks multiply your points (up to ×3). Hints cost the bonus.","Three lives. New captures join your collection."]},
+ triage:{cat:"acute",mins:2,diff:3,mode:"Real-time",par:150,cta:"Start 75-second shift",hook:"A bus has overturned. Tag fast, tag right.",skills:["START triage","Prioritisation","Disaster medicine"],how:["Casualties join the queue every 4 seconds.","Tag the patient at the front: Immediate, Delayed, Minor or Expectant.","+10 for a correct tag, −5 for a wrong one.","More than 6 waiting and one deteriorates (−5)."]},
+ flow:{cat:"sys",mins:6,diff:3,mode:"Strategy",par:300,cta:"Open the hospital",hook:"You run the hospital for 24 hours.",skills:["Systems thinking","Bed flow","Hospital admin"],how:["Each turn is a 3-hour block — 8 blocks in a day.","Pick up to 2 actions, then run the clock.","Random events hit: RTAs, staff sickness, lab outages.","Score = patients served + safety + budget left."]},
+ proto:{cat:"sys",mins:4,diff:1,mode:"Puzzle",par:300,cta:"Start building",hook:"Order the steps that save lives — and hold up in court.",skills:["Protocols","BLS / sepsis","Medicolegal"],how:["Three protocols per round.","Tap the steps in the correct order.","No mistakes = 3 stars, ≤2 = 2 stars.","Each protocol ends with the key teaching point."]},
+ bmw:{cat:"sys",mins:1,diff:1,mode:"Speed sort",par:250,cta:"Start 45-second sprint",hook:"Segregate at source. Every second counts.",skills:["BMW Rules 2016","Infection control","Community Medicine"],how:["An item appears — drop it in the right bin.","Every 3 correct in a row raises your combo.","Wrong bin costs 5 points and resets the combo.","Keys 1–5 work on a keyboard."]}};
+const GSTART={er:()=>erStart(),spot:()=>spStart(),deck:()=>dkStart(),triage:()=>trStart(),flow:()=>flStart(),proto:()=>prStart(),bmw:()=>bwStart()};
 
-function vGames(){const m=gMem();const tot=GAMES.reduce((a,g)=>a+(m.best[g[0]]||0),0);
- return `<section class="ghero"><div><span class="eyebrow">Learn by playing</span><h1>Clinical Games Arcade 🎮</h1><p>Serious games built around real ward, emergency and medicolegal scenarios. Every game teaches as you play and earns XP.</p></div>
-  <div class="gstats"><div><b>${m.plays||0}</b><span>games played</span></div><div><b>${(m.deck||[]).length}/${G_DECK.length}</b><span>cards collected</span></div><div><b>${tot}</b><span>total best score</span></div></div></section>
-  <div class="ggrid">${GAMES.map(g=>`<a class="gcard" data-g="${g[0]}" href="#g-${g[0]}"><span class="gcard-emo">${g[2]}</span><span class="gtag">${g[3]}</span><b>${g[1]}</b><span class="note">${g[4]}</span><span class="gcard-foot"><span>Best ${m.best[g[0]]||0}</span><span class="btn sm pri">Play →</span></span></a>`).join("")}</div>
-  <p class="note">All scenarios are original teaching cases written for this app. Always follow your hospital's current protocols in real practice.</p>`;}
+function gCard(g,m,daily){const id=g[0],M=GMETA[id],b=m.best[id]||0,st=gStars(id),pct=b?Math.min(100,Math.round(b/(M.par*1.2)*100)):0;
+ return `<a class="gcard" data-g="${id}" data-cat="${M.cat}" href="#g-${id}"><div class="gcard-art"><span class="gcard-emo">${g[2]}</span>${daily?`<em class="gbadge">DAILY</em>`:""}${b?`<span class="gcard-grade g${gGrade(id,b)}">${gGrade(id,b)}</span>`:`<span class="gcard-new">New</span>`}</div>
+  <div class="gcard-body"><span class="gtag">${g[3]}</span><b>${g[1]}</b><span class="gcard-desc">${g[4]}</span>
+  <div class="gmeta"><span>⏱ ${M.mins} min</span>${gDiff(M.diff)}<span>${M.mode}</span></div>
+  <div class="gskills sm">${M.skills.slice(0,2).map(s=>`<span>${s}</span>`).join("")}</div>
+  ${id==="deck"?`<div class="gprog"><div class="bar"><i style="width:${Math.round(m.deck.length/G_DECK.length*100)}%"></i></div><span>${m.deck.length}/${G_DECK.length} cards</span></div>`:`<div class="gprog"><div class="bar"><i style="width:${pct}%"></i></div><span>${b?`Best ${b}`:`Par ${M.par}`}</span></div>`}
+  <div class="gcard-foot"><span class="gstars">${[1,2,3].map(k=>`<i class="${k<=st?"on":""}">★</i>`).join("")}</span><span class="gplay">${b?"Play again":"Play"} <i>▶</i></span></div></div></a>`;}
+function vGames(){const m=gMem(),rk=gRank(),dId=gDaily(),dg=GAMES.find(g=>g[0]===dId),dDone=m.daily===gToday(),last=m.last&&GAMES.find(g=>g[0]===m.last);
+ const tot=GAMES.reduce((a,g)=>a+(m.best[g[0]]||0),0);
+ POST=()=>gApplyFilter();
+ return `<section class="garc"><div class="garc-grid" aria-hidden="true"></div><div class="garc-main"><span class="garc-kicker">● Clinical Games Arcade</span><h1>Learn by playing</h1><p>Seven original serious games built on real ward, emergency and medicolegal scenarios. Short rounds, instant feedback, real XP.</p>
+  <div class="garc-cta"><a class="btn pri lg" href="#g-${dId}">▶ Play today's challenge</a>${last?`<a class="btn garc-ghost" href="#g-${last[0]}">↻ Continue ${last[1]}</a>`:""}</div></div>
+  <div class="garc-rank"><div class="garc-badge"><span>${rk.emo}</span><div><small>Arcade rank</small><b>${rk.name}</b></div></div><div class="bar"><i style="width:${Math.round(rk.stars/21*100)}%"></i></div><span class="garc-sub">★ ${rk.stars}/21 stars${rk.stars<21?` · ${rk.next-rk.stars} to ${rk.nextName}`:""}</span>
+  <div class="garc-stats"><div><b>${m.plays||0}</b><span>runs</span></div><div><b>${m.deck.length}</b><span>cards</span></div><div><b>${tot}</b><span>best total</span></div></div></div></section>
+ <a class="gday ${dDone?"done":""}" data-g="${dId}" href="#g-${dId}"><span class="gday-emo">${dg[2]}</span><div><span class="eyebrow">${dDone?"Daily challenge complete ✓":"Today's challenge · +25 bonus XP"}</span><b>${dg[1]}</b><span class="note">${GMETA[dId].hook}</span></div><span class="btn ${dDone?"":"pri"}">${dDone?"Play again":"Accept"} →</span></a>
+ <div class="gfilt" role="tablist">${GCATS.map(c=>`<button class="chip ${GFILT===c[0]?"on":""}" data-act="g-filter" data-v="${c[0]}" role="tab" aria-selected="${GFILT===c[0]}">${c[1]} <small>${c[0]==="all"?GAMES.length:GAMES.filter(g=>GMETA[g[0]].cat===c[0]).length}</small></button>`).join("")}</div>
+ <div class="ggrid">${GAMES.map(g=>gCard(g,m,g[0]===dId&&!dDone)).join("")}</div>
+ <div class="gloop"><div><span>🎮</span><b>Play</b><small>3–6 minute rounds</small></div><i>→</i><div><span>💡</span><b>Learn</b><small>Teaching point after every call</small></div><i>→</i><div><span>⭐</span><b>Earn</b><small>XP, stars and arcade rank</small></div></div>
+ <p class="note">All scenarios are original teaching cases written for this app. Always follow your hospital's current protocols in real practice.</p>`;}
+function gApplyFilter(){$$(".ggrid .gcard").forEach(c=>{c.hidden=GFILT!=="all"&&c.dataset.cat!==GFILT;});}
+function gamesTeaser(){const m=gMem(),rk=gRank(),dId=gDaily(),dg=GAMES.find(g=>g[0]===dId),dDone=m.daily===gToday();
+ return `<section class="gteaser"><div class="garc-grid" aria-hidden="true"></div><div class="gteaser-l"><span class="garc-kicker">● Clinical Games Arcade</span><h2>Learn by playing 🎮</h2><p>Seven serious games — ER shifts, triage, card battles and more. Short rounds, real teaching, real XP.</p>
+  <div class="gteaser-me"><span>${rk.emo} <b>${rk.name}</b></span><span>★ ${rk.stars}/21</span><span>${m.plays||0} runs</span></div>
+  <div class="garc-cta"><a class="btn pri" href="#games">Enter arcade →</a><a class="btn garc-ghost" href="#g-${dId}">${dDone?"✓":"⚡"} Daily: ${dg[1]}</a></div></div>
+  <div class="gteaser-tiles">${GAMES.map(g=>`<a class="gtile" data-g="${g[0]}" href="#g-${g[0]}" title="${g[1]}"><span>${g[2]}</span><b>${g[1].replace("Code Blue: ","")}</b>${g[0]===dId&&!dDone?`<em>Daily</em>`:""}${gStars(g[0])?`<small>${"★".repeat(gStars(g[0]))}</small>`:""}</a>`).join("")}</div></section>`;}
+Object.assign(ACT,{
+ "g-start":el=>{const id=el.dataset.g;gMem().last=id;save();GSTART[id]();window.scrollTo({top:0,behavior:"smooth"});},
+ "g-filter":el=>{GFILT=el.dataset.v;$$(".gfilt .chip").forEach(c=>{const on=c.dataset.v===GFILT;c.classList.toggle("on",on);c.setAttribute("aria-selected",on);});gApplyFilter();}});
 
 /* ---------- 1. Code Blue: ER Shift ---------- */
-function vER(){POST=()=>erStart();return gHead("er","Code Blue: ER Shift","Every second costs stability. Investigations cost more. Wrong calls cost the most.")+`<div id="gm"></div>`;}
+function vER(){POST=()=>gIntro("er");return gHead("er","Code Blue: ER Shift","Every second costs stability. Investigations cost more. Wrong calls cost the most.")+`<div id="gm"></div>`;}
 function erStart(){GS={cases:gPick(G_ER,5),i:0,score:0,log:[]};erCase();}
 function erCase(){gStop();const c=GS.cases[GS.i];GS.c=c;GS.stab=100;GS.phase="dx";GS.rev=[];GS.wrong=0;GS.dx=shuffle(c.dx.slice());GS.mx=shuffle(c.mx.slice());erRender();
  GT=setInterval(()=>{GS.stab-=1;if(GS.stab<=0){GS.stab=0;erOver(false);}else erMeter();},1000);}
 function erMeter(){const m=$("#ermeter");if(!m)return;m.style.width=GS.stab+"%";m.className=GS.stab>60?"ok":GS.stab>30?"warn":"bad";$("#erstab").textContent=GS.stab;}
-function erRender(){const c=GS.c;$("#gm").innerHTML=`<div class="er">
+function erRender(){const c=GS.c;$("#gm").innerHTML=gHud(GS.i,GS.cases.length,GS.log.map(x=>x.ok),[`Patient <b>${GS.i+1}</b>/${GS.cases.length}`,`Score <b>${GS.score}</b>`])+`<div class="er">
  <div class="er-mon card"><div class="row between"><span class="eyebrow">Patient ${GS.i+1} of ${GS.cases.length} · Score ${GS.score}</span><span class="er-beat" aria-hidden="true">♥</span></div>
   <h2>${esc(c.who)}</h2><p>${esc(c.c)}</p>
   <div class="er-vitals">${c.v.map(v=>`<div><span>${v[0]}</span><b>${esc(String(v[1]))}</b></div>`).join("")}</div>
@@ -48,33 +104,33 @@ function erOver(ok){gStop();const c=GS.c;const pts=ok?GS.stab+(GS.wrong?0:20):0;
  $("#gm").innerHTML=`<div class="card er-out ${ok?"win":"lose"}"><span class="gbig">${ok?"✅ Patient stabilised":"💔 Patient crashed"}</span><p><b>${esc(c.dx[0])}</b> — ${esc(c.mx[0])}</p><p class="er-teach">💡 ${esc(c.t)}</p><p class="note">+${pts} points ${ok&&!GS.wrong?"(includes +20 flawless bonus)":""}</p><button class="btn pri" data-act="er-next">${GS.i+1<GS.cases.length?"Next patient →":"End shift"}</button></div>`;}
 
 /* ---------- 2. Clue Ladder ---------- */
-function vSpot(){POST=()=>spStart();return gHead("spot","Clue Ladder","5 points if you get it on clue 1, down to 1 point on clue 5.")+`<div id="gm"></div>`;}
-function spStart(){GS={q:gPick(G_SPOT,8),i:0,score:0,right:0};spRound();}
+function vSpot(){POST=()=>gIntro("spot");return gHead("spot","Clue Ladder","5 points if you get it on clue 1, down to 1 point on clue 5.")+`<div id="gm"></div>`;}
+function spStart(){GS={q:gPick(G_SPOT,8),i:0,score:0,right:0,res:[]};spRound();}
 function spRound(){const q=GS.q[GS.i];GS.ci=1;GS.opts=shuffle([q.a,...q.d]);GS.done=false;spRender();}
-function spRender(){const q=GS.q[GS.i];$("#gm").innerHTML=`<div class="card sp" data-s="${q.s}"><div class="row between"><span class="eyebrow">Case ${GS.i+1} of ${GS.q.length} · Score ${GS.score}</span><span class="sp-pts">Worth <b>${GS.done?0:6-GS.ci}</b> pts</span></div>
+function spRender(){const q=GS.q[GS.i];$("#gm").innerHTML=gHud(GS.i,GS.q.length,GS.res,[`Case <b>${GS.i+1}</b>/${GS.q.length}`,`Score <b>${GS.score}</b>`])+`<div class="card sp" data-s="${q.s}"><div class="row between"><span class="eyebrow">Case ${GS.i+1} of ${GS.q.length} · Score ${GS.score}</span><span class="sp-pts">Worth <b>${GS.done?0:6-GS.ci}</b> pts</span></div>
  <ol class="sp-clues">${q.c.map((x,k)=>`<li class="${k<GS.ci||GS.done?"on":""}">${k<GS.ci||GS.done?esc(x):"🔒 Hidden clue"}</li>`).join("")}</ol>
  ${GS.done?"":`<div class="row"><button class="btn" data-act="sp-clue" ${GS.ci>=5?"disabled":""}>Reveal next clue</button></div>`}
  <div class="sp-opts">${GS.opts.map(o=>`<button class="opt ${GS.done&&o===q.a?"yes":""}" data-act="sp-pick" data-v="${esc(o)}" ${GS.done?"disabled":""}>${esc(o)}</button>`).join("")}</div>
  ${GS.done?`<div class="row"><button class="btn pri" data-act="sp-next">${GS.i+1<GS.q.length?"Next case →":"See results"}</button></div>`:""}</div>`;}
 Object.assign(ACT,{
  "sp-clue":()=>{if(GS.ci<5){GS.ci++;spRender();}},
- "sp-pick":el=>{const q=GS.q[GS.i];if(GS.done)return;const ok=el.dataset.v===q.a;if(ok){GS.score+=6-GS.ci;GS.right++;toast(`Correct! +${6-GS.ci}`);}else toast(`It was ${q.a}`);GS.done=true;spRender();if(!ok){const b=[...$$(".sp-opts .opt")].find(x=>x.dataset.v===el.dataset.v);b&&b.classList.add("no");}},
+ "sp-pick":el=>{const q=GS.q[GS.i];if(GS.done)return;const ok=el.dataset.v===q.a;GS.res[GS.i]=ok;if(ok){GS.score+=6-GS.ci;GS.right++;toast(`Correct! +${6-GS.ci}`);}else toast(`It was ${q.a}`);GS.done=true;spRender();if(!ok){const b=[...$$(".sp-opts .opt")].find(x=>x.dataset.v===el.dataset.v);b&&b.classList.add("no");}},
  "sp-next":()=>{GS.i++;if(GS.i<GS.q.length)spRound();else $("#gm").innerHTML=gEnd("spot","Clue Ladder",GS.score*5,`<p>You solved <b>${GS.right}</b> of ${GS.q.length} cases (${GS.score} ladder points × 5).</p>`,"sp-again");},
  "sp-again":()=>spStart()});
 
 /* ---------- 3. Bug vs Drug ---------- */
-function vDeck(){POST=()=>dkStart();return gHead("deck","Bug vs Drug","Pick the drug of choice to capture each microbe. Three lives. Hints cost the shiny bonus.")+`<div class="row" style="margin-bottom:10px"><button class="btn sm" data-act="dk-coll">📚 My collection</button><button class="btn sm" data-act="dk-again">🔄 New battle</button></div><div id="gm"></div>`;}
-function dkStart(){const own=gMem().deck;const fresh=G_DECK.filter(b=>!own.includes(b.id));GS={q:shuffle(fresh).concat(shuffle(G_DECK.filter(b=>own.includes(b.id)))).slice(0,10),i:0,lives:3,score:0,streak:0,caught:0};dkRound();}
+function vDeck(){POST=()=>gIntro("deck");return gHead("deck","Bug vs Drug","Pick the drug of choice to capture each microbe. Three lives. Hints cost the shiny bonus.")+`<div class="row" style="margin-bottom:10px"><button class="btn sm" data-act="dk-coll">📚 My collection</button><button class="btn sm" data-act="dk-again">🔄 New battle</button></div><div id="gm"></div>`;}
+function dkStart(){const own=gMem().deck;const fresh=G_DECK.filter(b=>!own.includes(b.id));GS={q:shuffle(fresh).concat(shuffle(G_DECK.filter(b=>own.includes(b.id)))).slice(0,10),i:0,lives:3,score:0,streak:0,caught:0,res:[]};dkRound();}
 function dkRound(){const b=GS.q[GS.i];const others=shuffle([...new Set(G_DECK.filter(x=>x.x!==b.x).map(x=>x.x))]).slice(0,3);GS.hand=shuffle([b.x,...others]);GS.hint=false;GS.done=false;dkRender();}
 function dkCard(b,own){return `<div class="bug r${b.r} ${own?"":"locked"}"><span class="bug-k">${esc(b.k)}</span><b>${own?esc(b.n):"???"}</b><span class="bug-d">${own?esc(b.d):"Not captured yet"}</span>${own?`<span class="bug-x">💊 ${esc(b.x)}</span>`:""}<span class="bug-r">${"★".repeat(b.r)}</span></div>`;}
-function dkRender(){const b=GS.q[GS.i];$("#gm").innerHTML=`<div class="dk"><div class="row between"><span class="eyebrow">Battle ${GS.i+1}/${GS.q.length} · Score ${GS.score} · Streak ×${GS.streak}</span><span class="dk-lives">${"❤️".repeat(GS.lives)}${"🤍".repeat(3-GS.lives)}</span></div>
+function dkRender(){const b=GS.q[GS.i];$("#gm").innerHTML=gHud(GS.i,GS.q.length,GS.res,[`Score <b>${GS.score}</b>`,`Streak <b>×${Math.min(3,Math.max(1,GS.streak))}</b>`,`${"❤️".repeat(GS.lives)}${"🤍".repeat(3-GS.lives)}`])+`<div class="dk"><div class="row between"><span class="eyebrow">Battle ${GS.i+1}/${GS.q.length} · Score ${GS.score} · Streak ×${GS.streak}</span><span class="dk-lives">${"❤️".repeat(GS.lives)}${"🤍".repeat(3-GS.lives)}</span></div>
  <div class="dk-arena"><div class="bug big r${b.r}"><span class="bug-k">${esc(b.k)}</span><b>${esc(b.n)}</b><span class="bug-d">Causes: ${esc(b.d)}</span><span class="bug-r">${"★".repeat(b.r)} ${["","Common","Tricky","Boss"][b.r]}</span></div>
  <div class="stack"><span class="eyebrow">Your hand — play the drug of choice</span><div class="dk-hand">${GS.hand.map(h=>`<button class="pill-card" data-act="dk-play" data-v="${esc(h)}" ${GS.done?"disabled":""}>💊 ${esc(h)}</button>`).join("")}</div>
  ${GS.hint||GS.done?`<p class="dk-tip">🧑‍⚕️ Dr. Atlas: ${esc(b.tip)}</p>`:`<button class="btn sm ghost" data-act="dk-hint">🧑‍⚕️ Ask Dr. Atlas for a hint</button>`}
  ${GS.done?`<button class="btn pri" data-act="dk-next">${GS.lives>0&&GS.i+1<GS.q.length?"Next microbe →":"Finish battle"}</button>`:""}</div></div></div>`;}
 Object.assign(ACT,{
  "dk-hint":()=>{GS.hint=true;dkRender();},
- "dk-play":el=>{const b=GS.q[GS.i];if(GS.done)return;GS.done=true;const ok=el.dataset.v===b.x;
+ "dk-play":el=>{const b=GS.q[GS.i];if(GS.done)return;GS.done=true;const ok=el.dataset.v===b.x;GS.res[GS.i]=ok;
   if(ok){GS.streak++;const pts=(10*b.r+(GS.hint?0:5))*Math.min(3,GS.streak);GS.score+=pts;GS.caught++;const m=gMem();if(!m.deck.includes(b.id)){m.deck.push(b.id);save();toast(`Captured ${b.n}! New card +${pts}`);}else toast(`Defeated! +${pts}`);}
   else{GS.lives--;GS.streak=0;toast(`Resisted! Drug of choice: ${b.x}`);}
   dkRender();$$(".pill-card").forEach(x=>{if(x.dataset.v===b.x)x.classList.add("yes");else if(x.dataset.v===el.dataset.v)x.classList.add("no");});},
@@ -85,9 +141,7 @@ Object.assign(ACT,{
 /* ---------- 4. Triage Rush ---------- */
 const TAGS=[["red","Immediate","🔴"],["yellow","Delayed","🟡"],["green","Minor","🟢"],["black","Expectant","⚫"]];
 function vTriage(){POST=()=>trIntro();return gHead("triage","Triage Rush","START triage: Walk? → Breathing? → RR > 30? → Radial pulse / CRT > 2 s? → Obeys commands?")+`<div id="gm"></div>`;}
-function trIntro(){$("#gm").innerHTML=`<div class="card stack tr-intro"><h2>Mass casualty incident 🚨</h2><p>A bus has overturned. Casualties arrive every few seconds. Tag the patient at the front of the queue. More than 6 waiting means patients deteriorate.</p>
- <div class="tr-algo"><span>🚶 Walks → <b class="tg green">Minor</b></span><span>❌ No breathing after airway opened → <b class="tg black">Expectant</b></span><span>RR > 30, no radial pulse / CRT > 2 s, or cannot obey commands → <b class="tg red">Immediate</b></span><span>Otherwise → <b class="tg yellow">Delayed</b></span></div>
- <button class="btn pri" data-act="tr-go">Start 75-second shift</button></div>`;}
+function trIntro(){gIntro("triage",`<div class="tr-algo"><span>🚶 Walks → <b class="tg green">Minor</b></span><span>❌ No breathing after airway opened → <b class="tg black">Expectant</b></span><span>RR > 30, no radial pulse / CRT > 2 s, or cannot obey commands → <b class="tg red">Immediate</b></span><span>Otherwise → <b class="tg yellow">Delayed</b></span></div>`);}
 function trStart(){gStop();GS={pool:shuffle(G_TRIAGE.slice()),q:[],t:75,score:0,right:0,seen:0,miss:[]};trSpawn();trSpawn();trRender();
  GT=setInterval(()=>{GS.t--;let ch=false;if(GS.t%4===0){const was=GS.q.length;trSpawn();ch=!was;}if(GS.q.length>6){GS.score-=5;GS.q.shift();ch=true;toast("A waiting patient deteriorated −5");}if(GS.t<=0)return trEnd();ch?trRender():trHud();},1000);}
 function trHud(){const h=$(".tr-hud");if(!h)return trRender();h.innerHTML=`<span>⏱ <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span>`;const q=$(".tr-q");q&&(q.innerHTML=GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}">🧍</span>`).join(""));}
@@ -105,7 +159,7 @@ const FL_BLOCK=["00–03","03–06","06–09","09–12","12–15","15–18","18�
 const FL_BASE=[3,2,4,7,8,8,6,5];
 const FL_EVENTS=[["🚌 Road traffic accident: 4 extra casualties, one needs ICU",{arr:4,icu:1}],["🤧 Flu cluster from a hostel: 3 extra patients",{arr:3}],["🤒 Two nurses call in sick",{staff:-2}],["📋 Consultant ward round finished early: 4 patients ready for discharge",{ready:4}],["🧪 Lab analyser down — ED throughput reduced",{thru:-2}],["😌 Quiet spell — fewer arrivals",{arr:-2}],["⚠️ A ward patient deteriorates and needs ICU",{icu:1}],["",{}],["",{}]];
 const FL_ACTS=[["dis","🏠 Discharge round","Send home everyone ready for discharge (staff −1)"],["hud","🤝 Bed huddle","ED & ward coordinate: all admitted patients move to free beds"],["sur","🛏️ Open surge beds","+4 ward beds for the rest of the day (budget −2)"],["nur","👩‍⚕️ Call an extra nurse","Staff +3 (budget −2)"],["rst","☕ Staff rest break","Staff +2 but ED throughput −2 this block"],["div","🚑 Divert ambulances","Arrivals halved this block (safety −6: patients go elsewhere)"],["stp","⬇️ ICU step-down","Move up to 2 stable ICU patients to the ward"]];
-function vHosp(){POST=()=>flStart();return gHead("flow","Hospital 24","Each turn is 3 hours. Choose up to 2 actions, then run the clock. Keep the hospital safe, flowing and within budget.")+`<div id="gm"></div>`;}
+function vHosp(){POST=()=>gIntro("flow");return gHead("flow","Hospital 24","Each turn is 3 hours. Choose up to 2 actions, then run the clock. Keep the hospital safe, flowing and within budget.")+`<div id="gm"></div>`;}
 function flStart(){GS={b:0,ed:4,edCap:12,board:1,ward:26,wardCap:30,icu:5,icuCap:6,ready:3,budget:8,staff:8,safety:100,served:0,sel:[],ev:null,log:[]};flNextEvent();flRender();}
 function flNextEvent(){GS.ev=FL_EVENTS[Math.floor(Math.random()*FL_EVENTS.length)];}
 function gauge(l,v,max,warn){const p=Math.max(0,Math.min(100,v/max*100));return `<div class="fl-g ${warn?"warn":""}"><span>${l}</span><b>${v}${max?`<small>/${max}</small>`:""}</b><div class="bar"><i style="width:${p}%"></i></div></div>`;}
@@ -138,20 +192,20 @@ Object.assign(ACT,{
  "fl-run":()=>flRun(),"fl-again":()=>flStart()});
 
 /* ---------- 6. Protocol Builder ---------- */
-function vProto(){POST=()=>prStart();return gHead("proto","Protocol Builder","Tap the steps in the correct order. Three protocols per round.")+`<div id="gm"></div>`;}
-function prStart(){GS={list:gPick(G_PROTO,3),i:0,score:0,stars:0};prRound();}
+function vProto(){POST=()=>gIntro("proto");return gHead("proto","Protocol Builder","Tap the steps in the correct order. Three protocols per round.")+`<div id="gm"></div>`;}
+function prStart(){GS={list:gPick(G_PROTO,3),i:0,score:0,stars:0,res:[]};prRound();}
 function prRound(){const p=GS.list[GS.i];GS.p=p;GS.done=[];GS.miss=0;GS.opts=shuffle(p.s.slice());prRender();}
-function prRender(){const p=GS.p,fin=GS.done.length===p.s.length;$("#gm").innerHTML=`<div class="card pr"><div class="row between"><span class="eyebrow">Protocol ${GS.i+1} of ${GS.list.length} · Score ${GS.score}</span><span class="note">Mistakes: ${GS.miss}</span></div><h2>${esc(p.n)}</h2>
+function prRender(){const p=GS.p,fin=GS.done.length===p.s.length;$("#gm").innerHTML=gHud(GS.i,GS.list.length,GS.res,[`Protocol <b>${GS.i+1}</b>/${GS.list.length}`,`Score <b>${GS.score}</b>`,`Stars <b>${GS.stars}</b>`])+`<div class="card pr"><div class="row between"><span class="eyebrow">Protocol ${GS.i+1} of ${GS.list.length} · Score ${GS.score}</span><span class="note">Mistakes: ${GS.miss}</span></div><h2>${esc(p.n)}</h2>
  <ol class="pr-seq">${p.s.map((x,k)=>`<li class="${k<GS.done.length?"on":""}">${k<GS.done.length?esc(x):"…"}</li>`).join("")}</ol>
  ${fin?`<div class="pr-win"><b>${"⭐".repeat(GS.miss===0?3:GS.miss<=2?2:1)}</b><p class="er-teach">💡 ${esc(p.w)}</p><button class="btn pri" data-act="pr-next">${GS.i+1<GS.list.length?"Next protocol →":"See results"}</button></div>`:`<div class="pr-opts">${GS.opts.filter(o=>!GS.done.includes(o)).map(o=>`<button class="opt" data-act="pr-step" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`}</div>`;}
 Object.assign(ACT,{
- "pr-step":el=>{const want=GS.p.s[GS.done.length];if(el.dataset.v===want){GS.done.push(want);if(GS.done.length===GS.p.s.length){const st=GS.miss===0?3:GS.miss<=2?2:1;GS.stars+=st;GS.score+=st*40;}prRender();}else{GS.miss++;el.classList.add("shake","no");setTimeout(()=>el.classList.remove("shake","no"),500);const m=$(".pr .note");m&&(m.textContent="Mistakes: "+GS.miss);}},
+ "pr-step":el=>{const want=GS.p.s[GS.done.length];if(el.dataset.v===want){GS.done.push(want);if(GS.done.length===GS.p.s.length){const st=GS.miss===0?3:GS.miss<=2?2:1;GS.res[GS.i]=st>1;GS.stars+=st;GS.score+=st*40;}prRender();}else{GS.miss++;el.classList.add("shake","no");setTimeout(()=>el.classList.remove("shake","no"),500);const m=$(".pr .note");m&&(m.textContent="Mistakes: "+GS.miss);}},
  "pr-next":()=>{GS.i++;if(GS.i<GS.list.length)prRound();else $("#gm").innerHTML=gEnd("proto","Protocol Builder",GS.score,`<p>You earned <b>${GS.stars}</b> of ${GS.list.length*3} stars.</p>`,"pr-again");},
  "pr-again":()=>prStart()});
 
 /* ---------- 7. Waste Warrior ---------- */
 function vBMW(){POST=()=>bwIntro();return gHead("bmw","Waste Warrior","Bio-Medical Waste Management Rules, 2016 (amended). Keys 1–5 work too.")+`<div id="gm"></div>`;}
-function bwIntro(){$("#gm").innerHTML=`<div class="card stack"><h2>Segregate at source ♻️</h2><div class="bw-bins static">${G_BINS.map((b,i)=>`<div class="bin ${b[0]}"><span>${b[2]}</span><b>${b[1]}</b><small>${b[3]}</small></div>`).join("")}</div><button class="btn pri" data-act="bw-go">Start 45-second round</button></div>`;}
+function bwIntro(){gIntro("bmw",`<div class="bw-bins static">${G_BINS.map(b=>`<div class="bin ${b[0]}"><span>${b[2]}</span><b>${b[1]}</b><small>${b[3]}</small></div>`).join("")}</div>`);}
 function bwStart(){gStop();GS={pool:shuffle(G_BMW.slice()),t:45,score:0,combo:0,right:0,seen:0,miss:[]};GS.cur=GS.pool.pop();bwRender();GT=setInterval(()=>{GS.t--;if(GS.t<=0)return bwEnd();const h=$("#bwt");h&&(h.textContent=GS.t+"s");},1000);}
 function bwRender(){$("#gm").innerHTML=`<div class="bw"><div class="tr-hud"><span>⏱ <b id="bwt">${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Combo <b>×${1+Math.floor(GS.combo/3)}</b></span></div>
  <div class="card bw-item"><span class="eyebrow">Which bin?</span><b>${esc(GS.cur[0])}</b></div>

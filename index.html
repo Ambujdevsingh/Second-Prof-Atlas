@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Second Prof Atlas · MBBS Phase II</title>
 <meta name="description" content="Free MBBS 2nd-year learning platform: Pathology, Microbiology, Pharmacology, Community Medicine and FMT with flowcharts, exam radar, quizzes, planner and AI tutor.">
-<meta name="theme-color" content="#1F4FD1">
+<meta name="theme-color" content="#C2255C">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F4FD1'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EII%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -631,6 +631,45 @@ body{background:radial-gradient(1200px 600px at 100% -10%,#FFE3EE 0%,transparent
 .tool:nth-child(6n+5){--tc:#0C8599;--tcs:#E0F5F8} .tool:nth-child(6n){--tc:#C2255C;--tcs:#FFE0EC}
 .hw-ai-tool:nth-child(odd) .ic{background:#FFE3EC; color:#D6336C} .hw-ai-tool:nth-child(even) .ic{background:#F3E6FF; color:#9C36B5}
 @media (prefers-reduced-motion: reduce){.tool{transition:none}.tool:hover{transform:none}}
+
+/* ---- colourful sidebar ---- */
+[data-nc="home"]{--nc:#D6336C}[data-nc="subjects"]{--nc:#7048E8}[data-nc="radar"]{--nc:#E8590C}[data-nc="roadmap"]{--nc:#0C8599}[data-nc="flowcharts"]{--nc:#9C36B5}
+[data-nc="notes"]{--nc:#2B8A3E}[data-nc="studio"]{--nc:#C2255C}[data-nc="planner"]{--nc:#1971C2}[data-nc="saved"]{--nc:#D9480F}[data-nc="progress"]{--nc:#087F5B}
+.nic{width:30px; height:30px; border-radius:9px; display:grid; place-items:center; flex:none; color:var(--nc,var(--accent)); background:color-mix(in srgb,var(--nc,var(--accent)) 13%,#FFFFFF); transition:transform .15s, background .15s, color .15s}
+.nav a{gap:11px; padding:6px 10px; border-left:3px solid transparent; transition:background .15s, border-color .15s}
+.nav a[data-nc]:hover{background:color-mix(in srgb,var(--nc) 8%,#FFFFFF)}
+.nav a[data-nc]:hover .nic{transform:scale(1.08)}
+.nav a[data-nc].on{background:linear-gradient(90deg,color-mix(in srgb,var(--nc) 16%,#FFFFFF),color-mix(in srgb,var(--nc) 4%,#FFFFFF)); color:color-mix(in srgb,var(--nc) 80%,#000); border-left-color:var(--nc)}
+.nav a[data-nc].on .nic{background:var(--nc); color:#FFFFFF; box-shadow:0 4px 10px color-mix(in srgb,var(--nc) 35%,transparent)}
+.nav a[data-s].on{background:var(--ss); color:var(--sc); border-left-color:var(--sc)}
+.nav a[data-s]:hover{background:var(--ss)}
+.nav .dot{width:10px; height:10px; margin:0 10px 0 10px; box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 18%,transparent)}
+.sheet-grid a[data-nc]{border-color:color-mix(in srgb,var(--nc) 28%,#FFFFFF); background:color-mix(in srgb,var(--nc) 5%,#FFFFFF)}
+.sheet-grid a .nic{width:32px; height:32px}
+.tabbar a:nth-child(1){--tb:#D6336C}.tabbar a:nth-child(2){--tb:#7048E8}.tabbar a:nth-child(3){--tb:#9C36B5}.tabbar a:nth-child(4){--tb:#C2255C}
+.tabbar a.on{color:var(--tb,var(--accent))}
+/* ---- daily inspiration ---- */
+.qgrid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.qt{--qc:#D6336C; --qa:#FFE3EC; --qb:#FFF6F9; margin:0; position:relative; overflow:hidden; display:flex; flex-direction:column; gap:10px; padding:16px 18px 18px; border-radius:18px; border:1px solid color-mix(in srgb,var(--qc) 25%,#FFFFFF); background:linear-gradient(150deg,var(--qa) 0%,var(--qb) 70%); transition:transform .15s, box-shadow .15s}
+.qt::after{content:"”"; position:absolute; right:12px; bottom:-34px; font-family:Georgia,serif; font-size:120px; line-height:1; color:var(--qc); opacity:.1; pointer-events:none}
+.qt:hover{transform:translateY(-3px); box-shadow:0 10px 24px color-mix(in srgb,var(--qc) 20%,transparent)}
+.qt[data-q="life"]{--qc:#2B8A3E;--qa:#E3F7E8;--qb:#F6FCF7}
+.qt[data-q="love"]{--qc:#D6336C;--qa:#FFDCE8;--qb:#FFF5F8}
+.qt[data-q="journey"]{--qc:#0C8599;--qa:#DDF4F7;--qb:#F4FBFC}
+.qt[data-q="goal"]{--qc:#E8590C;--qa:#FFE6D5;--qb:#FFF8F2}
+.qt[data-q="dream"]{--qc:#7048E8;--qa:#EAE3FF;--qb:#F8F5FF}
+.qt[data-q="win"]{--qc:#B07800;--qa:#FFF1C9;--qb:#FFFBEF}
+.qt-top{display:flex; align-items:center; gap:8px}
+.qt-emo{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:#FFFFFFD9; font-size:1.1rem; box-shadow:0 2px 6px color-mix(in srgb,var(--qc) 18%,transparent)}
+.qt-cat{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color:var(--qc); flex:1}
+.qt-more{width:30px; height:30px; border-radius:50%; border:1px solid color-mix(in srgb,var(--qc) 30%,#FFFFFF); background:#FFFFFFCC; color:var(--qc); font-weight:800; cursor:pointer; transition:transform .25s}
+.qt-more:hover{transform:rotate(180deg)}
+.qt blockquote{margin:0; font-family:var(--f-display); font-size:1.06rem; line-height:1.5; font-weight:600; color:var(--ink)}
+.qt.flip{animation:qtIn .45s ease}
+@keyframes qtIn{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+@media (max-width:1100px){.qgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.qgrid{grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:86%; overflow-x:auto; scroll-snap-type:x mandatory; padding:2px 2px 10px; scrollbar-width:none} .qgrid::-webkit-scrollbar{display:none} .qt{scroll-snap-align:start} .qt blockquote{font-size:1rem}}
+@media (prefers-reduced-motion: reduce){.qt,.qt-more,.nic{transition:none}.qt.flip{animation:none}.qt:hover{transform:none}}
 
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
@@ -7387,12 +7426,12 @@ const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam 
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
-  <nav class="nav" aria-label="Main">${NAV.map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],18)}${n[1]}</a>`).join("")}
+  <nav class="nav" aria-label="Main">${NAV.map(n=>`<a href="#${n[0]}" data-nav="${n[0]}" data-nc="${n[0]}"><span class="nic">${ico(n[2],17)}</span>${n[1]}</a>`).join("")}
   <span class="grp mono">Subjects</span>${SUBJECTS.map(s=>`<a href="#s-${s.id}" data-nav="s-${s.id}" data-s="${s.id}"><span class="dot" style="background:var(--sc)"></span>${esc(s.name)}</a>`).join("")}</nav>
   <div class="xpcard"><div class="row between"><b>${esc(L.name)}</b><span class="mono">${S.xp} XP</span></div><div class="bar"><i style="width:${L.pct}%"></i></div><span class="note">${L.next?`${L.next-S.xp} XP to next level`:"Top level reached"} · 🔥 ${S.streak}-day streak</span></div>`;
   $("#tabbar").innerHTML=[["home","Home","home"],["subjects","Learn","book"],["flowcharts","Flows","flow"],["studio","AI","spark"]].map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],22)}${n[1]}</a>`).join("")+`<button type="button" class="tabmore" data-act="sheet" aria-haspopup="dialog">${ico("list",22)}More</button>`;
   let sh=$("#sheet");if(!sh){document.body.insertAdjacentHTML("beforeend",'<div id="sheet" hidden><div class="sheet-in" role="dialog" aria-label="All sections"></div></div>');sh=$("#sheet");}
-  $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go">${ico(n[2],20)}<span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
+  $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go" data-nc="${n[0]}"><span class="nic">${ico(n[2],18)}</span><span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
 function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab=a=>!!a.closest("#tabbar");
@@ -8186,6 +8225,8 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
    <div class="hx-stats">${stats.map(x=>`<a class="hx-stat" href="${x[3]}"><span class="ic">${ico(x[2],18)}</span><span><b>${x[0]}</b><span>${x[1]}${x[4]?` · <u>${x[4]}</u>`:""}</span></span></a>`).join("")}</div>
   </section>
 
+  ${quotesSection()}
+
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
     ${last?`<span class="eyebrow" style="color:var(--sc)">Continue learning</span><div class="hw-cont-main"><div class="stack" style="gap:8px;min-width:0"><span class="note">${esc(SUB[last.s].name)} · Chapter ${last.n}</span><h2>${esc(last.t)}</h2>
@@ -8225,6 +8266,70 @@ Object.assign(ACT,{
  "go-tab":(el,e)=>{e&&e.preventDefault();PENDING_TAB=el.dataset.t;const h="#c-"+el.dataset.c;if(location.hash===h){CHTAB=PENDING_TAB;PENDING_TAB=null;route();}else location.hash=h;},
  car:el=>{const c=$("#car");c.scrollBy({left:(+el.dataset.d)*c.clientWidth*0.8,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}
 });
+
+/* ============ Daily inspiration — original quotes, rotate every day ============ */
+const QUOTES=[
+ ["life","Life","🌿",[
+  "Life isn't measured in the chapters you finish, but in the person you become while reading them.",
+  "Some days you heal others; some days you heal yourself. Both count.",
+  "Breathe. The syllabus is long, but so is the beautiful life you are building.",
+  "A gentle day is still a day of progress.",
+  "Life rarely waits for perfect timing — it rewards the courage to begin anyway.",
+  "Every small kindness you offer today becomes someone's reason to believe tomorrow.",
+  "Rest is not the opposite of work; it is what lets the work last.",
+  "Your life is a slow, beautiful case history — write it with care."]],
+ ["love","Love","💗",[
+  "Love is the quiet hand on your shoulder that says, ‘Keep going, I'm proud of you.’",
+  "The best medicine has always been someone who believes in you.",
+  "Love grows the way knowledge does — a little more each day, never in a hurry.",
+  "You are loved on the days you shine and on the days you simply survive.",
+  "Behind every late night of study is a heart cheering you on.",
+  "Love doesn't lighten the load; it makes you strong enough to carry it.",
+  "Some people are a home you can return to between every hard chapter.",
+  "Be as gentle with your own heart as you are with your patients."]],
+ ["journey","Journey","🧭",[
+  "Every expert was once a beginner who refused to give up.",
+  "The road to ‘Doctor’ is paved with ordinary days done well.",
+  "Don't compare your chapter one to someone else's chapter twenty.",
+  "Slow progress is still progress — the stethoscope waits for those who keep walking.",
+  "The journey teaches what no textbook can: patience, humility and heart.",
+  "Look back sometimes — you've already climbed further than you once believed you could.",
+  "Detours are part of the map, not the end of it.",
+  "One page, one concept, one day at a time — that's how mountains are crossed."]],
+ ["goal","Dedication & Goals","🎯",[
+  "Discipline is choosing what you want most over what you want now.",
+  "Goals are dreams with a timetable — and you are writing yours today.",
+  "Show up on the dull days; that's where the real difference is made.",
+  "Dedication isn't loud. It's the light still on at midnight.",
+  "Set the goal, break it into today, and then simply do today.",
+  "Ten honest minutes every day will outrun one heroic night.",
+  "Your future patients are counting on the effort you make today.",
+  "Focus on the next right step; the goal will meet you halfway."]],
+ ["dream","Dreams","✨",[
+  "Dream in white coats; work in small, steady steps.",
+  "Your dreams are not too big — your days just haven't caught up with them yet.",
+  "Keep your dream close enough to see and far enough to keep you growing.",
+  "Every dream you've ever had is waiting on the other side of today's effort.",
+  "Dreams don't expire; they simply wait for you to be ready.",
+  "Hold your dream like a stethoscope — close to your heart.",
+  "The world needs the doctor you are dreaming of becoming.",
+  "Dream boldly, study patiently, believe completely."]],
+ ["win","Achievement","🏆",[
+  "Celebrate the small wins — they are the stepping stones of great ones.",
+  "Achievement is just persistence wearing its finest clothes.",
+  "Every chapter completed is a promise kept to your future self.",
+  "Success isn't one exam; it's every single time you didn't quit.",
+  "Today's effort becomes tomorrow's confidence in the viva.",
+  "Be proud of how far you've come and excited for where you're going.",
+  "The marks will come; the knowledge you build stays forever.",
+  "Great doctors aren't born — they're made, one finished day at a time."]]];
+let QSHIFT={};
+function dayNo(){const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);}
+function quoteFor(i){const q=QUOTES[i][3];return q[(dayNo()+i*3+(QSHIFT[i]||0))%q.length];}
+function quoteCard(i){const [id,name,emo]=QUOTES[i];return `<figure class="qt" data-q="${id}"><div class="qt-top"><span class="qt-emo" aria-hidden="true">${emo}</span><span class="qt-cat">${name}</span><button class="qt-more" data-act="qnext" data-i="${i}" aria-label="Show another ${name} quote" title="Another one">↻</button></div><blockquote>“${esc(quoteFor(i))}”</blockquote></figure>`;}
+function quotesSection(){const d=new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long"});
+  return `<section class="stack qsec">${hwHead(`Fresh every day · ${d}`,"Daily inspiration 💫")}<div class="qgrid" id="qgrid">${QUOTES.map((_,i)=>quoteCard(i)).join("")}</div></section>`;}
+Object.assign(ACT,{qnext:el=>{const i=+el.dataset.i;QSHIFT[i]=(QSHIFT[i]||0)+1;const f=el.closest(".qt");f.outerHTML=quoteCard(i);const n=$(`#qgrid .qt[data-q="${QUOTES[i][0]}"]`);n&&n.classList.add("flip");}});
 
 applyFS();mountDrawer();renderSide();route();
 

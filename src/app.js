@@ -199,12 +199,12 @@ const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam 
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
-  <nav class="nav" aria-label="Main">${NAV.map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],18)}${n[1]}</a>`).join("")}
+  <nav class="nav" aria-label="Main">${NAV.map(n=>`<a href="#${n[0]}" data-nav="${n[0]}" data-nc="${n[0]}"><span class="nic">${ico(n[2],17)}</span>${n[1]}</a>`).join("")}
   <span class="grp mono">Subjects</span>${SUBJECTS.map(s=>`<a href="#s-${s.id}" data-nav="s-${s.id}" data-s="${s.id}"><span class="dot" style="background:var(--sc)"></span>${esc(s.name)}</a>`).join("")}</nav>
   <div class="xpcard"><div class="row between"><b>${esc(L.name)}</b><span class="mono">${S.xp} XP</span></div><div class="bar"><i style="width:${L.pct}%"></i></div><span class="note">${L.next?`${L.next-S.xp} XP to next level`:"Top level reached"} · 🔥 ${S.streak}-day streak</span></div>`;
   $("#tabbar").innerHTML=[["home","Home","home"],["subjects","Learn","book"],["flowcharts","Flows","flow"],["studio","AI","spark"]].map(n=>`<a href="#${n[0]}" data-nav="${n[0]}">${ico(n[2],22)}${n[1]}</a>`).join("")+`<button type="button" class="tabmore" data-act="sheet" aria-haspopup="dialog">${ico("list",22)}More</button>`;
   let sh=$("#sheet");if(!sh){document.body.insertAdjacentHTML("beforeend",'<div id="sheet" hidden><div class="sheet-in" role="dialog" aria-label="All sections"></div></div>');sh=$("#sheet");}
-  $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go">${ico(n[2],20)}<span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
+  $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go" data-nc="${n[0]}"><span class="nic">${ico(n[2],18)}</span><span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
 function markNav(){const h=(location.hash||"#home").slice(1)||"home";const inTab=a=>!!a.closest("#tabbar");

@@ -40,6 +40,8 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
    <div class="hx-stats">${stats.map(x=>`<a class="hx-stat" href="${x[3]}"><span class="ic">${ico(x[2],18)}</span><span><b>${x[0]}</b><span>${x[1]}${x[4]?` · <u>${x[4]}</u>`:""}</span></span></a>`).join("")}</div>
   </section>
 
+  ${quotesSection()}
+
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
     ${last?`<span class="eyebrow" style="color:var(--sc)">Continue learning</span><div class="hw-cont-main"><div class="stack" style="gap:8px;min-width:0"><span class="note">${esc(SUB[last.s].name)} · Chapter ${last.n}</span><h2>${esc(last.t)}</h2>

@@ -981,6 +981,166 @@ button.bin:hover{transform:translateY(-3px)}
 }
 .gbadge{white-space:nowrap; letter-spacing:.05em}
 
+/* ===== Arcade v3: abstract icon system + in-game polish ===== */
+.gico{display:block; filter:drop-shadow(0 6px 12px rgba(20,4,30,.28))}
+.gart-bg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+.gcard-art::after,.gbrief-art::after{opacity:.5}
+.gcard .gcard-emo{display:grid; place-items:center; width:86px; height:86px; border-radius:26px; background:linear-gradient(145deg,#ffffff40,#ffffff0d); border:1px solid #ffffff4d; box-shadow:inset 0 1px 0 #ffffff66,0 10px 24px rgba(20,4,30,.22); backdrop-filter:blur(4px); filter:none}
+.gcard:hover .gcard-emo{transform:translateY(-3px) rotate(-4deg)}
+.gbrief-art>span{display:grid; place-items:center; width:150px; height:150px; border-radius:42px; background:linear-gradient(145deg,#ffffff40,#ffffff0d); border:1px solid #ffffff4d; box-shadow:inset 0 1px 0 #ffffff66,0 16px 34px rgba(20,4,30,.28); filter:none}
+.gday-emo{background:linear-gradient(135deg,var(--gc),color-mix(in srgb,var(--gc) 55%,#2A1040)); border-radius:18px}
+.gmini span{display:grid; place-items:center; width:44px; height:44px; border-radius:14px; background:linear-gradient(135deg,var(--gc),color-mix(in srgb,var(--gc) 55%,#2A1040))}
+.gtile span{display:grid; place-items:center; width:50px; height:50px; border-radius:16px; background:#ffffff1f; border:1px solid #ffffff33; filter:none}
+.gtile:first-child span{width:46px; height:46px}
+.garc-badge>span{font-size:0}
+.gteaser-me span{display:inline-flex; align-items:center; gap:6px}
+.gtop-meta span svg,.gmeta svg,.tr-hud svg{color:var(--gc,var(--accent)); flex:none}
+.gmeta span{display:inline-flex; align-items:center; gap:4px}
+.gloop div span{display:grid; place-items:center; width:42px; height:42px; border-radius:12px; background:#FFFFFF; color:var(--accent); border:1px solid var(--line)}
+/* lives */
+.glives{display:inline-flex; gap:4px; vertical-align:middle}
+.glives i{width:14px; height:14px; transform:rotate(45deg); border-radius:3px 0 3px 3px; background:var(--line); position:relative}
+.glives i.on{background:#E64980}
+/* triage */
+.tr-hud span{display:inline-flex; align-items:center; gap:6px}
+.tr-q{gap:6px; align-items:center; min-height:26px}
+.tr-dot{width:16px; height:22px; border-radius:8px 8px 4px 4px; background:color-mix(in srgb,var(--gc,#E8590C) 35%,#FFFFFF); position:relative; opacity:1}
+.tr-dot::before{content:""; position:absolute; top:-9px; left:3px; width:10px; height:10px; border-radius:50%; background:inherit}
+.tr-dot.on{background:var(--gc,#E8590C); transform:none; box-shadow:0 0 0 3px color-mix(in srgb,var(--gc,#E8590C) 22%,transparent)}
+.tr-q{padding-top:10px}
+.tr-p{border-left:0; border-top:5px solid var(--gc,#E8590C); padding:20px 22px; font-size:1.2rem; box-shadow:0 10px 26px rgba(232,89,12,.12)}
+.tagbtn{display:flex; align-items:center; justify-content:center; gap:10px; padding:18px 12px; box-shadow:0 6px 0 rgba(0,0,0,.18); transition:transform .1s, box-shadow .1s}
+.tagbtn:hover{transform:translateY(-2px)} .tagbtn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.tsw{width:14px; height:14px; border-radius:50%; background:#ffffffcc; box-shadow:0 0 0 3px #ffffff40}
+.tagbtn.yellow .tsw{background:#2B1D00aa}
+.tagbtn kbd{font-family:var(--f-mono); font-size:.7rem; padding:1px 6px; border-radius:6px; background:#ffffff2e; border:1px solid #ffffff40}
+.tagbtn.yellow kbd{background:#0000001a; border-color:#00000026}
+/* ER outcome + protocol stars */
+.gbig{display:inline-flex; align-items:center; gap:10px}
+.gout{font-style:normal; width:36px; height:36px; border-radius:50%; display:grid; place-items:center; color:#fff; font-size:1.1rem}
+.gout.ok{background:#2F9E44}.gout.no{background:#E03131}
+.gstars.big{font-size:2rem}
+/* ER monitor polish */
+.er-mon{box-shadow:0 14px 34px rgba(27,21,48,.32)}
+.er .opt,.sp .opt,.pr .opt{transition:transform .12s, border-color .12s, background .12s}
+.er .opt:hover,.sp .opt:hover,.pr .opt:hover{transform:translateX(3px); border-color:var(--gc,var(--accent))}
+@media (max-width:900px){.tagbtn kbd{display:none}}
+@media (max-width:520px){.gcard .gcard-emo{width:62px; height:62px; border-radius:20px} .gcard .gcard-emo svg{width:44px; height:44px} .gbrief-art>span{width:110px; height:110px; border-radius:32px} .gbrief-art>span svg{width:72px; height:72px}}
+
+/* ===== Practicals & Viva ===== */
+[data-nc="viva"]{--nc:#5F3DC4}
+.seg{display:inline-flex; background:var(--sunk); border-radius:12px; padding:3px; gap:2px; flex-wrap:wrap}
+.seg button{border:0; background:transparent; font:inherit; font-size:.84rem; font-weight:600; padding:6px 12px; border-radius:9px; cursor:pointer; color:var(--muted)}
+.seg button.on{background:#FFFFFF; color:var(--ink); box-shadow:0 1px 4px rgba(36,16,26,.12)}
+.vring{color:var(--sc,var(--accent)); flex:none}
+.vhero{position:relative; overflow:hidden; display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:24px; align-items:center; padding:28px 30px; border-radius:24px; color:#F6F0FF; background:radial-gradient(110% 130% at 0% 0%,#5F3DC4 0%,transparent 55%),radial-gradient(90% 120% at 100% 100%,#C2255C 0%,transparent 60%),linear-gradient(135deg,#1E1442,#2A1650); border:1px solid #3B2A72}
+.vhero::after{content:""; position:absolute; inset:0; pointer-events:none; background-image:radial-gradient(#ffffff1c 1.2px,transparent 1.2px); background-size:18px 18px; mask-image:linear-gradient(90deg,#000,transparent 70%); -webkit-mask-image:linear-gradient(90deg,#000,transparent 70%)}
+.vhero>*{position:relative; z-index:1}
+.vhero-mark{display:grid; place-items:center; width:58px; height:58px; border-radius:18px; background:linear-gradient(135deg,#ffffff38,#ffffff10); border:1px solid #ffffff40; margin-bottom:12px}
+.vhero .eyebrow{color:#C9B8FF}
+.vhero h1{font-size:clamp(1.9rem,3.6vw,2.7rem); color:#FFFFFF; margin:4px 0 8px}
+.vhero p{color:#DCD2F2; max-width:58ch; margin:0 0 18px}
+.vhero .btn:not(.pri){background:#ffffff14; color:#FFFFFF; border-color:#ffffff33}
+.vhero-r{display:flex; align-items:center; gap:16px; background:#ffffff0f; border:1px solid #ffffff24; border-radius:20px; padding:18px; color:#FFD8E8}
+.vhero-r .vring{color:#FF8FB8}
+.vhero-r b{display:block; font-family:var(--f-display); font-size:2rem; color:#FFFFFF}.vhero-r b small{font-size:1rem; color:#C9B8FF}
+.vhero-r span{display:block; color:#E6DDF7; font-size:.9rem}.vhero-r .note{color:#B7A8DA; margin-top:4px}
+.vsubs{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px}
+.vsub{display:flex; flex-direction:column; gap:8px; padding:18px; border-radius:20px; text-decoration:none; color:var(--ink); background:linear-gradient(165deg,var(--ss),#FFFFFF 60%); border:1px solid color-mix(in srgb,var(--sc) 25%,#FFFFFF); transition:transform .15s, box-shadow .15s}
+.vsub:hover{transform:translateY(-4px); box-shadow:0 14px 30px color-mix(in srgb,var(--sc) 22%,transparent)}
+.vsub-top{display:flex; justify-content:space-between; align-items:center}
+.vsub-ic{display:grid; place-items:center; width:46px; height:46px; border-radius:14px; color:#FFFFFF; background:linear-gradient(135deg,var(--sc),color-mix(in srgb,var(--sc) 55%,#1E1442)); box-shadow:0 6px 16px color-mix(in srgb,var(--sc) 35%,transparent)}
+.vsub b{font-family:var(--f-display); font-size:1.2rem}
+.vsub-st{display:flex; flex-wrap:wrap; gap:5px}
+.vsub-st span{font-size:.72rem; padding:2px 8px; border-radius:999px; background:#FFFFFFB3; border:1px solid color-mix(in srgb,var(--sc) 20%,#FFFFFF); color:var(--muted)}
+.vsub-go{margin-top:auto; padding-top:6px; font-weight:700; font-size:.88rem; color:var(--sc)}
+.vhow{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px}
+.vhow div{background:#FFFFFF; border:1px solid var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:4px}
+.vhow b{font-family:var(--f-display); color:#5F3DC4}.vhow span{font-size:.85rem; color:var(--muted)}
+/* subject page */
+.vtop{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:16px 18px; border-radius:20px; background:linear-gradient(120deg,var(--ss,#EFEAFF),#FFFFFF 70%); border:1px solid var(--line); border-top:5px solid var(--sc,#5F3DC4)}
+.vtop[data-s="mock"]{--sc:#5F3DC4; --ss:#EFEAFF}
+.vtop-t{flex:1; min-width:240px}.vtop-t h1{font-size:1.6rem; margin:2px 0}.vtop-t p{margin:2px 0 0; max-width:80ch}
+.vtop-r{display:flex; align-items:center; gap:12px}
+.vtop .btn.pri{background:var(--sc); border-color:var(--sc)}
+.vsubnav{display:flex; gap:8px; flex-wrap:wrap}
+.vsubnav .chip{text-decoration:none; color:var(--ink); border:1px solid var(--line); background:#FFFFFF; font-weight:600; padding:6px 12px}
+.vsubnav .chip.on{background:var(--sc); color:#FFFFFF; border-color:var(--sc)}
+.vstations{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 6px; scrollbar-width:thin}
+.vst{flex:none; border:1px solid var(--line); background:#FFFFFF; border-radius:12px; padding:9px 14px; font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; color:var(--ink); transition:all .15s}
+.vst small{font-family:var(--f-mono); font-weight:500; opacity:.6; margin-left:4px}
+.vst.on{background:var(--ink); color:#FFFFFF; border-color:var(--ink)}
+.vst:hover:not(.on){border-color:var(--accent)}
+.vtools{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.vsearch{flex:1; min-width:220px; display:flex; align-items:center; gap:8px; background:#FFFFFF; border:1px solid var(--line); border-radius:12px; padding:0 12px; color:var(--muted)}
+.vsearch input{flex:1; border:0; outline:0; font:inherit; padding:10px 0; background:transparent; color:var(--ink); min-width:0}
+.vsearch:focus-within{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+#vlist{display:flex; flex-direction:column; gap:18px}
+.vstation{background:#FFFFFF; border:1px solid var(--line); border-radius:20px; overflow:hidden}
+.vstation-h{display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; align-items:center; padding:16px 18px; background:linear-gradient(120deg,var(--ss),#FFFFFF 75%); border-bottom:1px solid var(--line)}
+.vstation-h>div:first-child{display:flex; gap:12px; align-items:center}
+.vstation-h h2{font-size:1.15rem}
+.vnum{display:grid; place-items:center; width:38px; height:38px; flex:none; border-radius:12px; background:var(--sc); color:#FFFFFF; font-family:var(--f-display); font-weight:800}
+.vtip{display:flex; gap:8px; align-items:flex-start; max-width:520px; font-size:.84rem; background:#FFF8E1; border:1px solid #FFE08A; border-radius:12px; padding:8px 12px; color:#5C4300}
+.vtip svg{flex:none; margin-top:2px}
+.vqs{list-style:none; margin:0; padding:0}
+.vqi{border-top:1px solid var(--line)}.vqi:first-child{border-top:0}
+.vq-q{width:100%; display:flex; gap:12px; align-items:flex-start; text-align:left; background:transparent; border:0; font:inherit; color:var(--ink); padding:14px 18px; cursor:pointer}
+.vq-q:hover{background:#FFF7FA}
+.vq-n{flex:none; width:26px; height:26px; display:grid; place-items:center; border-radius:8px; background:var(--sunk); font-family:var(--f-mono); font-size:.75rem; font-weight:700; color:var(--muted)}
+.vq-t{flex:1; font-weight:600; line-height:1.45}
+.vhy{flex:none; font-size:.72rem; font-weight:800; color:#B35C00; background:#FFF0D6; border-radius:999px; padding:2px 8px}
+.vq-s{flex:none; width:10px; height:10px; border-radius:50%; margin-top:8px; background:var(--line)}
+.vqi.known .vq-s{background:#2F9E44}.vqi.rev .vq-s{background:#F59F00}
+.vqi.known .vq-n{background:#EBFBEE; color:#2B8A3E}
+.vqi.open .vq-q{background:#FFF7FA}
+.vq-a{padding:0 18px 16px 56px}
+.vq-a p{margin:0 0 10px; line-height:1.6; background:var(--ss,#FFE6EF); border-left:4px solid var(--sc,var(--accent)); border-radius:0 12px 12px 0; padding:12px 14px}
+.vq-rate{display:flex; gap:8px; flex-wrap:wrap}
+.vq-rate .btn.on[data-v="2"]{background:#2F9E44; border-color:#2F9E44; color:#FFFFFF}
+.vq-rate .btn.on[data-v="1"]{background:#F59F00; border-color:#F59F00; color:#2B1D00}
+/* mock */
+#vm{display:flex; flex-direction:column; gap:14px}
+.vm-setup{display:flex; flex-direction:column; gap:12px; align-items:flex-start; max-width:760px}
+.vm-exam,.vm-av{display:grid; place-items:center; width:64px; height:64px; border-radius:20px; background:linear-gradient(135deg,#5F3DC4,#C2255C)}
+.vm-av{width:48px; height:48px; border-radius:14px}.vm-av svg{width:30px; height:30px}
+.vm-chips{display:flex; gap:8px; flex-wrap:wrap}
+.vm-chips .chip{border:1px solid var(--line); background:#FFFFFF; cursor:pointer; font-weight:600; padding:7px 13px}
+.vm-chips .chip.on{background:var(--sc,#5F3DC4); color:#FFFFFF; border-color:var(--sc,#5F3DC4)}
+.vm-opt{display:flex; gap:8px; align-items:center; font-size:.92rem}
+.vm-hud{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; background:#FFFFFF; border:1px solid var(--line); border-radius:14px; padding:10px 14px; --gc:#5F3DC4}
+.vm-card{display:flex; flex-direction:column; gap:14px; align-items:flex-start; border-top:5px solid var(--sc); animation:qtIn .3s ease}
+.vm-who{display:flex; gap:12px; align-items:center; width:100%}.vm-who>div{flex:1}
+.vm-who b{display:block}
+.vm-q{font-family:var(--f-display); font-size:clamp(1.25rem,2.4vw,1.6rem); font-weight:700; line-height:1.3; margin:0}
+.vm-a{width:100%; background:var(--ss); border-left:4px solid var(--sc); border-radius:0 14px 14px 0; padding:12px 16px}.vm-a p{margin:4px 0 0; line-height:1.6}
+.vm-rate{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; width:100%}
+.vm-rate .btn{justify-content:center; padding:12px}
+.vm-rate [data-v="2"]{border-color:#2F9E44; color:#2B8A3E}.vm-rate [data-v="1"]{border-color:#F59F00; color:#B35C00}.vm-rate [data-v="0"]{border-color:#E03131; color:#C92A2A}
+.vm-end{display:flex; flex-direction:column; gap:14px}
+.vm-weak{display:flex; flex-direction:column; gap:8px; padding-left:20px; margin:0}
+.vm-weak li p{margin:4px 0 0}
+/* home teaser */
+.vteaser{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:18px; align-items:center; padding:20px 24px; border-radius:22px; text-decoration:none; color:var(--ink); background:linear-gradient(115deg,#EFEAFF 0%,#FFFFFF 55%,#FFE6EF 100%); border:1px solid #DDD3FF; transition:transform .15s, box-shadow .15s}
+.vteaser:hover{transform:translateY(-3px); box-shadow:0 14px 30px rgba(95,61,196,.16)}
+.vteaser-ic{display:grid; place-items:center; width:68px; height:68px; border-radius:20px; background:linear-gradient(135deg,#5F3DC4,#C2255C); box-shadow:0 10px 22px rgba(95,61,196,.3)}
+.vteaser .eyebrow{color:#5F3DC4}
+.vteaser h2{margin:2px 0 4px; font-size:1.35rem}
+.vteaser p{margin:0}
+.vteaser-s{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
+.vteaser-s span{font-size:.75rem; font-weight:700; padding:3px 10px; border-radius:999px; background:var(--ss); color:var(--sc)}
+.vteaser-r{display:flex; flex-direction:column; align-items:center; gap:8px}
+.vteaser-r .vring{color:#5F3DC4}
+@media (max-width:900px){.vhero{grid-template-columns:minmax(0,1fr); padding:22px 18px} .vhow{grid-template-columns:repeat(2,minmax(0,1fr))} .vteaser{grid-template-columns:auto minmax(0,1fr)} .vteaser-r{grid-column:1/-1; flex-direction:row; justify-content:space-between}}
+@media (max-width:520px){.vhow{grid-template-columns:minmax(0,1fr)} .vq-a{padding-left:18px} .vq-q{padding:12px 14px} .vtip{max-width:none} .vm-rate{grid-template-columns:minmax(0,1fr)} .vteaser{padding:16px} .vteaser-ic{width:54px; height:54px} .vtop-r{width:100%; justify-content:space-between} .vhero-r b{font-size:1.6rem}}
+.vm-card{animation:none}.vm-card.in{animation:qtIn .3s ease}
+.vsubs{grid-template-columns:repeat(6,minmax(0,1fr))}
+.vsub{grid-column:span 2}.vsub:nth-child(n+4){grid-column:span 3}
+.vtop .vsub-ic{width:52px; height:52px; border-radius:16px}
+.vteaser-s span{display:inline-flex; align-items:center; gap:5px}
+@media (max-width:1100px){.vsubs{grid-template-columns:repeat(2,minmax(0,1fr))} .vsub,.vsub:nth-child(n+4){grid-column:auto}}
+@media (max-width:560px){.vsubs{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 <div class="app"><aside class="side" id="side" aria-label="Sidebar"></aside><main class="main" id="main"></main></div>
 <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
@@ -7535,6 +7695,337 @@ fmt10:["Forensic psychiatry deals with criminal responsibility of the mentally i
 fmt11:["Pharmaceutical, environmental and social toxicology covers paracetamol, salicylate and sedative poisoning, carbon monoxide and cyanide, alcohol and its medicolegal aspects (blood alcohol, drunkenness examination), and drug abuse under the NDPS Act.","Exam focus: drunkenness examination, CO poisoning and paracetamol poisoning."]
 };
 
+/* ============ Practicals & Viva — Pathology (original explanations) ============ */
+const VIVA=[];
+VIVA.push({s:"path",name:"Pathology",fmt:"Typical Phase II practical: haematology exercise (Hb / TLC / DLC / PBS), clinical pathology (urine), histopathology slides, gross specimens, spotters and a grand viva.",
+st:[
+{id:"hem",n:"Haematology bench",d:"Hb, TLC, DLC, ESR, PCV, BT/CT, blood grouping",tip:"State the principle first, then the method in 3–4 steps, the normal range, and one clinical use.",q:[
+["Principle of Sahli's haemoglobin estimation?","Hb is converted to acid haematin by N/10 HCl; the brown colour is diluted with water until it matches the standard comparator, and Hb is read directly in g/dL.",1],
+["Why is Sahli's method not very accurate?","Colour matching is subjective, the comparator fades, and not all Hb forms (carboxy-, sulph-Hb) convert to acid haematin. Error is about ±10%.",1],
+["Which method of Hb estimation is recommended by ICSH?","Cyanmethaemoglobin (Drabkin's) method — it converts all forms except sulphaemoglobin and is read on a colorimeter at 540 nm.",1],
+["Normal Hb values?","Adult men 13–17 g/dL; women 12–15 g/dL; newborn 14–20 g/dL. WHO anaemia cut-off: <13 men, <12 non-pregnant women, <11 pregnant women.",1],
+["Diluting fluid for TLC and its composition?","Turk's fluid: 2% glacial acetic acid (lyses RBCs) with gentian violet (stains WBC nuclei). Dilution 1:20 in the WBC pipette.",1],
+["How do you count WBCs on the Neubauer chamber?","Count cells in the four large corner squares (each 1 mm², depth 0.1 mm). TLC/µL = cells counted × dilution (20) ÷ volume (4 × 0.1 = 0.4) = N × 50.",1],
+["Normal TLC and causes of leucocytosis?","4,000–11,000/µL. Leucocytosis: bacterial infections, inflammation, stress, steroids, leukaemias. Leukopenia: typhoid, viral infections, aplastic anaemia, drugs.",0],
+["Stain used for a peripheral blood smear and why?","Leishman stain — a Romanowsky stain: methylene blue (basic) stains nuclei and basophilic structures; eosin (acidic) stains Hb and eosinophil granules. Methanol in it fixes the smear.",1],
+["Normal differential leucocyte count?","Neutrophils 40–75%, lymphocytes 20–45%, monocytes 2–10%, eosinophils 1–6%, basophils 0–1%.",1],
+["Features of a good blood smear?","Tongue-shaped, covers about two-thirds of the slide, thick head and thin feathery tail, no streaks or holes. Read in the monolayer just behind the tail.",0],
+["Methods of ESR estimation and normal values?","Westergren (gold standard, 200 mm tube, 3.8% sodium citrate 4:1) and Wintrobe. Normal: men 0–15, women 0–20 mm in the 1st hour.",1],
+["Factors that raise ESR?","Increased fibrinogen and globulins (rouleaux), anaemia, pregnancy, TB, multiple myeloma, rheumatic fever, malignancy. ESR is low in polycythaemia, sickle cell disease and hypofibrinogenaemia.",1],
+["What is PCV and its normal value?","Packed cell volume (haematocrit) — the percentage of blood volume occupied by RBCs after centrifuging in a Wintrobe tube. Men 40–50%, women 36–46%.",0],
+["Bleeding time vs clotting time — methods and what they test?","BT (Duke / Ivy): platelet number and function; normal 2–7 min. CT (Lee–White / capillary tube): intrinsic coagulation; normal 5–10 min (Lee–White).",1],
+["Principle of ABO blood grouping?","Agglutination: RBCs carrying antigen A or B clump with the matching antiserum. Forward grouping tests cells; reverse grouping tests serum against known A and B cells.",1],
+["Universal donor and universal recipient?","For red cells: O negative is the universal donor, AB positive the universal recipient. For plasma it is the reverse — AB plasma is universal.",0],
+["What is the reticulocyte count and its stain?","Immature RBCs with residual RNA, stained supravitally with new methylene blue or brilliant cresyl blue. Normal 0.5–2.5%; raised in haemolysis and after bleeding.",1],
+["Absolute eosinophil count — when is it raised?","Normal 40–440/µL. Raised in allergy, asthma, parasitic infestation (helminths), tropical pulmonary eosinophilia, Hodgkin lymphoma and drug reactions.",0]]},
+{id:"pbs",n:"Peripheral smear spotters",d:"Anaemias, leukaemias, malaria",tip:"Say: 'This is a peripheral smear stained with Leishman showing…' then RBC, WBC, platelets, and your diagnosis.",q:[
+["Peripheral smear in iron-deficiency anaemia?","Microcytic hypochromic RBCs with anisopoikilocytosis, pencil cells and target cells. Central pallor is more than one-third of the cell.",1],
+["Peripheral smear in megaloblastic anaemia?","Macro-ovalocytes, hypersegmented neutrophils (≥6 lobes or >5% with 5 lobes), anisopoikilocytosis and sometimes pancytopenia.",1],
+["What are target cells and where are they seen?","RBCs with a central dark spot (Mexican hat) due to excess membrane: thalassaemia, HbC, liver disease, post-splenectomy, iron deficiency.",0],
+["Smear findings in sickle cell anaemia?","Sickle-shaped RBCs, target cells, nucleated RBCs and Howell–Jolly bodies (autosplenectomy). Confirm with sickling test (sodium metabisulphite) and Hb electrophoresis.",1],
+["Smear in chronic myeloid leukaemia?","Marked leucocytosis with the full spectrum of myeloid cells — myelocytes and metamyelocytes peak ('myelocyte bulge'), basophilia, eosinophilia, few blasts. Confirm BCR-ABL / Philadelphia chromosome.",1],
+["Smear in chronic lymphocytic leukaemia?","Many small mature lymphocytes and smudge (basket) cells — fragile cells crushed while making the smear.",1],
+["Smear in acute leukaemia and how to tell AML from ALL?","Blasts >20%. AML blasts are larger with Auer rods and are MPO / Sudan black positive; ALL blasts are smaller with scanty cytoplasm, PAS block positivity and TdT positivity.",1],
+["How is malaria diagnosed on a smear?","Thick smear to detect parasites (sensitive), thin smear to identify the species. P. falciparum: ring forms, multiple rings, applique forms and banana-shaped gametocytes; P. vivax: enlarged RBCs with Schüffner's dots.",1],
+["What are schistocytes and their significance?","Fragmented RBCs (helmet cells) in microangiopathic haemolytic anaemia — DIC, TTP, HUS, prosthetic valves.",0],
+["Spherocytes are seen in?","Hereditary spherocytosis and autoimmune haemolytic anaemia. They lack central pallor; test with osmotic fragility (HS) or direct Coombs (AIHA).",0]]},
+{id:"urine",n:"Clinical pathology — urine",d:"Physical, chemical, microscopic urine examination",tip:"Name the test, the reagent, the positive result colour, and what it means.",q:[
+["Test for reducing sugar in urine?","Benedict's test: 5 mL Benedict's + 8 drops urine, boil. Colour green → yellow → orange → brick red corresponds to trace to ++++ glucose (cupric reduced to cuprous oxide).",1],
+["Tests for proteins in urine?","Heat and acetic acid test (coagulation), sulphosalicylic acid test, and dipstick (tetrabromophenol blue — detects mainly albumin).",1],
+["Why is acetic acid added in the heat coagulation test?","Heat causes turbidity from both proteins and phosphates; acetic acid dissolves phosphates, so turbidity that persists is protein.",1],
+["Test for ketone bodies in urine?","Rothera's test: ammonium sulphate + sodium nitroprusside + liquor ammonia gives a permanganate-purple ring with acetoacetate and acetone (not β-hydroxybutyrate).",1],
+["Tests for bile salts and bile pigments?","Bile salts: Hay's sulphur test (sulphur sinks because surface tension is lowered). Bile pigments: Fouchet's test (green-blue colour).",1],
+["What is Bence Jones protein?","Free immunoglobulin light chains in urine in multiple myeloma — precipitates at 40–60 °C and redissolves on boiling. Confirm by urine protein electrophoresis.",1],
+["Normal urine specific gravity and causes of fixed SG?","1.003–1.030. Fixed at 1.010 (isosthenuria) in chronic kidney disease.",0],
+["Significance of RBC casts and WBC casts?","RBC casts: glomerulonephritis. WBC casts: pyelonephritis / interstitial nephritis. Hyaline casts can be normal; waxy casts mean chronic renal failure.",1],
+["Common urinary crystals?","Acid urine: calcium oxalate (envelope), uric acid. Alkaline urine: triple phosphate (coffin-lid), amorphous phosphates. Cystine (hexagonal) is always abnormal.",0]]},
+{id:"histo",n:"Histopathology slides",d:"Common slides and their key features",tip:"Describe at low power then high power, end with the diagnosis and one differential.",q:[
+["Microscopy of a tuberculous granuloma?","Central caseous necrosis surrounded by epithelioid cells, Langhans giant cells (nuclei arranged like a horseshoe at the periphery), a lymphocyte cuff and fibroblasts.",1],
+["Squamous cell carcinoma — key features?","Islands of atypical squamous cells invading the stroma, keratin pearls, intercellular bridges and individual cell keratinisation.",1],
+["Basal cell carcinoma — key features?","Nests of basaloid cells with peripheral palisading, retraction artefact from stroma; no keratin pearls. Locally invasive (rodent ulcer), rarely metastasises.",1],
+["Fibroadenoma breast — microscopy?","Circumscribed tumour with proliferating stroma and compressed ducts — intracanalicular (slit-like) and pericanalicular (round ducts) patterns.",1],
+["Leiomyoma — microscopy?","Interlacing fascicles of spindle smooth-muscle cells with cigar-shaped (blunt-ended) nuclei, whorled pattern, no atypia and few mitoses.",1],
+["Fatty liver — microscopy?","Hepatocytes distended by clear fat vacuoles pushing the nucleus to the periphery (signet-ring look). Macrovesicular in alcohol and obesity; microvesicular in Reye syndrome and pregnancy.",1],
+["Chronic venous congestion of lung?","Thickened alveolar septa, congested capillaries and haemosiderin-laden macrophages ('heart failure cells') in the alveoli — brown induration.",1],
+["Chronic venous congestion of liver?","Centrilobular congestion and necrosis with peripheral fatty change — the nutmeg liver pattern; long-standing cases develop cardiac sclerosis.",1],
+["Hodgkin lymphoma — diagnostic cell?","Reed–Sternberg cell: large binucleate or bilobed cell with owl-eye eosinophilic nucleoli; CD15+ and CD30+, in a mixed inflammatory background.",1],
+["Papillary carcinoma thyroid — features?","Papillae with fibrovascular cores, Orphan Annie (ground-glass) nuclei, nuclear grooves and pseudo-inclusions, and psammoma bodies.",1],
+["Osteosarcoma — microscopy?","Malignant pleomorphic cells directly forming lacy osteoid. Common in the metaphysis around the knee in adolescents; X-ray shows Codman triangle and sunburst.",1],
+["Pleomorphic adenoma — microscopy?","Epithelial and myoepithelial cells in ducts and sheets mixed with chondromyxoid stroma. Common in the parotid; may recur if incompletely excised.",0],
+["Adenocarcinoma colon — microscopy?","Malignant glands with back-to-back arrangement, nuclear stratification and 'dirty' necrosis, invading the muscularis.",0],
+["Lipoma — microscopy?","Mature adipocytes separated by thin fibrous septa, enclosed in a thin capsule.",0],
+["Haemangioma — microscopy?","Capillary type: lobules of small capillaries; cavernous type: large dilated blood-filled spaces lined by flat endothelium.",0],
+["Seminoma — microscopy?","Sheets of large cells with clear cytoplasm and central nuclei, separated by fibrous septa infiltrated by lymphocytes.",0]]},
+{id:"gross",n:"Gross specimens",d:"Common museum specimens",tip:"Identify organ → describe size, cut surface, lesion → diagnosis → one complication.",q:[
+["Gross features of lobar pneumonia stages?","Congestion → red hepatisation (firm, red, liver-like) → grey hepatisation → resolution. Usually Streptococcus pneumoniae.",1],
+["Gross appearance of a chronic peptic ulcer?","Round to oval, punched-out ulcer, usually on the lesser curvature, with clean base, straight walls and flat margins; folds radiate from it.",1],
+["How to differentiate a benign from a malignant gastric ulcer grossly?","Malignant: larger, irregular, heaped-up everted margins, necrotic base, folds interrupted. Benign: punched out with flat margins and radiating folds.",1],
+["Gross features of cirrhosis?","Shrunken nodular liver with diffuse nodules separated by fibrous bands; micronodular (<3 mm, alcohol) or macronodular (post-viral).",1],
+["Infarct spleen — gross?","Wedge-shaped, pale (anaemic) infarct with the base toward the capsule; spleen has end-arteries.",1],
+["Hydronephrosis — gross?","Dilated pelvis and calyces with thinned-out cortex; cause usually obstruction (stone, PUJ obstruction, BPH).",0],
+["Tuberculous lung — gross?","Apical cavity with caseous material, fibrosis and pleural thickening; Ghon focus is subpleural in the lower upper lobe or upper lower lobe in primary TB.",1],
+["Bronchiectasis — gross?","Permanently dilated bronchi reaching up to the pleura, usually in lower lobes, with thickened walls and pus.",0],
+["Carcinoma colon gross types?","Right side: polypoid, fungating (presents with anaemia). Left side: annular napkin-ring constricting (presents with obstruction).",1],
+["Gangrene — dry vs wet?","Dry: arterial occlusion, shrivelled black limb with clear line of demarcation. Wet: venous + arterial, moist, swollen, infected, no clear line, spreads fast (bowel, diabetic foot).",1]]},
+{id:"gen",n:"Grand viva",d:"General pathology concepts examiners love",tip:"Give a one-line definition first, then classification, then an example.",q:[
+["Define necrosis and its types.","Death of cells in living tissue with inflammation. Types: coagulative, liquefactive, caseous, fat, fibrinoid and gangrenous.",1],
+["Apoptosis vs necrosis?","Apoptosis: programmed, single cells, shrinkage, intact membrane, no inflammation, DNA ladder. Necrosis: groups of cells, swelling, membrane rupture, inflammation, smear on gel.",1],
+["Define metaplasia with examples.","Reversible replacement of one adult cell type by another: columnar to squamous in smokers' bronchi; squamous to columnar in Barrett oesophagus.",1],
+["What is dystrophic vs metastatic calcification?","Dystrophic: in dead tissue with normal serum calcium (atheroma, TB, damaged valves). Metastatic: in normal tissue with hypercalcaemia (hyperparathyroidism, vitamin D excess).",1],
+["Virchow's triad?","Endothelial injury, abnormal blood flow (stasis or turbulence) and hypercoagulability — the three factors for thrombosis.",1],
+["Define embolism; commonest type?","A detached intravascular mass carried by blood to a distant site. Most common: thromboembolism, especially pulmonary embolism from deep vein thrombosis.",1],
+["Benign vs malignant tumour?","Malignant: rapid growth, infiltration, poorly circumscribed, anaplasia, high mitoses, metastasis. Benign: slow, encapsulated, well-differentiated, no metastasis.",1],
+["Routes of metastasis?","Lymphatic (carcinomas), haematogenous (sarcomas; also RCC, HCC, follicular thyroid), and transcoelomic (ovary, stomach — Krukenberg).",1],
+["What is amyloid and its staining?","Extracellular fibrillar protein with β-pleated sheet. Congo red: pink-red; apple-green birefringence under polarised light.",1],
+["What is the difference between grading and staging?","Grading: degree of differentiation (histology). Staging: extent of spread — TNM. Staging has more prognostic value.",1],
+["Fixative used for histopathology?","10% neutral buffered formalin, about 10 times the specimen volume. It cross-links proteins.",0]]}]});
+
+/* ============ Practicals & Viva — Microbiology ============ */
+VIVA.push({s:"micro",name:"Microbiology",fmt:"Typical Phase II practical: Gram stain and ZN stain exercises, stool examination, culture media and spotters (sterilisation, serology, biochemical tests, parasites, fungi), plus a grand viva.",
+st:[
+{id:"stain",n:"Staining exercises",d:"Gram, Ziehl–Neelsen, Albert, special stains",tip:"Give the steps with timings, the result, and two organisms you would see.",q:[
+["Steps of Gram staining?","Crystal violet 1 min → Gram's iodine (mordant) 1 min → decolourise with acetone / alcohol a few seconds → safranin counterstain 30 s. Gram-positive: purple; Gram-negative: pink.",1],
+["Why do Gram-positive bacteria retain the crystal violet?","Their thick peptidoglycan wall traps the crystal violet–iodine complex; decolouriser dehydrates and shrinks the pores. Gram-negatives have a thin wall and lipid-rich outer membrane that the decolouriser dissolves.",1],
+["Most critical step in Gram stain?","Decolourisation — over-decolourising makes positives look negative; under-decolourising makes negatives look positive.",1],
+["Steps of Ziehl–Neelsen staining?","Carbol fuchsin with heating until steam rises for 5 min → 20% H₂SO₄ decolourise → methylene blue counterstain. Acid-fast bacilli: pink-red rods on blue background.",1],
+["Why are mycobacteria acid fast?","High mycolic acid content in the cell wall resists decolourisation by acid once stained with hot carbol fuchsin.",1],
+["Acid used to decolourise for M. leprae and why?","5% H₂SO₄ — M. leprae is less acid-fast than M. tuberculosis (20%).",1],
+["How is sputum ZN graded (RNTCP/NTEP)?","No AFB in 100 fields: negative; 1–9/100 fields: scanty (record number); 10–99/100 fields: 1+; 1–10/field: 2+; >10/field: 3+.",1],
+["Other acid-fast structures?","Nocardia (weakly, 1% H₂SO₄), Cryptosporidium and Cyclospora oocysts, bacterial spores, Isospora, sperm heads.",0],
+["Albert's stain is used for?","Corynebacterium diphtheriae — metachromatic (volutin / Babes–Ernst) granules stain bluish-black, bacilli green, in Chinese-letter arrangement.",1],
+["Negative staining example?","India ink for capsules of Cryptococcus neoformans in CSF — clear halo around budding yeast against a dark background.",1],
+["What is a hanging drop preparation used for?","To see motility: darting motility of Vibrio cholerae, tumbling of Listeria, gliding of Mycoplasma, corkscrew of spirochaetes.",0]]},
+{id:"media",n:"Culture media",d:"Identify the medium, type and use",tip:"Name it, classify it (basal / enriched / selective / differential / enrichment / transport), give the organism it's used for.",q:[
+["Classify culture media with examples.","Basal: nutrient agar. Enriched: blood, chocolate agar. Selective: LJ, TCBS, DCA. Differential: MacConkey. Enrichment (liquid): selenite F, alkaline peptone water. Transport: Cary-Blair, Stuart. Anaerobic: Robertson cooked meat.",1],
+["MacConkey agar — components and use?","Peptone, lactose, bile salts, neutral red. Differential for Gram-negatives: lactose fermenters (E. coli, Klebsiella) form pink colonies; non-fermenters (Salmonella, Shigella, Proteus) pale.",1],
+["Why is it called chocolate agar?","Blood agar heated to ~80 °C — lysed RBCs release X (haemin) and V (NAD) factors; used for Haemophilus and Neisseria.",1],
+["Types of haemolysis on blood agar?","Alpha: partial, greenish (S. pneumoniae, viridans). Beta: complete, clear (S. pyogenes, S. aureus). Gamma: none (Enterococcus).",1],
+["Lowenstein–Jensen medium?","Egg-based selective medium with malachite green (inhibits other bacteria) for Mycobacterium tuberculosis — rough, buff, tough colonies in 2–8 weeks.",1],
+["TCBS agar is used for?","Vibrio cholerae — yellow colonies (sucrose fermenter). Thiosulphate citrate bile salt sucrose; alkaline pH (8.6).",1],
+["Media for Salmonella typhi in stool?","Selenite F broth (enrichment), then Wilson–Blair (black metallic sheen colonies), DCA or XLD (red with black centre).",1],
+["Robertson's cooked meat medium?","Anaerobic medium (meat particles provide reducing substances); Clostridium perfringens turns meat pink (saccharolytic), C. tetani blackens it (proteolytic).",0],
+["Sabouraud dextrose agar?","Fungal medium — acidic pH 5.6 and high sugar inhibit bacteria; add chloramphenicol / cycloheximide for selectivity.",1],
+["Loeffler's serum slope?","For C. diphtheriae — fast growth in 6–8 h and good granule formation.",0]]},
+{id:"ster",n:"Sterilisation spotters",d:"Autoclave, hot air oven, filters, indicators",tip:"Give principle, temperature-time, what is sterilised, and the control used.",q:[
+["Define sterilisation vs disinfection.","Sterilisation kills all forms including spores. Disinfection removes most pathogens but not necessarily spores.",1],
+["Principle and settings of an autoclave?","Moist heat (steam under pressure) — 121 °C at 15 psi for 15 min, or 134 °C for 3 min. Denatures and coagulates proteins.",1],
+["Biological indicator for autoclave?","Spores of Geobacillus (Bacillus) stearothermophilus.",1],
+["Hot air oven — settings and uses?","Dry heat 160 °C for 2 h (or 180 °C 30 min). For glassware, metal instruments, powders, oils and greases. Indicator: Bacillus atrophaeus (subtilis) spores.",1],
+["Why is moist heat better than dry heat?","Steam has latent heat of condensation and penetrates better; it kills by coagulation at lower temperatures and shorter times.",0],
+["What is tyndallisation?","Intermittent steaming at 100 °C for 20 min on three consecutive days — kills vegetative forms and then germinated spores; used for sugar and gelatin media.",1],
+["What is pasteurisation?","Holder method 63 °C × 30 min; flash method 72 °C × 15–20 s. Kills Brucella, Coxiella, Mycobacteria in milk (not sterilisation). Test: phosphatase test.",1],
+["Filters used to sterilise sera and antibiotics?","Membrane filters (0.22 µm), Seitz (asbestos), sintered glass. Used for heat-labile fluids.",0],
+["How are disposable syringes and catheters sterilised?","Ionising (gamma) radiation — cold sterilisation; or ethylene oxide for heat-sensitive plastics.",1],
+["Agent for high-level disinfection of endoscopes?","2% glutaraldehyde (Cidex) for 20 min, or ortho-phthalaldehyde.",1]]},
+{id:"bio",n:"Biochemical & serology tests",d:"Catalase, coagulase, IMViC, Widal, VDRL",tip:"State the reagent, the positive result and the organism differentiated.",q:[
+["Catalase test — principle and use?","H₂O₂ is broken to O₂ — bubbles. Staphylococci are positive, streptococci negative.",1],
+["Coagulase test and its significance?","Bound (slide) and free (tube) coagulase clot plasma. Coagulase-positive = S. aureus; marks pathogenicity.",1],
+["What is IMViC?","Indole, Methyl red, Voges–Proskauer, Citrate. E. coli: ++−−; Klebsiella: −−++.",1],
+["Oxidase test — positive organisms?","Purple colour with tetramethyl-p-phenylenediamine: Pseudomonas, Vibrio, Neisseria. All Enterobacteriaceae are oxidase negative.",1],
+["Urease test positive organisms?","Proteus (rapid), Klebsiella, H. pylori, Cryptococcus, Ureaplasma. Christensen's urea agar turns pink.",0],
+["Principle and interpretation of the Widal test?","Tube / slide agglutination detecting antibodies to O and H antigens of S. Typhi and Paratyphi. Significant: rising titre (4-fold) in paired sera; single titre O ≥1:160, H ≥1:200 in endemic areas (lab-specific).",1],
+["Limitations of Widal?","Prior vaccination, previous infection, cross-reacting antibodies, early antibiotics and anamnestic responses — blood culture is the gold standard in the 1st week.",1],
+["VDRL — type and limitations?","Non-treponemal flocculation test using cardiolipin antigen. False positives: pregnancy, SLE, leprosy, malaria, IV drug use. Confirm with TPHA / FTA-ABS.",1],
+["What is the ASO test for?","Antistreptolysin O titre >200 IU/mL indicates recent S. pyogenes infection — supports rheumatic fever (Jones criteria).",0],
+["Principle of ELISA?","Enzyme-labelled antigen or antibody; substrate converts to colour proportional to the target. Used for HIV, HBsAg, dengue NS1 / IgM.",1]]},
+{id:"para",n:"Parasitology & mycology",d:"Stool examination, ova, KOH mount",tip:"Describe size, shape, shell, contents; name the parasite and the stage.",q:[
+["How is a stool saline and iodine mount done?","Saline mount shows motile trophozoites and ova; Lugol's iodine stains cyst nuclei and glycogen, making cysts easier to identify.",1],
+["Features of an Ascaris lumbricoides ovum?","Fertilised: round-oval, bile-stained brown, thick mammillated albuminous coat, unsegmented ovum. Unfertilised: elongated, thin shell, granular.",1],
+["Features of a hookworm ovum?","Oval, colourless, thin transparent shell with a clear space; segmented ovum with 4–8 blastomeres. Not bile-stained.",1],
+["Taenia egg?","Spherical, brown, radially striated embryophore with a hexacanth (six-hooked) oncosphere — T. solium and T. saginata look alike.",1],
+["Entamoeba histolytica cyst vs trophozoite?","Cyst: round, 1–4 nuclei with central karyosome, chromatoid bars. Trophozoite: ingested RBCs (diagnostic of E. histolytica), finger-like pseudopodia.",1],
+["Giardia — forms seen?","Trophozoite: pear/tennis-racket shape, two nuclei (‘face’ appearance), falling-leaf motility. Cyst: oval, four nuclei.",1],
+["What is a KOH mount used for?","10% KOH digests keratin in skin, hair and nails to reveal fungal hyphae or spores (dermatophytes, Candida).",1],
+["Germ tube test?","Candida albicans forms germ tubes in serum at 37 °C within 2 hours (Reynold–Braude phenomenon).",1],
+["Concentration methods for stool?","Floatation (saturated salt, zinc sulphate) and sedimentation (formol-ether). Used when ova are scanty.",0]]},
+{id:"gen",n:"Grand viva",d:"Immunology, hospital infection, vaccines",tip:"Define, classify, one example — keep it crisp.",q:[
+["Koch's postulates?","Organism in every case; isolated in pure culture; reproduces disease in a susceptible animal; re-isolated from that animal.",1],
+["Types of hypersensitivity?","Type I IgE (anaphylaxis), II cytotoxic (transfusion reaction), III immune complex (serum sickness, PSGN), IV delayed T-cell (Mantoux, contact dermatitis).",1],
+["Principle and reading of the Mantoux test?","Type IV hypersensitivity: 5 TU PPD intradermally, read induration at 48–72 h. ≥10 mm positive (≥5 mm in HIV / immunosuppressed).",1],
+["Live attenuated vaccines?","BCG, OPV, measles / MR, MMR, rotavirus, yellow fever, varicella, oral typhoid Ty21a.",1],
+["Five moments of hand hygiene?","Before touching a patient, before a clean/aseptic procedure, after body fluid exposure risk, after touching a patient, after touching patient surroundings.",1],
+["Colour coding of biomedical waste?","Yellow: anatomical, soiled, chemical waste; Red: contaminated recyclable plastics; White translucent: sharps; Blue: glassware and metallic implants.",1],
+["Post-exposure prophylaxis after a needle-stick from an HIV-positive patient?","Wash with soap and water (don't squeeze or use bleach), report, test baseline, start PEP within 2 h ideally (max 72 h) — TDF + 3TC + DTG for 28 days.",1],
+["Exotoxin vs endotoxin?","Exotoxin: protein, secreted, heat-labile, highly antigenic, toxoid possible. Endotoxin: LPS of Gram-negative wall, heat-stable, weakly antigenic, no toxoid.",1],
+["What is a nosocomial infection?","An infection acquired in hospital, not present or incubating at admission, appearing 48 h or more after admission — e.g. CAUTI, CLABSI, VAP, SSI.",0]]}]});
+
+/* ============ Practicals & Viva — Pharmacology ============ */
+VIVA.push({s:"pharm",name:"Pharmacology",fmt:"Typical Phase II practical (CBME): prescription writing and critical appraisal, dosage-form spotters, experimental pharmacology (computer simulations / charts), clinical pharmacology exercises (ADR reporting, drug interactions, P-drug), and a viva.",
+st:[
+{id:"rx",n:"Prescription writing",d:"Parts of a prescription, rational prescribing",tip:"Write the prescription in order, then defend each drug: why this, why this dose, why this duration.",q:[
+["Parts of a prescription?","Prescriber details and registration number, date, patient details (name, age, sex, weight, address), diagnosis, superscription (℞), inscription (drug, strength, form), subscription (dispensing instructions), signa (directions to the patient), refill info, signature.",1],
+["What does ℞ stand for?","‘Recipe’ — Latin for ‘take thou’.",1],
+["Why should drugs be written in generic names?","Cheaper, unambiguous, MCI/NMC guidance, and avoids brand confusion. Write in CAPITALS, legibly.",1],
+["Common Latin abbreviations?","OD once daily, BD twice, TDS thrice, QID four times, HS at bedtime, SOS if required, STAT immediately, AC before food, PC after food.",1],
+["What is a P-drug?","A ‘personal drug’ chosen by the prescriber for a common condition after comparing efficacy, safety, suitability and cost (WHO Guide to Good Prescribing).",1],
+["Write a prescription for uncomplicated P. vivax malaria in an adult.","Chloroquine 10 mg/kg day 1 & 2 and 5 mg/kg day 3 (600 mg, 600 mg, 300 mg base for 60 kg) + primaquine 0.25 mg/kg daily × 14 days after G6PD screening (national guidelines).",1],
+["Write a prescription for acute watery diarrhoea in a child.","ORS (low osmolarity) as per dehydration plan + zinc 20 mg/day × 14 days (10 mg below 6 months); continue feeding; no antibiotics unless dysentery or cholera.",1],
+["What is an irrational fixed-dose combination?","A combination without proven synergy or with mismatched pharmacokinetics, e.g. antibiotic + antidiarrhoeal or multiple NSAIDs together — increases cost and ADRs.",0],
+["Essential medicines concept?","Medicines that satisfy priority health-care needs, chosen on efficacy, safety and cost (WHO model list; NLEM in India).",1]]},
+{id:"forms",n:"Dosage forms spotters",d:"Tablets, injections, inhalers, topical forms",tip:"Identify the form → define it → give its advantage → example drug.",q:[
+["What is an enteric-coated tablet? Example.","Coated to resist gastric acid and dissolve in the intestine — protects the drug from acid or the stomach from the drug: aspirin EC, pantoprazole, bisacodyl. Don't crush.",1],
+["Sustained-release vs controlled-release?","SR releases slowly over a period to reduce dosing frequency; CR maintains a near-constant release (zero-order) e.g. nifedipine GITS. Both shouldn't be chewed.",1],
+["Why are some drugs given sublingually?","Fast absorption and bypass of first-pass metabolism — nitroglycerin in angina, buprenorphine.",1],
+["Metered-dose inhaler technique?","Shake, breathe out, seal lips, press and inhale slowly and deeply, hold breath 10 s; use a spacer for children and poor coordination. Rinse mouth after inhaled steroids.",1],
+["MDI vs DPI?","MDI uses propellant and needs hand–breath coordination; DPI is breath-actuated (needs a good inspiratory flow), no propellant.",0],
+["What is a transdermal patch? Examples.","Delivers drug through skin at a controlled rate into systemic circulation: nitroglycerin, fentanyl, nicotine, scopolamine, oestrogen.",1],
+["Ointment vs cream?","Ointment: greasy, occlusive, better for dry lesions. Cream: oil-in-water emulsion, non-greasy, for moist or hairy areas.",0],
+["Suppository — advantages?","Useful in vomiting or unconscious patients and children; partial bypass of first-pass metabolism: paracetamol, diazepam (rectal), bisacodyl, glycerine.",0],
+["Ampoule vs vial?","Ampoule: sealed glass, single dose. Vial: rubber-stoppered, may be multi-dose and often needs reconstitution (e.g. ceftriaxone).",0],
+["Routes of injection and the angle of the needle?","Intradermal 10–15°, subcutaneous 45°, intramuscular 90°, intravenous 25°.",1]]},
+{id:"exp",n:"Experimental pharmacology",d:"Simulations: BP, eye, dose–response",tip:"Describe what the chart shows, explain the receptor mechanism, then name the clinical application.",q:[
+["What is Dale's vasomotor reversal?","Adrenaline normally raises BP (α1) then a fall (β2). After an α-blocker (phenoxybenzamine), adrenaline causes only a fall — unopposed β2 vasodilation.",1],
+["Effect of atropine on acetylcholine-induced fall in BP?","Atropine blocks muscarinic M3 receptors, so small doses of ACh no longer lower BP; large ACh doses then raise BP via nicotinic ganglia and adrenal medulla.",1],
+["Mydriatic and miotic drugs in the rabbit-eye experiment?","Mydriatics: atropine, homatropine (no light reflex — cycloplegia), phenylephrine (light reflex preserved). Miotics: pilocarpine, physostigmine.",1],
+["Why is light reflex absent after atropine but present after phenylephrine?","Atropine blocks the sphincter pupillae (parasympathetic) so it can't constrict; phenylephrine only stimulates the dilator, so the sphincter still responds to light.",1],
+["What does a log dose–response curve show?","Sigmoid curve: potency (position on the x-axis, EC50), efficacy (maximal height), slope. Competitive antagonist shifts it right in parallel; non-competitive lowers the maximum.",1],
+["Potency vs efficacy?","Potency: dose needed for an effect. Efficacy: maximum response achievable. Efficacy matters more clinically (e.g. furosemide vs thiazide).",1],
+["Therapeutic index?","LD50/ED50 (in humans TD50/ED50). Low TI drugs need monitoring: digoxin, lithium, warfarin, aminoglycosides, theophylline, phenytoin.",1],
+["Why are animal simulations used in CBME?","The 3Rs (replacement, reduction, refinement) and the CPCSEA guidance — computer-assisted learning replaces most live-animal experiments.",0]]},
+{id:"clin",n:"Clinical pharmacology",d:"ADRs, interactions, TDM, dosing",tip:"Use one concrete example in every answer.",q:[
+["What is an adverse drug reaction (WHO)?","A response to a drug that is noxious and unintended and occurs at doses normally used in humans for prophylaxis, diagnosis or therapy.",1],
+["How do you report an ADR in India?","Through the Pharmacovigilance Programme of India (PvPI, IPC Ghaziabad) — Suspected ADR Reporting Form, the ADR PvPI app or helpline 1800-180-3024. Report even if unsure of causality.",1],
+["Type A vs Type B ADR?","A (augmented): dose-related, predictable — hypoglycaemia with insulin. B (bizarre): not dose-related, unpredictable — anaphylaxis to penicillin, SJS.",1],
+["Causality assessment scales?","WHO-UMC (certain, probable, possible, unlikely…) and Naranjo algorithm (score ≥9 definite).",1],
+["Example of enzyme induction interaction?","Rifampicin induces CYP3A4 and reduces levels of oral contraceptives, warfarin and protease inhibitors — contraceptive failure.",1],
+["Example of enzyme inhibition interaction?","Erythromycin / clarithromycin or ketoconazole inhibit CYP3A4 and raise levels of terfenadine / cisapride (QT prolongation) or statins (myopathy).",1],
+["Drugs needing therapeutic drug monitoring?","Low TI and variable kinetics: digoxin, lithium, phenytoin, aminoglycosides, vancomycin, cyclosporine, tacrolimus.",1],
+["Paediatric dose formulae?","Young's: age/(age + 12) × adult dose. Clark's: weight (lb)/150 × adult dose. Body-surface area method is the most accurate.",1],
+["Drugs contraindicated in pregnancy?","ACE inhibitors, warfarin, isotretinoin, valproate, tetracyclines, methotrexate, thalidomide, misoprostol (except medical indications), statins.",1],
+["What is a placebo and nocebo?","Placebo: inert substance producing a response through expectation. Nocebo: negative effects from negative expectations.",0]]},
+{id:"gen",n:"Grand viva",d:"High-yield concepts across systems",tip:"Mechanism → one use → one adverse effect — the three-line answer.",q:[
+["Drug of choice for anaphylaxis and dose?","Adrenaline 1:1000 (1 mg/mL) 0.5 mg IM in the anterolateral thigh for adults (0.01 mg/kg in children), repeat every 5–15 min.",1],
+["Antidote for organophosphate poisoning?","Atropine (titrate until secretions dry and chest clear) + pralidoxime (oxime) early to reactivate cholinesterase.",1],
+["Antidote for paracetamol poisoning?","N-acetylcysteine (replenishes glutathione) — best within 8–10 h; decide using the Rumack–Matthew nomogram.",1],
+["Antidotes to remember?","Opioid: naloxone. Benzodiazepine: flumazenil. Heparin: protamine. Warfarin: vitamin K. Methanol: fomepizole/ethanol. Iron: desferrioxamine. Digoxin: Fab. Cyanide: hydroxocobalamin / nitrites + thiosulphate.",1],
+["Mechanism of aspirin's antiplatelet action?","Irreversible acetylation of COX-1 in platelets → no thromboxane A2 for the platelet's life (7–10 days). Low dose 75–150 mg.",1],
+["First-line anti-TB drugs and key toxicities?","Isoniazid (neuropathy, hepatitis), rifampicin (orange urine, hepatitis, enzyme induction), pyrazinamide (hepatitis, gout), ethambutol (optic neuritis).",1],
+["Drug of choice for status epilepticus?","IV lorazepam 4 mg (or diazepam / IM midazolam), then fosphenytoin / phenytoin, valproate or levetiracetam.",1],
+["Why is propranolol contraindicated in asthma?","Non-selective β-blockade blocks β2 bronchodilation → bronchospasm.",1],
+["What is first-pass metabolism?","Metabolism of an oral drug in gut wall and liver before reaching systemic circulation — high for nitroglycerin, propranolol, lidocaine, morphine.",1],
+["Loading dose vs maintenance dose?","Loading = Vd × target concentration; reaches steady state quickly. Maintenance = CL × target concentration × dosing interval; keeps it there.",0]]}]});
+
+/* ============ Practicals & Viva — Community Medicine ============ */
+VIVA.push({s:"cm",name:"Community Medicine",fmt:"Typical practical: spotters (vaccines & cold chain, entomology, insecticides, environment, nutrition, contraceptives), epidemiology & biostatistics exercises, family / clinico-social case presentation, and viva.",
+st:[
+{id:"vac",n:"Vaccines & cold chain",d:"National Immunisation Schedule, cold chain equipment",tip:"Name the vaccine, type, dose, route, site, schedule and storage.",q:[
+["BCG — type, dose, route and site?","Live attenuated (Danish 1331 strain). 0.1 mL (0.05 mL under 1 month) intradermal, left upper arm, at birth up to 1 year.",1],
+["Pentavalent vaccine contains?","DPT + Hepatitis B + Hib. 0.5 mL IM anterolateral thigh at 6, 10 and 14 weeks.",1],
+["OPV and IPV schedule?","OPV: birth dose, 6, 10, 14 weeks, and booster at 16–24 months. fIPV: 0.1 mL intradermal at 6 and 14 weeks (+ 9 months in the current schedule). ",1],
+["Measles–Rubella vaccine schedule?","MR 0.5 mL subcutaneous, right upper arm, at 9–12 months and 16–24 months.",1],
+["What is a vaccine vial monitor (VVM)?","A heat-sensitive square inside a circle on the vial; if the inner square is the same colour as or darker than the circle, discard the vial (cumulative heat exposure).",1],
+["Shake test is done for?","Freeze-damage of adsorbed vaccines (DPT, pentavalent, Td, Hep B). Frozen vaccine sediments faster than a control frozen sample.",1],
+["Which vaccines are most heat-sensitive and most freeze-sensitive?","Heat: OPV is most sensitive, then measles/MR. Freeze: Hep B is most sensitive, then pentavalent, DPT, Td, IPV.",1],
+["Ice-lined refrigerator storage?","+2 to +8 °C. At the PHC all vaccines (including OPV) are kept in the ILR basket, with freeze-sensitive vaccines away from the walls and bottom; the deep freezer is used to freeze icepacks.",0],
+["Cold chain equipment at different levels?","Walk-in coolers/freezers (state, region), ILR + deep freezers (district, PHC), cold boxes and vaccine carriers with conditioned icepacks (outreach sessions).",1],
+["Open vial policy?","Opened vials of OPV, pentavalent, DPT, TT/Td, Hep B, PCV and IPV may be used for up to 28 days if stored properly; BCG, MR, rotavirus and JE are discarded after 4 h or at session end.",1]]},
+{id:"ento",n:"Medical entomology & insecticides",d:"Mosquitoes, flies, fleas, lice and control",tip:"Identify → disease transmitted → breeding habit → control measure.",q:[
+["How do you identify Anopheles?","Resting at an angle to the surface, spotted wings, palps as long as the proboscis in both sexes, eggs with lateral floats laid singly. Transmits malaria.",1],
+["Culex vs Aedes?","Culex: brown, rests parallel, eggs in rafts, breeds in dirty water — filaria, JE. Aedes: black with white stripes (tiger mosquito), day-biter, breeds in clean stored water — dengue, chikungunya, Zika, yellow fever.",1],
+["Sandfly transmits?","Kala-azar (Leishmania donovani), oriental sore and sandfly fever. Control: indoor residual spraying.",1],
+["Rat flea transmits?","Xenopsylla cheopis — plague (Yersinia pestis) and endemic (murine) typhus. Cheopis index >1 means plague risk.",1],
+["Housefly transmits?","Mechanically: typhoid, cholera, dysentery, amoebiasis, trachoma, polio.",0],
+["What is temephos (Abate) used for?","Organophosphate larvicide for clean water (Aedes / Anopheles breeding), 1 ppm.",1],
+["Indoor residual spraying insecticides?","DDT (now limited), malathion, synthetic pyrethroids (deltamethrin, cyfluthrin, alpha-cypermethrin).",1],
+["What is an LLIN?","Long-lasting insecticidal net impregnated with pyrethroid that stays effective for about 3 years / 20 washes.",1],
+["Biological control of mosquito larvae?","Larvivorous fish — Gambusia and Guppy; Bacillus thuringiensis israelensis (Bti).",0]]},
+{id:"env",n:"Environment & water",d:"Chlorination, Horrocks, sanitation",tip:"Purpose → principle → normal value / dose.",q:[
+["What is Horrocks' apparatus used for?","To find the chlorine demand / dose of bleaching powder needed to disinfect a well. Six cups; the first cup showing blue colour with starch–iodide indicates the dose.",1],
+["Free residual chlorine required?","At least 0.5 mg/L after 1 hour of contact time (0.2 mg/L at consumer end).",1],
+["Available chlorine in bleaching powder?","About 33% (fresh). Stored in a cool, dark, airtight container.",1],
+["What is the orthotoluidine (OT) test?","Detects free and combined chlorine — yellow colour; reading in 10 s gives free chlorine, 15 min total chlorine.",1],
+["Break-point chlorination?","Adding chlorine until the demand of organics and ammonia is met; beyond this point, every further dose appears as free residual chlorine.",0],
+["Features of a sanitary well?","At least 15 m from a source of contamination, parapet wall, impervious lining for 6 m, covered top, hand-pump, platform with drain, quality checked.",1],
+["Slow sand vs rapid sand filter?","Slow: biological action of the vital layer (schmutzdecke), slow rate, needs large area. Rapid: coagulation with alum then filtration, backwashing, faster and more compact.",1],
+["Indicator of faecal contamination of water?","E. coli (thermotolerant coliforms) — should be 0 in 100 mL of drinking water.",1]]},
+{id:"nut",n:"Nutrition & contraceptives",d:"Food items, nutrition programmes, family planning spotters",tip:"For foods: nutrient content and public health value. For contraceptives: type, mechanism, failure rate, side effects.",q:[
+["Protein content of common foods?","Soybean ~43%, pulses ~22%, groundnut ~25%, egg ~13%, wheat ~12%, rice ~7%, milk ~3.2%.",1],
+["What is double-fortified salt?","Salt fortified with iodine and iron — tackles iodine deficiency and anaemia together.",1],
+["Iodine level in salt at production and consumer level?","At least 30 ppm at production and 15 ppm at consumer level.",1],
+["Supplementary nutrition under ICDS (preschool child)?","About 500 kcal and 12–15 g protein per day; severely underweight children get 800 kcal and 20–25 g protein.",0],
+["Cu-T 380A — duration and mechanism?","Effective for 10 years; copper ions cause a sterile inflammatory reaction toxic to sperm and ovum, and prevent implantation.",1],
+["What is Chhaya (centchroman / ormeloxifene)?","Non-steroidal SERM, once a week pill (twice a week for the first 3 months); no hormonal side effects. Available free under the national programme.",1],
+["Emergency contraceptive pill?","Levonorgestrel 1.5 mg single dose within 72 hours (ideally sooner) of unprotected intercourse; Cu-T within 5 days is more effective.",1],
+["Injectable contraceptive under the national programme?","MPA (Antara) — DMPA 150 mg IM every 3 months.",1],
+["Pearl index?","Failures per 100 woman-years of exposure = (failures × 1200) / total months of exposure.",1]]},
+{id:"epi",n:"Epidemiology & biostatistics exercises",d:"Rates, screening, study design",tip:"Write the formula, plug numbers, interpret in one line.",q:[
+["Sensitivity and specificity — formulae?","Sensitivity = TP/(TP+FN): ability to detect the diseased. Specificity = TN/(TN+FP): ability to detect the healthy.",1],
+["Positive predictive value depends on?","Prevalence — PPV rises when prevalence is higher, even with the same sensitivity and specificity.",1],
+["Incidence vs prevalence?","Incidence: new cases in a period / population at risk. Prevalence: all existing cases / total population. Prevalence ≈ incidence × duration.",1],
+["Infant mortality rate definition?","Deaths under 1 year per 1000 live births in that year. India IMR (SRS 2020) is about 28 per 1000.",1],
+["Maternal mortality ratio definition?","Maternal deaths per 100,000 live births. India MMR (SRS 2018–20) is 97.",1],
+["Relative risk vs odds ratio?","RR from cohort studies = incidence in exposed / unexposed. OR from case–control studies = ad/bc; approximates RR when the disease is rare.",1],
+["Attributable risk?","Incidence in exposed − incidence in unexposed (÷ incidence in exposed for AR%). Shows how much disease can be prevented by removing the exposure.",0],
+["Mean, median, mode — when to use which?","Mean for symmetrical data; median for skewed data (e.g. income); mode for the commonest value or categorical data.",0],
+["What is the standard normal curve?","Bell-shaped symmetric curve: mean = median = mode; ±1 SD covers 68%, ±2 SD 95%, ±3 SD 99.7%.",1],
+["Level of prevention for Pap smear screening?","Secondary prevention — early diagnosis and treatment.",1]]},
+{id:"gen",n:"Grand viva",d:"Programmes and concepts",tip:"Give the programme's year, target and key strategy.",q:[
+["Define health (WHO).","A state of complete physical, mental and social well-being and not merely the absence of disease or infirmity.",1],
+["Levels of prevention with examples?","Primordial (preventing risk factors — healthy lifestyles in children), primary (immunisation), secondary (screening), tertiary (rehabilitation).",1],
+["Iceberg phenomenon?","Visible clinical cases are the tip; the hidden mass of subclinical, undiagnosed cases and carriers is much larger — e.g. hypertension, diabetes.",1],
+["Population norms for health centres (plains)?","Sub-centre / Ayushman Arogya Mandir 5,000; PHC 30,000; CHC 1,20,000 (hilly/tribal: 3,000 / 20,000 / 80,000).",1],
+["Daily dose under the national TB programme?","Weight-band fixed-dose combinations daily: 2 months HRZE then 4 months HRE for drug-sensitive TB; Nikshay Poshan Yojana gives nutritional support.",1],
+["What is herd immunity?","Indirect protection of the unimmunised when a large proportion of a population is immune, breaking chains of transmission.",1],
+["Epidemiological triad?","Agent, host and environment interacting to cause disease.",1],
+["Define quarantine and isolation.","Isolation: separating the sick during their period of communicability. Quarantine: restricting healthy contacts for the longest incubation period.",1]]}]});
+
+/* ============ Practicals & Viva — Forensic Medicine & Toxicology ============ */
+VIVA.push({s:"fmt",name:"Forensic Medicine & Toxicology",fmt:"Typical practical: spotters (weapons, bones, poisons, photographs, X-rays), medicolegal certificates (injury, age, drunkenness, death certificate), a case-based toxicology exercise, and viva. Since 1 July 2024 the BNS, BNSS and BSA have replaced the IPC, CrPC and Evidence Act — quote both.",
+st:[
+{id:"wpn",n:"Weapons & injuries",d:"Blunt, sharp, firearm — injury patterns",tip:"Identify the weapon → type of injury it produces → features → medicolegal importance (simple / grievous).",q:[
+["Classify mechanical injuries.","Blunt force: abrasion, contusion, laceration, fracture. Sharp force: incised wound, stab wound, chop wound. Firearm injuries.",1],
+["Abrasion — medicolegal importance?","Shows the site of impact and sometimes the pattern of the weapon (patterned abrasion), direction of force, and time since injury by colour/scab: fresh red, reddish scab 12–24 h, brown scab 2–3 days.",1],
+["Colour changes of a contusion with age?","Red (fresh) → blue (hours–3 days) → bluish-black/brown (4 days) → greenish (5–6 days) → yellow (7–12 days) → normal (~2 weeks). Only a rough guide.",1],
+["Laceration vs incised wound?","Laceration (blunt): irregular margins, bruised edges, tissue bridges, hair roots crushed. Incised (sharp): clean-cut margins, length > depth, no tissue bridges, gaping, more bleeding.",1],
+["What is a stab wound and the features to record?","Depth greater than length. Note the shape (single vs double-edged), length, width, direction, depth, and the organs injured.",1],
+["Hesitation (tentative) cuts suggest?","Suicide — multiple superficial parallel incised wounds at accessible sites (wrist, neck) before the deeper fatal cut.",1],
+["Defence wounds?","Cuts or bruises on palms, fingers, forearms from warding off an attack — suggest homicide.",1],
+["Entry vs exit firearm wound?","Entry: smaller, inverted margins, abrasion collar, may show burning, tattooing and soot at close range. Exit: larger, everted, irregular, no collar or soot.",1],
+["What is tattooing (stippling)?","Unburnt powder particles embedded in skin around an entry wound — range up to about 60 cm for a handgun; cannot be wiped off (soot can).",1],
+["Define grievous hurt (IPC 320 / BNS 116).","Emasculation; permanent loss of sight or hearing; loss or impairment of a limb or joint; permanent disfigurement of head or face; fracture or dislocation of bone or tooth; hurt endangering life or causing severe pain or inability to follow ordinary pursuits for 20 days (IPC) — 15 days under BNS.",1],
+["Hurt is defined under?","IPC 319 / BNS 114 — causing bodily pain, disease or infirmity.",1]]},
+{id:"bone",n:"Bones & age estimation",d:"Ossification, sex determination",tip:"State the bone, side, sex features, then the age clues it gives.",q:[
+["Sex differences in the pelvis?","Female: broad, shallow, sub-pubic angle >90° (U-shaped), greater sciatic notch wide, preauricular sulcus present, round inlet. Male: narrow, deep, angle <70° (V-shaped), narrow notch.",1],
+["Sex differences in the skull?","Male: larger, prominent supraorbital ridges, square orbits with rounded margins, prominent mastoid and external occipital protuberance, square chin. Female: smaller, sharp orbital margins, pointed chin.",1],
+["Most reliable bone for sex determination?","Pelvis (up to ~95%), then skull. Whole skeleton gives nearly 100%.",1],
+["Which X-rays help estimate age in a 14–25 year old?","Elbow (14–16), wrist (lower end radius ~18–19 in India), iliac crest (~18–20), medial end clavicle (~22–25), plus pubic symphysis changes for older ages.",1],
+["Medicolegal importance of age 18?","Age of majority, legal consent to sexual intercourse, capable of consenting to marriage (girls); POCSO protects anyone under 18.",1],
+["Age at eruption of first permanent tooth?","First permanent molar at ~6 years. Third molar 17–25 years (unreliable).",1],
+["What is Gustafson's method?","Age estimation from teeth in adults using six changes: attrition, periodontosis, secondary dentine, cementum apposition, root resorption, root transparency.",0],
+["Stature from a long bone?","Use regression formulae (Pan's for Indians, Trotter–Gleser) — femur is the most reliable.",0]]},
+{id:"poi",n:"Poisons spotters",d:"Plant, animal and chemical poisons",tip:"Identify → active principle → signs and symptoms → treatment → medicolegal importance.",q:[
+["Dhatura — active principle and features?","Hyoscine, hyoscyamine, atropine. ‘Dry as a bone, red as a beet, blind as a bat, hot as a hare, mad as a hatter’ — dilated pupils, delirium. Used in road poisoning / robbery. Antidote: physostigmine.",1],
+["How do you differentiate dhatura seeds from capsicum seeds?","Dhatura: kidney-shaped, laterally compressed, thick ridged margin, odourless, bitter. Capsicum: round, flat, smooth thin margin, pungent smell and taste.",1],
+["Abrus precatorius — active principle and use in crime?","Abrin (toxalbumin). Crushed seeds made into needles (sui) used for cattle poisoning; produce local necrosis and systemic toxicity.",1],
+["Oleander poisoning features and treatment?","Cardiac glycosides (nerioside, oleandrin in white; thevetin in yellow) — vomiting, bradycardia, heart block, hyperkalaemia. Treat with activated charcoal, atropine, digoxin-specific Fab.",1],
+["Organophosphate poisoning features?","Muscarinic: DUMBELS (diarrhoea, urination, miosis, bronchorrhoea, bradycardia, emesis, lacrimation, salivation); nicotinic: fasciculations, weakness; CNS: coma, seizures. Garlic/kerosene smell.",1],
+["Postmortem finding in OP poisoning?","Kerosene/garlic smell in stomach, froth at mouth and nostrils, pulmonary oedema, congested organs; preserve viscera and blood for cholinesterase.",0],
+["Aluminium phosphide poisoning?","Celphos tablets release phosphine gas — refractory shock, myocardial toxicity, metabolic acidosis, garlic/fishy smell; silver nitrate paper turns black. No specific antidote; supportive care, magnesium.",1],
+["Arsenic poisoning chronic features?","Raindrop pigmentation, hyperkeratosis of palms and soles, Mees' lines on nails, peripheral neuropathy. Antidote: dimercaprol (BAL) / DMSA. Detected in hair and nails long after death.",1],
+["Viper vs elapid envenomation?","Viper (Russell's, saw-scaled): local swelling, bleeding, coagulopathy (20WBCT unclotted), renal failure. Elapid (cobra, krait): neurotoxic — ptosis, bulbar palsy, respiratory paralysis, little local swelling (krait none).",1],
+["Treatment of snake bite?","Immobilise, reassure, no tourniquet or incision; polyvalent ASV (10 vials initial in India), neostigmine + atropine for neurotoxicity, ventilate if needed.",1],
+["Preservatives for viscera?","Saturated sodium chloride solution in most poisons; rectified spirit for most others except alcohol, kerosene, phenol, phosphorus, paraldehyde, formalin (use saline). Blood: sodium fluoride + potassium oxalate.",1]]},
+{id:"cert",n:"Medicolegal documents",d:"Injury report, death certificate, drunkenness, age",tip:"Name the document → who can issue it → mandatory parts → common mistakes.",q:[
+["What should an injury report contain?","Identification marks, consent, history from the patient, each injury with type, size, site (from fixed landmarks), colour/age, weapon likely, nature (simple / grievous / dangerous) and the doctor's signature with date and time.",1],
+["Death certificate — cause of death format?","WHO format: Part I — immediate cause (a), antecedent causes (b, c), underlying cause last; Part II — other significant conditions. Mode (e.g. cardiac arrest) is never written as cause.",1],
+["Signs of drunkenness examined?","Smell of alcohol, gait, speech, pupils, nystagmus, reaction time, Romberg sign, behaviour; collect blood (sodium fluoride) with consent. Legal limit for driving in India: 30 mg per 100 mL blood.",1],
+["Dying declaration — who records it and under which law?","Any person, preferably a magistrate; doctor certifies the person is of sound mind. Admissible under IEA Section 32 / BSA Section 26. No oath is needed.",1],
+["Dying declaration vs dying deposition?","Deposition is recorded by a magistrate in the presence of the accused or lawyer with cross-examination and oath — more weight; declaration has none of these.",0],
+["Inquest — types in India?","Police inquest (CrPC 174 / BNSS 194) — the most common; magistrate inquest (CrPC 176 / BNSS 196) for custodial deaths, dowry deaths within 7 years of marriage, exhumation.",1],
+["Examination of a sexual assault survivor — legal provision?","CrPC 164A / BNSS 184 — by a registered medical practitioner with informed consent, within 24 h of information, report forwarded to the investigating officer; the two-finger test is banned.",1],
+["What is the doctrine of res ipsa loquitur?","‘The thing speaks for itself’ — negligence is evident without expert proof (e.g. swab left inside the abdomen, wrong-side surgery).",1],
+["Professional negligence — four Ds?","Duty, dereliction (breach), direct causation, damage.",1],
+["Consent — types and age?","Implied, expressed (oral / written), informed. Valid consent for medical examination and treatment: 12 years or above for examination and treatment; for a child under 12 the parent or guardian consents (IPC 89). Consent for sexual acts needs age 18.",0]]},
+{id:"thana",n:"Thanatology & asphyxia",d:"Postmortem changes, hanging, drowning",tip:"Describe the change, the time window, and how it helps estimate time since death.",q:[
+["Sequence of postmortem changes?","Immediate: cessation of circulation and respiration. Early: algor mortis (cooling), livor mortis (hypostasis), rigor mortis. Late: decomposition, adipocere, mummification.",1],
+["Rigor mortis — sequence and timing (India)?","Starts in the myocardium, then eyelids, face, neck, moving down to limbs (Nysten's rule). Appears 1–2 h, fully developed ~12 h, lasts 12 h, passes off in the same order — faster in summer.",1],
+["When does postmortem lividity get fixed?","About 6–8 hours; before this, it shifts with position change. Colour: cherry-red in CO poisoning, bright red in cyanide and cold, brown in nitrites.",1],
+["Hanging vs strangulation ligature mark?","Hanging: oblique, incomplete, high above thyroid cartilage, knot impression, parchment-like base. Strangulation: horizontal, complete, low (at/below thyroid), uniform depth, more bruising.",1],
+["Fracture of hyoid is common in?","Throttling (manual strangulation) — especially in older people with ossified hyoid.",1],
+["Most reliable sign of antemortem drowning?","Diatoms in bone marrow / distant organs matching the water body; also fine leathery froth at mouth and nostrils, cadaveric spasm with weeds in hands.",1],
+["Cadaveric spasm vs rigor mortis?","Cadaveric spasm: instant stiffening of a group of muscles at death (holding a weapon), no primary relaxation — reflects the last act; cannot be simulated.",1],
+["Adipocere — what and when?","Saponification of body fat in warm, moist conditions — waxy, rancid smell, preserves features and injuries; forms in weeks to months.",0]]}]});
+
 /* ============ core helpers ============ */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -7732,7 +8223,7 @@ function chCards(c){return [...c.hy,...(S.custom[c.id]||[])].map(hy);}
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);const x=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cs=getComputedStyle(document.documentElement);const cols=["--path","--micro","--pharm","--cm","--fmt","--star"].map(v=>cs.getPropertyValue(v).trim());const P=Array.from({length:140},()=>({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-2,c:cols[Math.floor(Math.random()*cols.length)],r:Math.random()*6+3,a:Math.random()*6}));let f=0;(function step(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});if(++f<120)requestAnimationFrame(step);else cv.remove();})();}
 
 /* ============ layout ============ */
-const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"],["games","Clinical Games","joy"]];
+const NAV=[["home","Home","home"],["subjects","Subjects","book"],["radar","Exam Radar","radar"],["roadmap","Roadmap","map"],["flowcharts","Flowcharts","flow"],["notes","Notes & Books","doc"],["studio","AI Studio","spark"],["planner","Study Planner","cal"],["saved","Revision List","bookmark"],["progress","My Progress","chart"],["viva","Practicals & Viva","mic"],["games","Clinical Games","joy"]];
 function renderSide(){
   const L=level();
   $("#side").innerHTML=`<a class="brand" href="#home"><span class="brand-mark">II</span><span><b>Second Prof Atlas</b><small>MBBS Phase II · Lucknow</small></span></a>
@@ -7744,7 +8235,7 @@ function renderSide(){
   $(".sheet-in",sh).innerHTML=`<div class="row between"><b>All sections</b><button class="btn sm ghost" data-act="sheet" aria-label="Close">✕</button></div><div class="sheet-grid">${NAV.map(n=>`<a href="#${n[0]}" data-act="sheet-go" data-nc="${n[0]}"><span class="nic">${ico(n[2],18)}</span><span>${n[1]}</span></a>`).join("")}${SUBJECTS.map(x=>`<a href="#s-${x.id}" data-act="sheet-go" data-s="${x.id}"><span class="dot" style="background:var(--sc)"></span><span>${esc(x.name)}</span></a>`).join("")}</div>`;
   markNav();
 }
-function markNav(){let h=(location.hash||"#home").slice(1)||"home";if(h.startsWith("g-"))h="games";const inTab=a=>!!a.closest("#tabbar");
+function markNav(){let h=(location.hash||"#home").slice(1)||"home";if(h.startsWith("g-"))h="games";if(h.startsWith("viva-"))h="viva";const inTab=a=>!!a.closest("#tabbar");
   const chS=h.startsWith("c-")&&CH[h.slice(2)]?"s-"+CH[h.slice(2)].s:null;
   const isTool=TOOLS.some(t=>t[0]===h);
   $$("[data-nav]").forEach(a=>{const n=a.dataset.nav;let on=n===h;
@@ -8538,6 +9029,7 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
   ${quotesSection()}
 
   ${gamesTeaser()}
+  ${vivaTeaser()}
 
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
@@ -8852,16 +9344,17 @@ function gMem(){S.games=S.games||{best:{},plays:0,deck:[]};const m=S.games;m.bes
 function gDaily(){return GAMES[dayNo()%GAMES.length][0];}
 function gGrade(id,score){const p=GMETA[id].par;return score>=p*1.2?"S":score>=p?"A":score>=p*.6?"B":"C";}
 function gStars(id){const b=gMem().best[id];if(!b)return 0;const g=gGrade(id,b);return g==="C"?1:g==="B"?2:3;}
-function gRank(){const st=GAMES.reduce((a,g)=>a+gStars(g[0]),0);const R=[[0,"Intern","🩺"],[5,"Resident","🥼"],[11,"Registrar","📋"],[17,"Consultant","👑"]];let r=R[0];R.forEach(x=>{if(st>=x[0])r=x;});const nx=R[R.indexOf(r)+1];return {stars:st,name:r[1],emo:r[2],next:nx?nx[0]:21,nextName:nx?nx[1]:"Max rank"};}
+function gRankIco(n,sz=28){return `<svg width="${sz}" height="${sz}" viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M16 3 27 8v8c0 7-5 11-11 13C10 27 5 23 5 16V8Z" fill="#fff" fill-opacity=".18"/>${Array.from({length:n},(_,k)=>`<path d="m10 ${21-k*4} 6-3.5 6 3.5"/>`).join("")}</svg>`;}
+function gRank(){const st=GAMES.reduce((a,g)=>a+gStars(g[0]),0);const R=[[0,"Intern",1],[5,"Resident",2],[11,"Registrar",3],[17,"Consultant",4]];let r=R[0];R.forEach(x=>{if(st>=x[0])r=x;});const nx=R[R.indexOf(r)+1];return {stars:st,name:r[1],emo:r[2],next:nx?nx[0]:21,nextName:nx?nx[1]:"Max rank"};}
 function gFinish(id,score,label){const m=gMem();m.plays=(m.plays||0)+1;m.runs[id]=(m.runs[id]||0)+1;m.last=id;const prev=m.best[id]||0;const nb=!prev||score>prev;if(nb)m.best[id]=score;
  let xp=Math.max(5,Math.min(60,Math.round(score/15)));let daily=false;if(id===gDaily()&&m.daily!==gToday()){m.daily=gToday();xp+=25;daily=true;}save();addXP(xp,label);return {nb,prev,xp,daily};}
 function gPick(a,n){return shuffle(a.slice()).slice(0,n);}
 function gDots(i,n,res){return `<div class="gdots" aria-label="Round ${i+1} of ${n}">${Array.from({length:n},(_,k)=>`<i class="${k<i?(res&&res[k]===false?"x":"d"):k===i?"on":""}"></i>`).join("")}</div>`;}
 function gHud(i,n,res,chips){return `<div class="ghud">${gDots(i,n,res)}<div class="ghud-c">${chips.map(c=>`<span>${c}</span>`).join("")}</div></div>`;}
 function gDiff(n){return `<span class="gdiff" title="${["","Easy","Medium","Hard"][n]}">${[1,2,3].map(k=>`<i class="${k<=n?"on":""}"></i>`).join("")}</span>`;}
-function gHead(id,title,sub){const g=GAMES.find(x=>x[0]===id),M=GMETA[id],b=gMem().best[id]||0;return `<div class="gtop" data-g="${id}"><a class="gback" href="#games" aria-label="Back to arcade">←</a><div class="gtitle"><span class="gemo">${g[2]}</span><div><span class="gtag">${g[3]}</span><h1>${title}</h1><p class="note">${sub}</p></div></div><div class="gtop-meta"><span>⏱ ${M.mins} min</span><span>${gDiff(M.diff)}</span><span>🏅 Best <b class="gbest-v">${b}</b></span><span>🎯 Par <b>${M.par}</b></span></div></div>`;}
+function gHead(id,title,sub){const g=GAMES.find(x=>x[0]===id),M=GMETA[id],b=gMem().best[id]||0;return `<div class="gtop" data-g="${id}"><a class="gback" href="#games" aria-label="Back to arcade">←</a><div class="gtitle"><span class="gemo">${gIco(id,34)}</span><div><span class="gtag">${g[3]}</span><h1>${title}</h1><p class="note">${sub}</p></div></div><div class="gtop-meta"><span>${ico("timer",14)} ${M.mins} min</span><span>${gDiff(M.diff)}</span><span>${ico("chart",14)} Best <b class="gbest-v">${b}</b></span><span>${ico("target",14)} Par <b>${M.par}</b></span></div></div>`;}
 function gIntro(id,extra){const g=GAMES.find(x=>x[0]===id),M=GMETA[id],m=gMem(),b=m.best[id]||0,isD=gDaily()===id&&m.daily!==gToday();
- $("#gm").innerHTML=`<div class="gbrief" data-g="${id}"><div class="gbrief-art"><span>${g[2]}</span>${isD?`<em class="gbadge">DAILY · +25 XP</em>`:""}</div><div class="gbrief-body"><span class="eyebrow">Mission briefing</span><h2>${M.hook}</h2>
+ $("#gm").innerHTML=`<div class="gbrief" data-g="${id}"><div class="gbrief-art">${gArtBg()}<span>${gIco(id,96)}</span>${isD?`<em class="gbadge">DAILY · +25 XP</em>`:""}</div><div class="gbrief-body"><span class="eyebrow">Mission briefing</span><h2>${M.hook}</h2>
   <ol class="gsteps">${M.how.map(h=>`<li>${h}</li>`).join("")}</ol>
   ${extra||""}
   <div class="gskills">${M.skills.map(s=>`<span>${s}</span>`).join("")}</div>
@@ -8874,8 +9367,19 @@ function gEnd(id,title,score,lines,again){const r=gFinish(id,score,title);setTim
   <div class="gpar"><div class="bar"><i style="width:${pct}%"></i><s style="left:${Math.round(100/1.2)}%" title="Par"></s></div><span class="note">Par ${M.par} · S at ${Math.round(M.par*1.2)}</span></div>
   <div class="gend-review"><h3>Round review</h3>${lines}</div>
   <div class="gend-act"><button class="btn pri" data-act="${again}">↻ Play again</button><a class="btn" href="#games">Back to arcade</a></div>
-  <div class="gend-next"><span class="eyebrow">Try next</span><div>${nxt.map(g=>`<a class="gmini" data-g="${g[0]}" href="#g-${g[0]}"><span>${g[2]}</span><b>${g[1]}</b><small>${g[3]}</small></a>`).join("")}</div></div></div>`;}
+  <div class="gend-next"><span class="eyebrow">Try next</span><div>${nxt.map(g=>`<a class="gmini" data-g="${g[0]}" href="#g-${g[0]}"><span>${gIco(g[0],26)}</span><b>${g[1]}</b><small>${g[3]}</small></a>`).join("")}</div></div></div>`;}
 
+/* abstract game marks — original geometric SVGs (white on the game colour) */
+const GICO={
+ er:'<circle cx="24" cy="24" r="19" fill="#fff" fill-opacity=".14"/><circle cx="24" cy="24" r="12.5" fill="#fff" fill-opacity=".16"/><path d="M5 25h9l3.5-8 6 16 4.5-12 3 4H43" stroke-width="3.2"/><circle cx="35" cy="25" r="2.2" fill="#fff" stroke="none"/>',
+ spot:'<rect x="7" y="31" width="9" height="9" rx="2.5" fill="#fff" fill-opacity=".2"/><rect x="15" y="23" width="9" height="17" rx="2.5" fill="#fff" fill-opacity=".28"/><rect x="23" y="15" width="9" height="25" rx="2.5" fill="#fff" fill-opacity=".38"/><circle cx="31" cy="15" r="8" fill="#fff" fill-opacity=".2"/><path d="M36.8 20.8 42 26" stroke-width="3.4"/><circle cx="31" cy="15" r="8" stroke-width="3"/>',
+ deck:'<rect x="7" y="9" width="20" height="28" rx="4" transform="rotate(-10 17 23)" fill="#fff" fill-opacity=".18"/><rect x="19" y="11" width="20" height="28" rx="4" transform="rotate(9 29 25)" fill="#fff" fill-opacity=".3"/><circle cx="29" cy="25" r="5.5" stroke-width="2.6"/><path d="M29 16.5v3M29 30.5v3M20.5 25h3M34.5 25h3M23 19l2 2M33 29l2 2M35 19l-2 2M25 29l-2 2" stroke-width="2.2"/>',
+ triage:'<path d="M24 5 43 24 24 43 5 24Z" fill="#fff" fill-opacity=".14"/><path d="M24 11 37 24 24 37 11 24Z" fill="#fff" fill-opacity=".2"/><path d="M24 11v26M11 24h26" stroke-width="2.6"/><circle cx="24" cy="24" r="4" fill="#fff" stroke="none"/><path d="M24 5 43 24 24 43 5 24Z" stroke-width="2.6"/>',
+ flow:'<rect x="5" y="8" width="13" height="11" rx="3" fill="#fff" fill-opacity=".28"/><rect x="30" y="8" width="13" height="11" rx="3" fill="#fff" fill-opacity=".16"/><rect x="17.5" y="29" width="13" height="11" rx="3" fill="#fff" fill-opacity=".38"/><path d="M18 13.5h12M11.5 19v5a5 5 0 0 0 5 5h1M36.5 19v5a5 5 0 0 1-5 5h-1" stroke-width="2.8"/><path d="m26 10 4 3.5-4 3.5" stroke-width="2.6"/>',
+ proto:'<rect x="6" y="6" width="15" height="15" rx="4" fill="#fff" fill-opacity=".36"/><rect x="27" y="6" width="15" height="15" rx="4" fill="#fff" fill-opacity=".14"/><rect x="6" y="27" width="15" height="15" rx="4" fill="#fff" fill-opacity=".14"/><rect x="27" y="27" width="15" height="15" rx="4" fill="#fff" fill-opacity=".26"/><path d="M13.5 21v6M21 34.5h6M34.5 27v-6" stroke-width="2.8"/><circle cx="13.5" cy="13.5" r="2.4" fill="#fff" stroke="none"/>',
+ bmw:'<circle cx="24" cy="24" r="19" fill="#fff" fill-opacity=".12"/><path d="M24 8.5 31.5 21h-15Z" fill="#fff" fill-opacity=".34"/><path d="M38.5 33 31 39.5 24 27.5Z" fill="#fff" fill-opacity=".24"/><path d="M9.5 33 16.5 21 24 33Z" fill="#fff" fill-opacity=".18"/><path d="M28.5 9.5A15 15 0 0 1 38.8 22M38 31a15 15 0 0 1-14 8.5M10.5 31A15 15 0 0 1 12 15" stroke-width="2.6"/><path d="m36 22 3 .3.7-3M22 42l2.3-2.4-2-2.4M9 15.5l3-.5.6 3" stroke-width="2.2"/>'};
+function gIco(id,sz=40){return `<svg class="gico" width="${sz}" height="${sz}" viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GICO[id]||""}</svg>`;}
+function gArtBg(){return `<svg class="gart-bg" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="170" cy="10" r="46" fill="#fff" fill-opacity=".09"/><circle cx="18" cy="118" r="38" fill="#fff" fill-opacity=".07"/><circle cx="100" cy="60" r="44" fill="none" stroke="#fff" stroke-opacity=".14" stroke-dasharray="3 6"/><circle cx="100" cy="60" r="58" fill="none" stroke="#fff" stroke-opacity=".08"/></svg>`;}
 const GAMES=[
  ["er","Code Blue: ER Shift","🚑","Emergency simulator","Five patients, one shift. Investigate, diagnose and treat before the stability meter hits zero.","er"],
  ["spot","Clue Ladder","🔎","Spot diagnosis","Clues appear one by one. Name the diagnosis, drug or finding early for more points.","spot"],
@@ -8896,9 +9400,9 @@ const GMETA={
 const GSTART={er:()=>erStart(),spot:()=>spStart(),deck:()=>dkStart(),triage:()=>trStart(),flow:()=>flStart(),proto:()=>prStart(),bmw:()=>bwStart()};
 
 function gCard(g,m,daily){const id=g[0],M=GMETA[id],b=m.best[id]||0,st=gStars(id),pct=b?Math.min(100,Math.round(b/(M.par*1.2)*100)):0;
- return `<a class="gcard" data-g="${id}" data-cat="${M.cat}" href="#g-${id}"><div class="gcard-art"><span class="gcard-emo">${g[2]}</span>${daily?`<em class="gbadge">DAILY</em>`:""}${b?`<span class="gcard-grade g${gGrade(id,b)}">${gGrade(id,b)}</span>`:`<span class="gcard-new">New</span>`}</div>
+ return `<a class="gcard" data-g="${id}" data-cat="${M.cat}" href="#g-${id}"><div class="gcard-art">${gArtBg()}<span class="gcard-emo">${gIco(id,64)}</span>${daily?`<em class="gbadge">DAILY</em>`:""}${b?`<span class="gcard-grade g${gGrade(id,b)}">${gGrade(id,b)}</span>`:`<span class="gcard-new">New</span>`}</div>
   <div class="gcard-body"><span class="gtag">${g[3]}</span><b>${g[1]}</b><span class="gcard-desc">${g[4]}</span>
-  <div class="gmeta"><span>⏱ ${M.mins} min</span>${gDiff(M.diff)}<span>${M.mode}</span></div>
+  <div class="gmeta"><span>${ico("timer",13)} ${M.mins} min</span>${gDiff(M.diff)}<span>${M.mode}</span></div>
   <div class="gskills sm">${M.skills.slice(0,2).map(s=>`<span>${s}</span>`).join("")}</div>
   ${id==="deck"?`<div class="gprog"><div class="bar"><i style="width:${Math.round(m.deck.length/G_DECK.length*100)}%"></i></div><span>${m.deck.length}/${G_DECK.length} cards</span></div>`:`<div class="gprog"><div class="bar"><i style="width:${pct}%"></i></div><span>${b?`Best ${b}`:`Par ${M.par}`}</span></div>`}
   <div class="gcard-foot"><span class="gstars">${[1,2,3].map(k=>`<i class="${k<=st?"on":""}">★</i>`).join("")}</span><span class="gplay">${b?"Play again":"Play"} <i>▶</i></span></div></div></a>`;}
@@ -8907,19 +9411,19 @@ function vGames(){const m=gMem(),rk=gRank(),dId=gDaily(),dg=GAMES.find(g=>g[0]==
  POST=()=>gApplyFilter();
  return `<section class="garc"><div class="garc-grid" aria-hidden="true"></div><div class="garc-main"><span class="garc-kicker">● Clinical Games Arcade</span><h1>Learn by playing</h1><p>Seven original serious games built on real ward, emergency and medicolegal scenarios. Short rounds, instant feedback, real XP.</p>
   <div class="garc-cta"><a class="btn pri lg" href="#g-${dId}">▶ Play today's challenge</a>${last?`<a class="btn garc-ghost" href="#g-${last[0]}">↻ Continue ${last[1]}</a>`:""}</div></div>
-  <div class="garc-rank"><div class="garc-badge"><span>${rk.emo}</span><div><small>Arcade rank</small><b>${rk.name}</b></div></div><div class="bar"><i style="width:${Math.round(rk.stars/21*100)}%"></i></div><span class="garc-sub">★ ${rk.stars}/21 stars${rk.stars<21?` · ${rk.next-rk.stars} to ${rk.nextName}`:""}</span>
+  <div class="garc-rank"><div class="garc-badge"><span>${gRankIco(rk.emo)}</span><div><small>Arcade rank</small><b>${rk.name}</b></div></div><div class="bar"><i style="width:${Math.round(rk.stars/21*100)}%"></i></div><span class="garc-sub">★ ${rk.stars}/21 stars${rk.stars<21?` · ${rk.next-rk.stars} to ${rk.nextName}`:""}</span>
   <div class="garc-stats"><div><b>${m.plays||0}</b><span>runs</span></div><div><b>${m.deck.length}</b><span>cards</span></div><div><b>${tot}</b><span>best total</span></div></div></div></section>
- <a class="gday ${dDone?"done":""}" data-g="${dId}" href="#g-${dId}"><span class="gday-emo">${dg[2]}</span><div><span class="eyebrow">${dDone?"Daily challenge complete ✓":"Today's challenge · +25 bonus XP"}</span><b>${dg[1]}</b><span class="note">${GMETA[dId].hook}</span></div><span class="btn ${dDone?"":"pri"}">${dDone?"Play again":"Accept"} →</span></a>
+ <a class="gday ${dDone?"done":""}" data-g="${dId}" href="#g-${dId}"><span class="gday-emo">${gIco(dId,36)}</span><div><span class="eyebrow">${dDone?"Daily challenge complete ✓":"Today's challenge · +25 bonus XP"}</span><b>${dg[1]}</b><span class="note">${GMETA[dId].hook}</span></div><span class="btn ${dDone?"":"pri"}">${dDone?"Play again":"Accept"} →</span></a>
  <div class="gfilt" role="tablist">${GCATS.map(c=>`<button class="chip ${GFILT===c[0]?"on":""}" data-act="g-filter" data-v="${c[0]}" role="tab" aria-selected="${GFILT===c[0]}">${c[1]} <small>${c[0]==="all"?GAMES.length:GAMES.filter(g=>GMETA[g[0]].cat===c[0]).length}</small></button>`).join("")}</div>
  <div class="ggrid">${GAMES.map(g=>gCard(g,m,g[0]===dId&&!dDone)).join("")}</div>
- <div class="gloop"><div><span>🎮</span><b>Play</b><small>3–6 minute rounds</small></div><i>→</i><div><span>💡</span><b>Learn</b><small>Teaching point after every call</small></div><i>→</i><div><span>⭐</span><b>Earn</b><small>XP, stars and arcade rank</small></div></div>
+ <div class="gloop"><div><span>${ico("joy",22)}</span><b>Play</b><small>3–6 minute rounds</small></div><i>→</i><div><span>${ico("bulb",22)}</span><b>Learn</b><small>Teaching point after every call</small></div><i>→</i><div><span>${ico("flame",22)}</span><b>Earn</b><small>XP, stars and arcade rank</small></div></div>
  <p class="note">All scenarios are original teaching cases written for this app. Always follow your hospital's current protocols in real practice.</p>`;}
 function gApplyFilter(){$$(".ggrid .gcard").forEach(c=>{c.hidden=GFILT!=="all"&&c.dataset.cat!==GFILT;});}
 function gamesTeaser(){const m=gMem(),rk=gRank(),dId=gDaily(),dg=GAMES.find(g=>g[0]===dId),dDone=m.daily===gToday();
- return `<section class="gteaser"><div class="garc-grid" aria-hidden="true"></div><div class="gteaser-l"><span class="garc-kicker">● Clinical Games Arcade</span><h2>Learn by playing 🎮</h2><p>Seven serious games — ER shifts, triage, card battles and more. Short rounds, real teaching, real XP.</p>
-  <div class="gteaser-me"><span>${rk.emo} <b>${rk.name}</b></span><span>★ ${rk.stars}/21</span><span>${m.plays||0} runs</span></div>
+ return `<section class="gteaser"><div class="garc-grid" aria-hidden="true"></div><div class="gteaser-l"><span class="garc-kicker">● Clinical Games Arcade</span><h2>Learn by playing</h2><p>Seven serious games — ER shifts, triage, card battles and more. Short rounds, real teaching, real XP.</p>
+  <div class="gteaser-me"><span>${gRankIco(rk.emo,16)} <b>${rk.name}</b></span><span>★ ${rk.stars}/21</span><span>${m.plays||0} runs</span></div>
   <div class="garc-cta"><a class="btn pri" href="#games">Enter arcade →</a><a class="btn garc-ghost" href="#g-${dId}">${dDone?"✓":"⚡"} Daily: ${dg[1]}</a></div></div>
-  <div class="gteaser-tiles">${GAMES.map(g=>`<a class="gtile" data-g="${g[0]}" href="#g-${g[0]}" title="${g[1]}"><span>${g[2]}</span><b>${g[1].replace("Code Blue: ","")}</b>${g[0]===dId&&!dDone?`<em>Daily</em>`:""}${gStars(g[0])?`<small>${"★".repeat(gStars(g[0]))}</small>`:""}</a>`).join("")}</div></section>`;}
+  <div class="gteaser-tiles">${GAMES.map(g=>`<a class="gtile" data-g="${g[0]}" href="#g-${g[0]}" title="${g[1]}"><span>${gIco(g[0],34)}</span><b>${g[1].replace("Code Blue: ","")}</b>${g[0]===dId&&!dDone?`<em>Daily</em>`:""}${gStars(g[0])?`<small>${"★".repeat(gStars(g[0]))}</small>`:""}</a>`).join("")}</div></section>`;}
 Object.assign(ACT,{
  "g-start":el=>{const id=el.dataset.g;gMem().last=id;save();GSTART[id]();window.scrollTo({top:0,behavior:"smooth"});},
  "g-filter":el=>{GFILT=el.dataset.v;$$(".gfilt .chip").forEach(c=>{const on=c.dataset.v===GFILT;c.classList.toggle("on",on);c.setAttribute("aria-selected",on);});gApplyFilter();}});
@@ -8946,7 +9450,7 @@ Object.assign(ACT,{
  "er-next":()=>{GS.i++;if(GS.i<GS.cases.length)erCase();else{gStop();const saved=GS.log.filter(x=>x.ok).length;$("#gm").innerHTML=gEnd("er","ER Shift",GS.score,`<p>You stabilised <b>${saved}</b> of ${GS.cases.length} patients.</p><div class="glog">${GS.log.map(x=>`<div class="${x.ok?"good":"bad"}">${x.ok?"✓":"✕"} ${esc(x.d)} — ${x.pts} pts</div>`).join("")}</div>`,"er-again");}},
  "er-again":()=>erStart()});
 function erOver(ok){gStop();const c=GS.c;const pts=ok?GS.stab+(GS.wrong?0:20):0;GS.score+=pts;GS.log.push({d:c.dx[0],ok,pts});
- $("#gm").innerHTML=`<div class="card er-out ${ok?"win":"lose"}"><span class="gbig">${ok?"✅ Patient stabilised":"💔 Patient crashed"}</span><p><b>${esc(c.dx[0])}</b> — ${esc(c.mx[0])}</p><p class="er-teach">💡 ${esc(c.t)}</p><p class="note">+${pts} points ${ok&&!GS.wrong?"(includes +20 flawless bonus)":""}</p><button class="btn pri" data-act="er-next">${GS.i+1<GS.cases.length?"Next patient →":"End shift"}</button></div>`;}
+ $("#gm").innerHTML=`<div class="card er-out ${ok?"win":"lose"}"><span class="gbig"><i class="gout ${ok?"ok":"no"}">${ok?"✓":"✕"}</i>${ok?"Patient stabilised":"Patient crashed"}</span><p><b>${esc(c.dx[0])}</b> — ${esc(c.mx[0])}</p><p class="er-teach">💡 ${esc(c.t)}</p><p class="note">+${pts} points ${ok&&!GS.wrong?"(includes +20 flawless bonus)":""}</p><button class="btn pri" data-act="er-next">${GS.i+1<GS.cases.length?"Next patient →":"End shift"}</button></div>`;}
 
 /* ---------- 2. Clue Ladder ---------- */
 function vSpot(){POST=()=>gIntro("spot");return gHead("spot","Clue Ladder","5 points if you get it on clue 1, down to 1 point on clue 5.")+`<div id="gm"></div>`;}
@@ -8968,7 +9472,7 @@ function vDeck(){POST=()=>gIntro("deck");return gHead("deck","Bug vs Drug","Pick
 function dkStart(){const own=gMem().deck;const fresh=G_DECK.filter(b=>!own.includes(b.id));GS={q:shuffle(fresh).concat(shuffle(G_DECK.filter(b=>own.includes(b.id)))).slice(0,10),i:0,lives:3,score:0,streak:0,caught:0,res:[]};dkRound();}
 function dkRound(){const b=GS.q[GS.i];const others=shuffle([...new Set(G_DECK.filter(x=>x.x!==b.x).map(x=>x.x))]).slice(0,3);GS.hand=shuffle([b.x,...others]);GS.hint=false;GS.done=false;dkRender();}
 function dkCard(b,own){return `<div class="bug r${b.r} ${own?"":"locked"}"><span class="bug-k">${esc(b.k)}</span><b>${own?esc(b.n):"???"}</b><span class="bug-d">${own?esc(b.d):"Not captured yet"}</span>${own?`<span class="bug-x">💊 ${esc(b.x)}</span>`:""}<span class="bug-r">${"★".repeat(b.r)}</span></div>`;}
-function dkRender(){const b=GS.q[GS.i];$("#gm").innerHTML=gHud(GS.i,GS.q.length,GS.res,[`Score <b>${GS.score}</b>`,`Streak <b>×${Math.min(3,Math.max(1,GS.streak))}</b>`,`${"❤️".repeat(GS.lives)}${"🤍".repeat(3-GS.lives)}`])+`<div class="dk"><div class="row between"><span class="eyebrow">Battle ${GS.i+1}/${GS.q.length} · Score ${GS.score} · Streak ×${GS.streak}</span><span class="dk-lives">${"❤️".repeat(GS.lives)}${"🤍".repeat(3-GS.lives)}</span></div>
+function dkRender(){const b=GS.q[GS.i];$("#gm").innerHTML=gHud(GS.i,GS.q.length,GS.res,[`Score <b>${GS.score}</b>`,`Streak <b>×${Math.min(3,Math.max(1,GS.streak))}</b>`,`<span class="glives">${[0,1,2].map(k=>`<i class="${k<GS.lives?"on":""}"></i>`).join("")}</span>`])+`<div class="dk">
  <div class="dk-arena"><div class="bug big r${b.r}"><span class="bug-k">${esc(b.k)}</span><b>${esc(b.n)}</b><span class="bug-d">Causes: ${esc(b.d)}</span><span class="bug-r">${"★".repeat(b.r)} ${["","Common","Tricky","Boss"][b.r]}</span></div>
  <div class="stack"><span class="eyebrow">Your hand — play the drug of choice</span><div class="dk-hand">${GS.hand.map(h=>`<button class="pill-card" data-act="dk-play" data-v="${esc(h)}" ${GS.done?"disabled":""}>💊 ${esc(h)}</button>`).join("")}</div>
  ${GS.hint||GS.done?`<p class="dk-tip">🧑‍⚕️ Dr. Atlas: ${esc(b.tip)}</p>`:`<button class="btn sm ghost" data-act="dk-hint">🧑‍⚕️ Ask Dr. Atlas for a hint</button>`}
@@ -8989,11 +9493,11 @@ function vTriage(){POST=()=>trIntro();return gHead("triage","Triage Rush","START
 function trIntro(){gIntro("triage",`<div class="tr-algo"><span>🚶 Walks → <b class="tg green">Minor</b></span><span>❌ No breathing after airway opened → <b class="tg black">Expectant</b></span><span>RR > 30, no radial pulse / CRT > 2 s, or cannot obey commands → <b class="tg red">Immediate</b></span><span>Otherwise → <b class="tg yellow">Delayed</b></span></div>`);}
 function trStart(){gStop();GS={pool:shuffle(G_TRIAGE.slice()),q:[],t:75,score:0,right:0,seen:0,miss:[]};trSpawn();trSpawn();trRender();
  GT=setInterval(()=>{GS.t--;let ch=false;if(GS.t%4===0){const was=GS.q.length;trSpawn();ch=!was;}if(GS.q.length>6){GS.score-=5;GS.q.shift();ch=true;toast("A waiting patient deteriorated −5");}if(GS.t<=0)return trEnd();ch?trRender():trHud();},1000);}
-function trHud(){const h=$(".tr-hud");if(!h)return trRender();h.innerHTML=`<span>⏱ <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span>`;const q=$(".tr-q");q&&(q.innerHTML=GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}">🧍</span>`).join(""));}
+function trHud(){const h=$(".tr-hud");if(!h)return trRender();h.innerHTML=`<span>${ico("timer",15)} <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span>`;const q=$(".tr-q");q&&(q.innerHTML=GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}"></span>`).join(""));}
 function trSpawn(){if(!GS.pool.length)GS.pool=shuffle(G_TRIAGE.slice());GS.q.push(GS.pool.pop());}
-function trRender(){const p=GS.q[0];$("#gm").innerHTML=`<div class="tr"><div class="tr-hud"><span>⏱ <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span></div>
- <div class="tr-q">${GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}">🧍</span>`).join("")}</div>
- ${p?`<div class="card tr-p"><span class="eyebrow">Casualty #${GS.seen+1}</span><p>${esc(p[0])}</p></div><div class="tr-tags">${TAGS.map(t=>`<button class="tagbtn ${t[0]}" data-act="tr-tag" data-v="${t[0]}">${t[2]} ${t[1]}</button>`).join("")}</div>`:`<div class="card"><p>Queue clear — next casualty arriving…</p></div>`}</div>`;}
+function trRender(){const p=GS.q[0];$("#gm").innerHTML=`<div class="tr"><div class="tr-hud"><span>${ico("timer",15)} <b>${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Queue <b class="${GS.q.length>4?"bad":""}">${GS.q.length}</b>/6</span></div>
+ <div class="tr-q">${GS.q.map((x,k)=>`<span class="tr-dot ${k===0?"on":""}"></span>`).join("")}</div>
+ ${p?`<div class="card tr-p"><span class="eyebrow">Casualty #${GS.seen+1}</span><p>${esc(p[0])}</p></div><div class="tr-tags">${TAGS.map(t=>`<button class="tagbtn ${t[0]}" data-act="tr-tag" data-v="${t[0]}"><i class="tsw"></i>${t[1]}<kbd>${TAGS.indexOf(t)+1}</kbd></button>`).join("")}</div>`:`<div class="card"><p>Queue clear — next casualty arriving…</p></div>`}</div>`;}
 function trEnd(){gStop();const acc=GS.seen?Math.round(GS.right/GS.seen*100):0;$("#gm").innerHTML=gEnd("triage","Triage Rush",Math.max(0,GS.score),`<p>Tagged <b>${GS.seen}</b> casualties · accuracy <b>${acc}%</b>.</p>${GS.miss.length?`<div class="glog">${GS.miss.slice(0,6).map(m=>`<div class="bad">✕ ${esc(m[0])}<br><span class="note">${esc(m[2])}</span></div>`).join("")}</div>`:""}`,"tr-go");}
 Object.assign(ACT,{
  "tr-go":()=>trStart(),
@@ -9042,7 +9546,7 @@ function prStart(){GS={list:gPick(G_PROTO,3),i:0,score:0,stars:0,res:[]};prRound
 function prRound(){const p=GS.list[GS.i];GS.p=p;GS.done=[];GS.miss=0;GS.opts=shuffle(p.s.slice());prRender();}
 function prRender(){const p=GS.p,fin=GS.done.length===p.s.length;$("#gm").innerHTML=gHud(GS.i,GS.list.length,GS.res,[`Protocol <b>${GS.i+1}</b>/${GS.list.length}`,`Score <b>${GS.score}</b>`,`Stars <b>${GS.stars}</b>`])+`<div class="card pr"><div class="row between"><span class="eyebrow">Protocol ${GS.i+1} of ${GS.list.length} · Score ${GS.score}</span><span class="note">Mistakes: ${GS.miss}</span></div><h2>${esc(p.n)}</h2>
  <ol class="pr-seq">${p.s.map((x,k)=>`<li class="${k<GS.done.length?"on":""}">${k<GS.done.length?esc(x):"…"}</li>`).join("")}</ol>
- ${fin?`<div class="pr-win"><b>${"⭐".repeat(GS.miss===0?3:GS.miss<=2?2:1)}</b><p class="er-teach">💡 ${esc(p.w)}</p><button class="btn pri" data-act="pr-next">${GS.i+1<GS.list.length?"Next protocol →":"See results"}</button></div>`:`<div class="pr-opts">${GS.opts.filter(o=>!GS.done.includes(o)).map(o=>`<button class="opt" data-act="pr-step" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`}</div>`;}
+ ${fin?`<div class="pr-win"><span class="gstars big">${[1,2,3].map(k=>`<i class="${k<=(GS.miss===0?3:GS.miss<=2?2:1)?"on":""}">★</i>`).join("")}</span><p class="er-teach">💡 ${esc(p.w)}</p><button class="btn pri" data-act="pr-next">${GS.i+1<GS.list.length?"Next protocol →":"See results"}</button></div>`:`<div class="pr-opts">${GS.opts.filter(o=>!GS.done.includes(o)).map(o=>`<button class="opt" data-act="pr-step" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`}</div>`;}
 Object.assign(ACT,{
  "pr-step":el=>{const want=GS.p.s[GS.done.length];if(el.dataset.v===want){GS.done.push(want);if(GS.done.length===GS.p.s.length){const st=GS.miss===0?3:GS.miss<=2?2:1;GS.res[GS.i]=st>1;GS.stars+=st;GS.score+=st*40;}prRender();}else{GS.miss++;el.classList.add("shake","no");setTimeout(()=>el.classList.remove("shake","no"),500);const m=$(".pr .note");m&&(m.textContent="Mistakes: "+GS.miss);}},
  "pr-next":()=>{GS.i++;if(GS.i<GS.list.length)prRound();else $("#gm").innerHTML=gEnd("proto","Protocol Builder",GS.score,`<p>You earned <b>${GS.stars}</b> of ${GS.list.length*3} stars.</p>`,"pr-again");},
@@ -9052,16 +9556,96 @@ Object.assign(ACT,{
 function vBMW(){POST=()=>bwIntro();return gHead("bmw","Waste Warrior","Bio-Medical Waste Management Rules, 2016 (amended). Keys 1–5 work too.")+`<div id="gm"></div>`;}
 function bwIntro(){gIntro("bmw",`<div class="bw-bins static">${G_BINS.map(b=>`<div class="bin ${b[0]}"><span>${b[2]}</span><b>${b[1]}</b><small>${b[3]}</small></div>`).join("")}</div>`);}
 function bwStart(){gStop();GS={pool:shuffle(G_BMW.slice()),t:45,score:0,combo:0,right:0,seen:0,miss:[]};GS.cur=GS.pool.pop();bwRender();GT=setInterval(()=>{GS.t--;if(GS.t<=0)return bwEnd();const h=$("#bwt");h&&(h.textContent=GS.t+"s");},1000);}
-function bwRender(){$("#gm").innerHTML=`<div class="bw"><div class="tr-hud"><span>⏱ <b id="bwt">${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Combo <b>×${1+Math.floor(GS.combo/3)}</b></span></div>
+function bwRender(){$("#gm").innerHTML=`<div class="bw"><div class="tr-hud"><span>${ico("timer",15)} <b id="bwt">${GS.t}s</b></span><span>Score <b>${GS.score}</b></span><span>Combo <b>×${1+Math.floor(GS.combo/3)}</b></span></div>
  <div class="card bw-item"><span class="eyebrow">Which bin?</span><b>${esc(GS.cur[0])}</b></div>
  <div class="bw-bins">${G_BINS.map((b,i)=>`<button class="bin ${b[0]}" data-act="bw-put" data-v="${b[0]}"><span>${b[2]}</span><b>${i+1}. ${b[1]}</b><small>${b[3]}</small></button>`).join("")}</div></div>`;}
 function bwEnd(){gStop();$("#gm").innerHTML=gEnd("bmw","Waste Warrior",Math.max(0,GS.score),`<p>Sorted <b>${GS.seen}</b> items · <b>${GS.right}</b> correct.</p>${GS.miss.length?`<div class="glog">${GS.miss.slice(0,6).map(m=>`<div class="bad">✕ ${esc(m[0])} — ${esc(m[2])}</div>`).join("")}</div>`:""}`,"bw-go");}
 Object.assign(ACT,{
  "bw-go":()=>bwStart(),
  "bw-put":el=>{if(!GS||!GS.cur||GS.t<=0)return;const it=GS.cur;GS.seen++;if(el.dataset.v===it[1]){GS.combo++;GS.right++;GS.score+=10*(1+Math.floor(GS.combo/3));toast("✓ "+it[2]);}else{GS.combo=0;GS.score-=5;GS.miss.push(it);toast("✕ "+it[2]);}if(!GS.pool.length)GS.pool=shuffle(G_BMW.slice());GS.cur=GS.pool.pop();bwRender();}});
-document.addEventListener("keydown",e=>{if(location.hash==="#g-bmw"&&GT&&/^[1-5]$/.test(e.key)){const b=$$(".bw-bins .bin")[+e.key-1];b&&b.click();}});
+document.addEventListener("keydown",e=>{if(location.hash==="#g-triage"&&GT&&/^[1-4]$/.test(e.key)){const b=$$(".tr-tags .tagbtn")[+e.key-1];b&&b.click();return;}if(location.hash==="#g-bmw"&&GT&&/^[1-5]$/.test(e.key)){const b=$$(".bw-bins .bin")[+e.key-1];b&&b.click();}});
 
 Object.assign(ROUTES,{games:vGames,"g-er":vER,"g-spot":vSpot,"g-deck":vDeck,"g-triage":vTriage,"g-flow":vHosp,"g-proto":vProto,"g-bmw":vBMW});
+
+/* ============ Practicals & Viva — UI ============ */
+let VST="all", VF="all", VQ="", VOPEN={}, VREVEAL=false, VM=null;
+function vMem(){S.viva=S.viva||{st:{},mocks:0};S.viva.st=S.viva.st||{};return S.viva;}
+function vSub(s){return VIVA.find(x=>x.s===s);}
+function vAllQ(sub){const out=[];sub.st.forEach(st=>st.q.forEach((q,i)=>out.push({id:`${sub.s}.${st.id}.${i}`,st,q:q[0],a:q[1],hy:!!q[2],s:sub.s})));return out;}
+function vStats(sub){const m=vMem().st,all=vAllQ(sub);const k=all.filter(x=>m[x.id]===2).length,r=all.filter(x=>m[x.id]===1).length;return {n:all.length,k,r,hy:all.filter(x=>x.hy).length,pct:all.length?Math.round(k/all.length*100):0};}
+function vTotals(){let n=0,k=0;VIVA.forEach(s=>{const t=vStats(s);n+=t.n;k+=t.k;});return {n,k,pct:n?Math.round(k/n*100):0};}
+const VMARK='<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="9" width="26" height="20" rx="6" fill="#fff" fill-opacity=".22"/><path d="M14 29v7l7-7"/><rect x="18" y="20" width="24" height="17" rx="6" fill="#fff" fill-opacity=".38"/><path d="M34 37v5l-5-5M24 28.5h12M24 32h7"/><path d="M13 17h12M13 21h8"/></svg>';
+const VSICO={
+ path:'<path d="M12 3l4 2.3v4.6L12 12 8 9.9V5.3z"/><path d="M8 9.9l-4 2.3v4.6L8 19l4-2.2v-4.6M16 9.9l4 2.3v4.6L16 19l-4-2.2"/>',
+ micro:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.6"/><circle cx="14.5" cy="8.5" r="1.1"/><circle cx="15" cy="14.5" r="1.8"/><circle cx="9.5" cy="15.5" r="1"/>',
+ pharm:'<rect x="3" y="8.5" width="18" height="7" rx="3.5" transform="rotate(-35 12 12)"/><path d="M9.6 8.6l4.8 6.8"/>',
+ cm:'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9.5" r="2.3"/><path d="M2.5 20c.6-3.7 2.8-5.5 5.5-5.5s4.9 1.8 5.5 5.5M14 15.2c.9-.7 1.9-1 3-1 2.3 0 3.9 1.6 4.4 4.8"/>',
+ fmt:'<path d="M12 3v18M7 21h10M4 7h16"/><path d="M6.5 7 3.5 13.5a3 3 0 0 0 6 0zM17.5 7l-3 6.5a3 3 0 0 0 6 0z"/>'};
+function vIco(s,sz=20){return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${VSICO[s]||""}</svg>`;}
+function vRing(p,sz=58){const r=24,c=2*Math.PI*r;return `<svg class="vring" width="${sz}" height="${sz}" viewBox="0 0 58 58" aria-hidden="true"><circle cx="29" cy="29" r="${r}" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="6"/><circle cx="29" cy="29" r="${r}" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}" transform="rotate(-90 29 29)"/><text x="29" y="33" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">${p}%</text></svg>`;}
+
+function vVivaHub(){const T=vTotals(),m=vMem();
+ return `<section class="vhero"><div class="vhero-l"><span class="vhero-mark">${VMARK}</span><span class="eyebrow">Practicals & Viva · all 5 subjects</span><h1>Walk into the viva prepared</h1><p>Station-wise viva questions for every Phase II practical — spotters, slides, media, prescriptions, certificates — each with a concise answer you can revise offline.</p>
+  <div class="row" style="gap:10px;flex-wrap:wrap"><a class="btn pri lg" href="#viva-mock">${ico("mic",18)} Start a mock viva</a><a class="btn lg" href="#viva-${VIVA[0].s}">Browse questions</a></div></div>
+  <div class="vhero-r">${vRing(T.pct,110)}<div><b>${T.k}<small>/${T.n}</small></b><span>questions you've marked as known</span><span class="note">${m.mocks||0} mock vivas taken</span></div></div></section>
+ <div class="vsubs">${VIVA.map(s=>{const t=vStats(s);return `<a class="vsub" data-s="${s.s}" href="#viva-${s.s}"><div class="vsub-top"><span class="vsub-ic">${vIco(s.s,24)}</span>${vRing(t.pct,52)}</div><b>${esc(s.name)}</b><span class="note">${s.st.length} stations · ${t.n} questions · ${t.hy} high-yield</span><div class="vsub-st">${s.st.map(x=>`<span>${esc(x.n)}</span>`).join("")}</div><span class="vsub-go">${t.k?`${t.k} known · ${t.r} to revise`:"Start revising"} →</span></a>`;}).join("")}</div>
+ <div class="vhow"><div><b>1 · Read the station</b><span>Each station opens with how examiners expect you to answer.</span></div><div><b>2 · Answer aloud, then reveal</b><span>Say your answer first. Tap the question to check it.</span></div><div><b>3 · Mark it</b><span>"I knew it" or "Revise again" — filter to your weak spots later.</span></div><div><b>4 · Mock viva</b><span>Random examiner-style rounds with a score at the end.</span></div></div>
+ <p class="note">Questions are compiled from the CBME Phase II practical syllabus and the themes most commonly asked in university vivas. They are not an official question paper — check your department's practical manual for local patterns. Answers are original summaries; verify current guidelines before clinical use.</p>`;}
+
+function vVivaSub(s){const sub=vSub(s);if(!sub)return vVivaHub();const t=vStats(sub);
+ if(VST!=="all"&&!sub.st.some(x=>x.id===VST))VST="all";
+ POST=()=>{vRenderList(sub);const q=$("#vq");q&&q.addEventListener("input",()=>{VQ=q.value.trim().toLowerCase();vRenderList(sub);});};
+ return `<div class="vtop" data-s="${s}"><a class="gback" href="#viva" aria-label="All subjects">←</a><span class="vsub-ic">${vIco(s,26)}</span><div class="vtop-t"><span class="eyebrow">Practicals & Viva</span><h1>${esc(sub.name)}</h1><p class="note">${esc(sub.fmt)}</p></div><div class="vtop-r">${vRing(t.pct,64)}<a class="btn pri" href="#viva-mock" data-act="v-mocksub" data-s="${s}">${ico("mic",16)} Mock viva</a></div></div>
+ <div class="vsubnav">${VIVA.map(x=>`<a class="chip ${x.s===s?"on":""}" data-s="${x.s}" href="#viva-${x.s}">${esc(x.name.replace("Forensic Medicine & Toxicology","FMT"))}</a>`).join("")}</div>
+ <div class="vstations" role="tablist"><button class="vst ${VST==="all"?"on":""}" data-act="v-st" data-v="all">All stations <small>${t.n}</small></button>${sub.st.map(x=>`<button class="vst ${VST===x.id?"on":""}" data-act="v-st" data-v="${x.id}">${esc(x.n)} <small>${x.q.length}</small></button>`).join("")}</div>
+ <div class="vtools"><label class="vsearch">${ico("search",16)}<input id="vq" type="search" placeholder="Search ${esc(sub.name)} viva questions…" value="${esc(VQ)}" aria-label="Search viva questions"></label>
+  <div class="seg" role="group" aria-label="Filter">${[["all","All"],["hy","★ High-yield"],["rev","To revise"],["new","Not marked"]].map(f=>`<button class="${VF===f[0]?"on":""}" data-act="v-f" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>
+  <button class="btn sm" data-act="v-reveal">${VREVEAL?"Hide all answers":"Show all answers"}</button></div>
+ <div id="vlist"></div>`;}
+
+function vRenderList(sub){const m=vMem().st,box=$("#vlist");if(!box)return;let html="",shown=0;
+ sub.st.filter(x=>VST==="all"||x.id===VST).forEach(st=>{
+  const items=st.q.map((q,i)=>({id:`${sub.s}.${st.id}.${i}`,q:q[0],a:q[1],hy:!!q[2],i})).filter(x=>(VF==="all"||(VF==="hy"&&x.hy)||(VF==="rev"&&m[x.id]===1)||(VF==="new"&&!m[x.id]))&&(!VQ||(x.q+" "+x.a).toLowerCase().includes(VQ)));
+  if(!items.length)return;shown+=items.length;const k=st.q.filter((_,i)=>m[`${sub.s}.${st.id}.${i}`]===2).length;
+  html+=`<section class="vstation" data-s="${sub.s}"><div class="vstation-h"><div><span class="vnum">${sub.st.indexOf(st)+1}</span><div><h2>${esc(st.n)}</h2><span class="note">${esc(st.d)} · ${k}/${st.q.length} known</span></div></div><div class="vtip">${ico("bulb",16)}<span><b>How to answer:</b> ${esc(st.tip)}</span></div></div>
+   <ol class="vqs">${items.map(x=>{const open=VREVEAL||VOPEN[x.id],stt=m[x.id];return `<li class="vqi ${open?"open":""} ${stt===2?"known":stt===1?"rev":""}" data-id="${x.id}"><button class="vq-q" data-act="v-open" data-id="${x.id}" aria-expanded="${!!open}"><span class="vq-n">${x.i+1}</span><span class="vq-t">${esc(x.q)}</span>${x.hy?`<span class="vhy" title="High-yield">★</span>`:""}<span class="vq-s" aria-hidden="true"></span></button>
+    <div class="vq-a" ${open?"":"hidden"}><p>${esc(x.a)}</p><div class="vq-rate"><button class="btn sm ${stt===2?"on":""}" data-act="v-rate" data-id="${x.id}" data-v="2">✓ I knew it</button><button class="btn sm ${stt===1?"on":""}" data-act="v-rate" data-id="${x.id}" data-v="1">↻ Revise again</button></div></div></li>`;}).join("")}</ol></section>`;});
+ box.innerHTML=html||`<div class="card empty"><b>No questions match.</b><p class="note">Try another filter or clear the search.</p></div>`;}
+
+/* ---------- mock viva ---------- */
+let VMS="all";
+function vVivaMock(){POST=null;return `<div class="vtop" data-s="mock"><a class="gback" href="#viva" aria-label="Back">←</a><div class="vtop-t"><span class="eyebrow">Practicals & Viva</span><h1>Mock viva</h1><p class="note">An examiner asks — you answer aloud, reveal, and judge yourself honestly.</p></div></div><div id="vm">${vMockSetup()}</div>`;}
+function vMockSetup(){return `<div class="vm-setup card"><div class="vm-exam">${VMARK}</div><h2>Set up your viva</h2><span class="eyebrow">Subject</span>
+ <div class="vm-chips">${[["all","All subjects"],...VIVA.map(s=>[s.s,s.name])].map(x=>`<button class="chip ${VMS===x[0]?"on":""}" data-act="vm-s" data-v="${x[0]}" ${x[0]!=="all"?`data-s="${x[0]}"`:""}>${esc(x[1])}</button>`).join("")}</div>
+ <span class="eyebrow">Length</span><div class="vm-chips">${[5,10,20].map(n=>`<button class="chip vm-n ${n===10?"on":""}" data-act="vm-n" data-v="${n}">${n} questions</button>`).join("")}</div>
+ <label class="vm-opt"><input type="checkbox" id="vmweak"> Prefer questions I marked "Revise again"</label>
+ <button class="btn pri lg" data-act="vm-go">${ico("mic",18)} Begin viva</button></div>`;}
+function vMockQ(){const x=VM.q[VM.i],sub=vSub(x.s);return `<div class="vm-hud">${gDots(VM.i,VM.q.length,VM.res.map(r=>r===2?true:r===0?false:undefined))}<span class="note">Score <b>${VM.score}</b> / ${VM.q.length*2}</span></div>
+ <div class="vm-card card ${VM.shown?"":"in"}" data-s="${x.s}"><div class="vm-who"><span class="vm-av">${VMARK}</span><div><b>Examiner · ${esc(sub.name)}</b><span class="note">${esc(x.st.n)}</span></div>${x.hy?`<span class="vhy">★ High-yield</span>`:""}</div>
+ <p class="vm-q">${esc(x.q)}</p>
+ ${VM.shown?`<div class="vm-a"><span class="eyebrow">Model answer</span><p>${esc(x.a)}</p></div><span class="eyebrow">How did you do?</span><div class="vm-rate"><button class="btn" data-act="vm-r" data-v="2">✓ Knew it</button><button class="btn" data-act="vm-r" data-v="1">≈ Partly</button><button class="btn" data-act="vm-r" data-v="0">✕ Didn't know</button></div>`:`<p class="note">Answer aloud as you would to the examiner, then check.</p><button class="btn pri lg" data-act="vm-show">Reveal answer</button>`}</div>`;}
+function vMockEnd(){const n=VM.q.length,p=Math.round(VM.score/(n*2)*100);const m=vMem();m.mocks=(m.mocks||0)+1;save();addXP(Math.max(5,Math.round(VM.score)),"Mock viva");
+ const weak=VM.q.filter((_,i)=>VM.res[i]<2);const gr=p>=85?"S":p>=70?"A":p>=50?"B":"C";
+ return `<div class="vm-end card"><div class="gend-hero" data-g="proto"><div class="ggrade g${gr}"><b>${gr}</b><span>grade</span></div><div class="gend-main"><span class="eyebrow">Mock viva complete</span><div class="gend-score"><b>${p}%</b><span>${VM.score}/${n*2} points</span></div><p class="gend-msg">${p>=85?"Examiner-ready. Keep it warm with a quick round daily.":p>=70?"Strong. Polish the few you hesitated on.":p>=50?"Getting there — revise the list below and retry.":"Revise the stations below, then try again tomorrow."}</p></div></div>
+ ${weak.length?`<h3>Revise these (${weak.length})</h3><ol class="vm-weak">${weak.map(x=>`<li><b>${esc(x.q)}</b><p class="note">${esc(x.a)}</p></li>`).join("")}</ol>`:`<p>Flawless round — every question known. 🎉</p>`}
+ <div class="row" style="gap:10px;flex-wrap:wrap"><button class="btn pri" data-act="vm-again">↻ Another round</button><a class="btn" href="#viva">Back to Practicals & Viva</a></div></div>`;}
+Object.assign(ACT,{
+ "v-st":el=>{VST=el.dataset.v;$$(".vstations .vst").forEach(b=>b.classList.toggle("on",b.dataset.v===VST));const sub=vSub(location.hash.slice(6));sub&&vRenderList(sub);},
+ "v-f":el=>{VF=el.dataset.v;$$(".vtools .seg button").forEach(b=>b.classList.toggle("on",b.dataset.v===VF));const sub=vSub(location.hash.slice(6));sub&&vRenderList(sub);},
+ "v-reveal":el=>{VREVEAL=!VREVEAL;el.textContent=VREVEAL?"Hide all answers":"Show all answers";if(!VREVEAL)VOPEN={};const sub=vSub(location.hash.slice(6));sub&&vRenderList(sub);},
+ "v-open":el=>{const id=el.dataset.id,li=el.closest(".vqi"),a=$(".vq-a",li),o=a.hidden;a.hidden=!o;li.classList.toggle("open",o);el.setAttribute("aria-expanded",o);VOPEN[id]=o;},
+ "v-rate":el=>{const m=vMem().st,id=el.dataset.id,v=+el.dataset.v,was=m[id];if(was===v)delete m[id];else{m[id]=v;if(v===2&&was!==2)addXP(1,"Viva question known");}save();const li=el.closest(".vqi");li.classList.toggle("known",m[id]===2);li.classList.toggle("rev",m[id]===1);$$(".vq-rate .btn",li).forEach(b=>b.classList.toggle("on",+b.dataset.v===m[id]));},
+ "v-mocksub":el=>{VMS=el.dataset.s;},
+ "vm-s":el=>{VMS=el.dataset.v;$$(".vm-chips .chip[data-act='vm-s']").forEach(b=>b.classList.toggle("on",b.dataset.v===VMS));},
+ "vm-n":el=>{$$(".vm-n").forEach(b=>b.classList.toggle("on",b===el));},
+ "vm-go":()=>{const n=+($(".vm-n.on")||{dataset:{v:10}}).dataset.v,weak=$("#vmweak")&&$("#vmweak").checked,m=vMem().st;
+  let pool=(VMS==="all"?VIVA:[vSub(VMS)]).flatMap(vAllQ);let first=weak?shuffle(pool.filter(x=>m[x.id]===1)):[];
+  const rest=shuffle(pool.filter(x=>!first.includes(x)));VM={q:first.concat(rest).slice(0,n),i:0,score:0,res:[],shown:false};$("#vm").innerHTML=vMockQ();},
+ "vm-show":()=>{VM.shown=true;$("#vm").innerHTML=vMockQ();},
+ "vm-r":el=>{const v=+el.dataset.v,x=VM.q[VM.i],m=vMem().st;VM.res[VM.i]=v;VM.score+=v;m[x.id]=v===2?2:1;save();VM.i++;VM.shown=false;$("#vm").innerHTML=VM.i<VM.q.length?vMockQ():vMockEnd();window.scrollTo({top:0,behavior:"smooth"});},
+ "vm-again":()=>{$("#vm").innerHTML=vMockSetup();}});
+function vivaTeaser(){const T=vTotals();return `<a class="vteaser" href="#viva"><span class="vteaser-ic">${VMARK}</span><div><span class="eyebrow">New · Practicals & Viva</span><h2>Viva questions with answers, station by station</h2><p class="muted">${T.n} questions across Pathology, Microbiology, Pharmacology, Community Medicine and FMT — revise offline, then take a mock viva.</p><div class="vteaser-s">${VIVA.map(s=>`<span data-s="${s.s}">${vIco(s.s,13)}${esc(s.name.replace("Forensic Medicine & Toxicology","FMT"))}</span>`).join("")}</div></div><div class="vteaser-r">${vRing(T.pct,72)}<span class="btn pri">Open →</span></div></a>`;}
+Object.assign(ROUTES,{viva:vVivaHub,"viva-mock":vVivaMock});VIVA.forEach(s=>{ROUTES["viva-"+s.s]=()=>vVivaSub(s.s);});
 
 applyFS();mountDrawer();renderSide();route();
 

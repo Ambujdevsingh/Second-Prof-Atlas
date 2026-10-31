@@ -43,6 +43,7 @@ function vHome2(){const L=level();const h=new Date().getHours();const greet=h<5?
   ${quotesSection()}
 
   ${gamesTeaser()}
+  ${vivaTeaser()}
 
   <section class="hw-grid">
    <div class="hw-continue card" data-s="${last?last.s:"path"}">
